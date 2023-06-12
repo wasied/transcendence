@@ -7,6 +7,7 @@ import { HeaderLpComponent } from './components/header-lp/header-lp.component';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 import { MainMenuComponent } from './components/main-menu/main-menu.component';
 import { ChatroomsComponent } from './components/chatrooms/chatrooms.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -15,10 +16,11 @@ import { ChatroomsComponent } from './components/chatrooms/chatrooms.component';
     HeaderLpComponent,
     LandingPageComponent,
     MainMenuComponent,
-    ChatroomsComponent
+    ChatroomsComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
