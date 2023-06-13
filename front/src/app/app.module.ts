@@ -8,6 +8,8 @@ import { LandingPageComponent } from './components/landing-page/landing-page.com
 import { MainMenuComponent } from './components/main-menu/main-menu.component';
 import { ChatroomsComponent } from './components/chatrooms/chatrooms.component';
 import { AppRoutingModule } from './app-routing.module';
+import { AchievementComponent } from './components/achievement/achievement.component';
+import { AchievementsComponent } from './components/achievements/achievements.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { AppRoutingModule } from './app-routing.module';
     LandingPageComponent,
     MainMenuComponent,
     ChatroomsComponent,
+    AchievementComponent,
+    AchievementsComponent,
   ],
   imports: [
     BrowserModule,
