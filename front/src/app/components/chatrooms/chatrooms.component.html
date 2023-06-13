@@ -1,9 +1,3 @@
-<div class="bg-black h-screen">
-	<app-header></app-header>
-	<div class="flex justify-center m-8">
-		<h1 class="text-white text-4xl">CHATROOMS</h1>
-	</div>
-	<div class="flex justify-center m-8">
-		<button class="w-48 h-12 rounded-full bg-yellow-500" type="button">Create Chatroom</button>
-	</div>
+<div>
+	<app-chatroom *ngFor="let chatroomCard of chatrooms" [chatroom]="chatroomCard"></app-chatroom>
 </div>

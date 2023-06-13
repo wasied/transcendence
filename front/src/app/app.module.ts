@@ -10,6 +10,7 @@ import { ChatroomsComponent } from './components/chatrooms/chatrooms.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AchievementComponent } from './components/achievement/achievement.component';
 import { AchievementsComponent } from './components/achievements/achievements.component';
+import { ChatroomComponent } from './components/chatroom/chatroom.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { AchievementsComponent } from './components/achievements/achievements.co
     ChatroomsComponent,
     AchievementComponent,
     AchievementsComponent,
+    ChatroomComponent,
   ],
   imports: [
     BrowserModule,
