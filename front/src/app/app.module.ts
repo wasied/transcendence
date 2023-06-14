@@ -11,6 +11,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AchievementComponent } from './components/achievement/achievement.component';
 import { AchievementsComponent } from './components/achievements/achievements.component';
 import { ChatroomComponent } from './components/chatroom/chatroom.component';
+import { GameCardComponent } from './components/game-card/game-card.component';
+import { GameCardsComponent } from './components/game-cards/game-cards.component';
+import { FriendComponent } from './components/friend/friend.component';
+import { FriendsComponent } from './components/friends/friends.component';
+import { DirectMessageComponent } from './components/direct-message/direct-message.component';
+import { DirectMessagesComponent } from './components/direct-messages/direct-messages.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +29,12 @@ import { ChatroomComponent } from './components/chatroom/chatroom.component';
     AchievementComponent,
     AchievementsComponent,
     ChatroomComponent,
+    GameCardComponent,
+    GameCardsComponent,
+    FriendComponent,
+    FriendsComponent,
+    DirectMessageComponent,
+    DirectMessagesComponent,
   ],
   imports: [
     BrowserModule,

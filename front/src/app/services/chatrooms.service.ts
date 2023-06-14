@@ -6,7 +6,7 @@ import { Chatroom } from "../models/chatroom.model";
 })
 export class ChatroomsService {
 
-	// harcoded for demo purpose
+	// hardcoded for demo purpose
 	chatrooms: Chatroom[] = [
 		{
 			id: 1,
