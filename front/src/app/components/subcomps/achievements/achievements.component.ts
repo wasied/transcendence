@@ -8,7 +8,7 @@ import { AchievementsService } from 'src/app/services/achievements.service';
   styleUrls: ['./achievements.component.css']
 })
 export class AchievementsComponent implements OnInit {
-
+  
   achievements!: Achievement[];
   
   constructor (private achievementsService: AchievementsService) {}

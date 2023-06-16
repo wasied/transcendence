@@ -12,6 +12,6 @@ export class LandingPageComponent {
 
   onConnect() : void
   {
-    this.router.navigateByUrl('menu');
+    this.router.navigateByUrl('main');
   }
 }

@@ -1,11 +1,11 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { LandingPageComponent } from "./components/landing-page/landing-page.component";
-import { MainMenuComponent } from "./components/main-menu/main-menu.component";
+import { LandingPageComponent } from "./components/views/landing-page/landing-page.component";
+import { MainMenuComponent } from "./components/views/main-menu/main-menu.component";
 
 const routes: Routes = [
 	{path: '', component: LandingPageComponent},
-	{path: 'menu', component: MainMenuComponent}
+	{path: 'main', component: MainMenuComponent}
 ];
 
 @NgModule({
