@@ -17,7 +17,6 @@ import { FriendComponent } from './components/subcomps/friend/friend.component';
 import { FriendsComponent } from './components/subcomps/friends/friends.component';
 import { DirectMessageComponent } from './components/subcomps/direct-message/direct-message.component';
 import { DirectMessagesComponent } from './components/subcomps/direct-messages/direct-messages.component';
-import { StatsComponent } from './components/subcomps/stats/stats.component';
 import { ProfileSelfComponent } from './components/views/profile-self/profile-self.component';
 import { FriendsViewComponent } from './components/views/friends-view/friends-view.component';
 import { GameHistoryViewComponent } from './components/views/game-history-view/game-history-view.component';
@@ -25,6 +24,9 @@ import { ChatroomsViewComponent } from './components/views/chatrooms-view/chatro
 import { DirectMessagesViewComponent } from './components/views/direct-messages-view/direct-messages-view.component';
 import { GamesViewComponent } from './components/views/games-view/games-view.component';
 import { ProfileOtherComponent } from './components/views/profile-other/profile-other.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SignUpComponent } from './components/utils/sign-up/sign-up.component';
+import { SignInComponent } from './components/utils/sign-in/sign-in.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,6 @@ import { ProfileOtherComponent } from './components/views/profile-other/profile-
     FriendsComponent,
     DirectMessageComponent,
     DirectMessagesComponent,
-    StatsComponent,
     ProfileSelfComponent,
     FriendsViewComponent,
     GameHistoryViewComponent,
@@ -51,10 +52,13 @@ import { ProfileOtherComponent } from './components/views/profile-other/profile-
     DirectMessagesViewComponent,
     GamesViewComponent,
     ProfileOtherComponent,
+    SignUpComponent,
+    SignInComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

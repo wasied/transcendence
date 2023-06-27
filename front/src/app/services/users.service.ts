@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
+import { FormGroup } from "@angular/forms";
 import { User } from "../models/user.model";
 
 @Injectable ({
 	providedIn: 'root'
 })
 export class UserService {
-
 	// hardcoded for demo purpose
 	users: User[] = [
 		{
@@ -27,4 +27,55 @@ export class UserService {
 			createdAt: new Date()
 		}
 	]
+
+	// return id
+	returnNewId() : number {
+		let newId: number = 0;
+		const users:User[] = this.users;
+	
+		newId = users.length + 1;
+		return newId;
+	}
+
+	getUserById(id: number) : User {		
+		const user = this.users.find(user => user.id === id);
+
+		if (!user)
+			throw console.error('user not found'); // temporary
+		else
+			return user;
+	}
+
+	fromFormToUser(form: FormGroup) : User {
+
+		let newUser: User = {
+			id: this.returnNewId(),
+			username: form.get('username')?.value,
+			password: form.get('password')?.value,
+			profileImageURL: form.get('profileImageURL')?.value,
+			phoneNumber: form.get('phoneNumber')?.value,
+			createdAt: new Date,
+			updatedAt: new Date
+		}
+		return newUser;
+	}
+	
+	// to work with placeholder, replace by http requests
+	addUser(form: FormGroup) : number {
+		let user: User = this.fromFormToUser(form);
+		
+		this.users.push(user);
+		return user.id; 
+	}
+
+	delUser(id: number) : void {
+		this.users = this.users.filter(arr_id => arr_id.id != id);
+	}
+
+	// debug only
+	displayUsers() : void {
+		this.users.forEach((val) => {
+			console.log(val);
+		});
+	}
 }

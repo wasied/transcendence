@@ -10,18 +10,21 @@ export class DirectMessagesSevice {
 	directMessages: DirectMessage[] = [
 		{
 			id: 1,
-			playerPseudo: 'opiron',
-			playerStatus: 'online'
+			otherPlayerId: 2,
+			otherPlayerPseudo: 'opiron',
+			otherPlayerStatus: 'online'
 		},
 		{
 			id: 2,
-			playerPseudo: 'cjulienn',
-			playerStatus: 'online'
+			otherPlayerId: 1,
+			otherPlayerPseudo: 'cjulienn',
+			otherPlayerStatus: 'online'
 		},
 		{
 			id: 3,
-			playerPseudo: 'mbennafl',
-			playerStatus: 'offline'
+			otherPlayerId: 2,
+			otherPlayerPseudo: 'mbennafl',
+			otherPlayerStatus: 'offline'
 		}
 	]  
 }

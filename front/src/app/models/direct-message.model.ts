@@ -1,5 +1,6 @@
 export class DirectMessage {
 	constructor (public id: number,
-				 public playerPseudo: string,
-				 public playerStatus: string) {}
+				 public otherPlayerId: number,
+				 public otherPlayerPseudo: string,
+				 public otherPlayerStatus: string) {}
 }

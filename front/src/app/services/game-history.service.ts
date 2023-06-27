@@ -9,6 +9,9 @@ export class GameHistoryService {
 	// hardcoded for demo purpose
 	gameHistory: GameHistory[] = [
 		{
+			id: 1,
+			userId: 1,
+			opponentId: 3,
 			opponentPseudo: 'cjulienn',
 			opponentStatus: 'online',
 			yourScore: 12,
@@ -16,6 +19,9 @@ export class GameHistoryService {
 			ladderLevel: 1
 		},
 		{
+			id: 2,
+			userId: 2,
+			opponentId: 1,
 			opponentPseudo: 'opiron',
 			opponentStatus: 'offline',
 			yourScore: 8,
@@ -23,6 +29,9 @@ export class GameHistoryService {
 			ladderLevel: 2
 		},
 		{
+			id: 3,
+			userId: 3,
+			opponentId: 2,
 			opponentPseudo: 'mphearph',
 			opponentStatus: 'online',
 			yourScore: 12,
