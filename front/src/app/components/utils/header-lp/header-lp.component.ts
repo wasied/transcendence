@@ -15,4 +15,8 @@ export class HeaderLpComponent implements OnInit {
   onAddNewUser() : void {
     this.router.navigateByUrl('/signup');
   }
+
+  onSignIn() : void {
+    this.router.navigateByUrl('/signin');
+  }
 }

@@ -1,4 +1,5 @@
-<header class="flex justify-between items-center bg-yellow-500 h-24">
+<header class="flex justify-between items-center bg-yellow-500 h-24
+	fixed top-0 left-0 right-0 z-50">
 	<div class="flex items-center w-2/12">
 		<img class="h-24 m-3" src="../../../assets/imgs/42_Logo.png" alt="42 logo">
 	</div>
@@ -9,13 +10,13 @@
 			type="button">PLAY</button>
 		</div>
 		<div class="flex w-8/12 justify-around text-2xl">
-			<p class="hover:underline hover:cursor-pointer">Chatrooms</p>
-			<p class="hover:underline hover:cursor-pointer">Messages</p>
-			<p class="hover:underline hover:cursor-pointer">Friends</p>
+			<button (click)="onClickOnChatrooms()" class="hover:underline hover:cursor-pointer">Chatrooms</button>
+			<button (click)="onClickOnMessages()" class="hover:underline hover:cursor-pointer">Messages</button>
+			<button (click)="onClickOnFriends()" class="hover:underline hover:cursor-pointer">Friends</button>
 		</div>
 	</div>
 	<div class="w-2/12 flex justify-end">
-		<img class="h-24 m-0 p-4 rounded-full hover:cursor-pointer" 
+		<img (click)="onClickOnProfilePicture()" class="h-24 m-0 p-4 rounded-full hover:cursor-pointer" 
 		[src]="this.user.profileImageURL" alt="profile picture">
 	</div>
 </header>

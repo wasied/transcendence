@@ -27,6 +27,7 @@ import { ProfileOtherComponent } from './components/views/profile-other/profile-
 import { ReactiveFormsModule } from '@angular/forms';
 import { SignUpComponent } from './components/utils/sign-up/sign-up.component';
 import { SignInComponent } from './components/utils/sign-in/sign-in.component';
+import { InfoSecurityComponent } from './components/subcomps/info-security/info-security.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { SignInComponent } from './components/utils/sign-in/sign-in.component';
     ProfileOtherComponent,
     SignUpComponent,
     SignInComponent,
+    InfoSecurityComponent,
   ],
   imports: [
     BrowserModule,

@@ -9,7 +9,7 @@ export class UserService {
 	// hardcoded for demo purpose
 	users: User[] = [
 		{
-			id:1,
+			id: 1,
 			username: 'cjulienn',
 			password: '12345',
 			profileImageURL: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Glock_17-removebg-preview.png',
@@ -18,7 +18,7 @@ export class UserService {
 			createdAt: new Date()
 		},
 		{
-			id:2,
+			id: 2,
 			username: 'opiron',
 			password: '123456',
 			profileImageURL: 'https://www.nps.gov/articles/000/images/SAMA_2236-11.jpg?maxwidth=1300&autorotate=false&quality=78&format=webp',
@@ -38,12 +38,21 @@ export class UserService {
 	}
 
 	getUserById(id: number) : User {		
-		const user = this.users.find(user => user.id === id);
+		const userToFind: User | undefined = this.users.find(user => user.id === id);
 
-		if (!user)
-			throw console.error('user not found'); // temporary
+		if (!userToFind)
+			throw console.error('getUserById : user not found'); // temporary
 		else
-			return user;
+			return userToFind;
+	}
+
+	getIdByUser(username: string) : number | undefined {
+		for (let user of this.users)
+		{
+			if (username == user.username)
+				return user.id; 
+		}
+		return undefined;
 	}
 
 	fromFormToUser(form: FormGroup) : User {
