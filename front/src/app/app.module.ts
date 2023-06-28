@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/utils/header/header.component';
@@ -28,6 +29,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SignUpComponent } from './components/utils/sign-up/sign-up.component';
 import { SignInComponent } from './components/utils/sign-in/sign-in.component';
 import { InfoSecurityComponent } from './components/subcomps/info-security/info-security.component';
+import { SeparatorLineComponent } from './components/utils/separator-line/separator-line.component';
+import { CheckboxComponent } from './components/utils/checkbox/checkbox.component';
+import { CustomButtonComponent } from './components/utils/custom-button/custom-button.component';
+import { ProfileBadgeComponent } from './components/subcomps/profile-badge/profile-badge.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ModalFormComponent } from './components/utils/modal-form/modal-form.component';
 
 @NgModule({
   declarations: [
@@ -56,11 +63,18 @@ import { InfoSecurityComponent } from './components/subcomps/info-security/info-
     SignUpComponent,
     SignInComponent,
     InfoSecurityComponent,
+    SeparatorLineComponent,
+    CheckboxComponent,
+    CustomButtonComponent,
+    ProfileBadgeComponent,
+    ModalFormComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

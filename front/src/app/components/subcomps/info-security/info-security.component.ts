@@ -7,4 +7,15 @@ import { Component } from '@angular/core';
 })
 export class InfoSecurityComponent {
 
+  onClickOnEditPassword() : void {
+
+  }
+
+  onClickOnEditPic() : void {
+
+  }
+
+  onClickOnEditNumber() : void {
+    
+  }
 }

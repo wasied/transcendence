@@ -43,4 +43,8 @@ export class HeaderComponent implements OnInit {
   onClickOnProfilePicture() : void {
     this.router.navigate(['main', this.user.id, 'profile', this.user.id]);
   }
+
+  onClickPlay() : void {
+    
+  }
 }

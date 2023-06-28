@@ -5,9 +5,7 @@
 	</div>
 	<div class="flex justify-around items-center w-8/12">
 		<div class="flex justify-center w-4/12">
-			<button class="bg-black text-white text-2xl h-12 w-32 rounded-full
-			border border-2 border-black hover:bg-white hover:text-black ease-in duration-300" 
-			type="button">PLAY</button>
+			<app-custom-button (onClick)="onClickPlay()" [title]="'PLAY'"></app-custom-button>
 		</div>
 		<div class="flex w-8/12 justify-around text-2xl">
 			<button (click)="onClickOnChatrooms()" class="hover:underline hover:cursor-pointer">Chatrooms</button>
