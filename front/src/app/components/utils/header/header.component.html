@@ -14,7 +14,9 @@
 		</div>
 	</div>
 	<div class="w-2/12 flex justify-end">
-		<img (click)="onClickOnProfilePicture()" class="h-24 m-0 p-4 rounded-full hover:cursor-pointer" 
-		[src]="this.user.profileImageURL" alt="profile picture">
+		<div class="w-24 h-24 p-3">
+			<img (click)="onClickOnProfilePicture()" class="object-cover w-full h-full rounded-full hover:cursor-pointer" 
+			[src]="this.user.profileImageURL" alt="profile picture">
+		</div>
 	</div>
 </header>

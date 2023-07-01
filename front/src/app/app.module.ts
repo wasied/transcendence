@@ -35,6 +35,7 @@ import { CustomButtonComponent } from './components/utils/custom-button/custom-b
 import { ProfileBadgeComponent } from './components/subcomps/profile-badge/profile-badge.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalFormComponent } from './components/utils/modal-form/modal-form.component';
+import { StatsComponent } from './components/subcomps/stats/stats.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { ModalFormComponent } from './components/utils/modal-form/modal-form.com
     CustomButtonComponent,
     ProfileBadgeComponent,
     ModalFormComponent,
+    StatsComponent,
   ],
   imports: [
     BrowserModule,

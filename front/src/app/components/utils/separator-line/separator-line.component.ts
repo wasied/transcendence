@@ -6,6 +6,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
   styleUrls: ['./separator-line.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class SeparatorLineComponent {
-
-}
+export class SeparatorLineComponent {}

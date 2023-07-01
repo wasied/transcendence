@@ -11,7 +11,7 @@ export class ModalFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.modal = new FormGroup({
-      
+      // work in progress
     });
   }
 }
