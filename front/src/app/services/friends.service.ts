@@ -1,60 +1,58 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { Observable, map, switchMap } from "rxjs";
 import { Friend } from "../models/friend.model";
+
 
 @Injectable({
 	providedIn: 'root'
 })
 export class FriendService
 {
-	// hardcoded for demo purpose
-	friends: Friend[] = [
-		{
-			id: 1,
-			userId: 1,
-			friendId: 4,
-			friendName: 'opiron',
-			friendStatus: 'online',
-			createdAt: new Date()
-		},
-		{
-			id: 2,
-			userId: 2,
-			friendId: 3,
-			friendName: 'cjulienn',
-			friendStatus: 'online',
-			createdAt: new Date()
-		},
-		{
-			id:3,
-			userId: 3,
-			friendId: 5,
-			friendName: 'styx2147',
-			friendStatus: 'offline',
-			createdAt: new Date()
-		},
-		{
-			id: 4,
-			userId: 4,
-			friendId: 4,
-			friendName: 'mbennafl',
-			friendStatus: 'in a game',
-			createdAt: new Date()
-		},
-		{
-			id: 5,
-			userId: 5,
-			friendId: 1,
-			friendName: 'mpeharph',
-			friendStatus: 'in a game',
-			createdAt: new Date()
-		},
-		{
-			id: 6,
-			userId: 6,
-			friendId: 2,
-			friendName: 'genghis_khan',
-			friendStatus: 'online',
-			createdAt: new Date()
-		}
-	]
+
+	constructor (private http : HttpClient) {};
+
+	private apiURL : string = 'http://localhost:3000/'; // modify this
+
+	returnNewId() : Observable<number> {
+		return this.getAllFriends().pipe(
+			map(friends => {
+				const maxId = Math.max(...friends.map(friend => friend.id));
+				const newId = maxId + 1;
+				return newId;
+			})
+		);
+	}
+
+	// addNewFriend(form: FormGroup) : Observable<Friend> {
+		
+	// 	const friendUsername: string = form.get('friendUsername')?.value;
+
+	// 	return this.returnNewId().pipe(
+	// 		switchMap(newId => {
+	// 			const NewFriend: Friend = {
+	// 				id: newId,
+	// 				userId: ,
+	// 				friendId: ,
+	// 				friendName: ,
+	// 				friendStatus: ,
+	// 				createdAt: new Date()
+	// 			};
+	// 			return this.http.post<>();
+	// 		})	
+	// 	);
+	// }
+
+	getFriendById(id: number) : Observable<Friend> {
+		return this.http.get<Friend>(`${this.apiURL}/${id}`);
+	}
+
+	getAllFriends() : Observable<Friend[]> {
+		return this.http.get<Friend[]>(`${this.apiURL}`);
+	}
+
+	delFriend(id: number) : Observable<void> {
+		return this.http.delete<void>(`${this.apiURL}/${id}`);
+	}
 }

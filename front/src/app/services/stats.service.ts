@@ -1,31 +1,22 @@
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 import { Stat } from "../models/stat.model";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable ({
 	providedIn: 'root'
 })
 export class StatsService {
-	// hardcoded for demo purpose
-	stats: Stat[] = [
-		{
-			id: 1,
-			victories: 4,
-			defeats: 5,
-			gamesPlayed: 9,
-			ratio: this.calcRatio(4, 5),
-			totalTimePlaying: new Date()
-		},
-		{
-			id: 2,
-			victories: 4,
-			defeats: 5,
-			gamesPlayed: 9,
-			ratio: this.calcRatio(4, 5),
-			totalTimePlaying: new Date()
-		}
-	]
 
-	calcRatio(win: number, lose: number) : number {
-		return (win / lose);
+	constructor (private http: HttpClient) {}
+
+	private apiUrl : string = 'http://localhost:3000/stats';
+
+	getAllStats() : Observable<Stat[]> {
+		return this.http.get<Stat[]>(`${this.apiUrl}`);
+	}
+
+	getStatById(id: number) : Observable<Stat> {
+		return this.http.get<Stat>(`${this.apiUrl}/${id}`);
 	}
 }

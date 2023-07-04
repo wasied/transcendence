@@ -1,4 +1,6 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable, map } from "rxjs";
 import { Chatroom } from "../models/chatroom.model";
 
 @Injectable({
@@ -6,34 +8,25 @@ import { Chatroom } from "../models/chatroom.model";
 })
 export class ChatroomsService {
 
-	// hardcoded for demo purpose
-	chatrooms: Chatroom[] = [
-		{
-			id: 1,
-			chatroomName: 'Casual Gaming',
-			ownerId: 1,
-			owner: 'cjulienn',
-			accessStatus: 'password protected',
-			participants: ['opiron', 'cjulienn'],
-			participantsId: [1, 2]
-		},
-		{
-			id: 2,
-			chatroomName: '42',
-			ownerId: 2,
-			owner: 'opiron',
-			accessStatus: 'private',
-			participants: ['player1', 'player2', 'player3'],
-			participantsId: [2, 3]
-		},
-		{
-			id: 3,
-			chatroomName: '19 gamers',
-			ownerId: 3,
-			owner: 'archimede',
-			accessStatus: 'open access',
-			participants: ['player1', 'player2', 'player3', 'player4'],
-			participantsId: [3, 1]
-		}
-	]
+	constructor (private http: HttpClient) {};
+
+	private apiURL: string = ''; // change that
+
+	returnNewId() : Observable<number> {
+		return this.getAllChatrooms().pipe(
+			map(chatrooms => {
+				const maxId = Math.max(...chatrooms.map(chatroom => chatroom.id));
+				const newId = maxId + 1;
+				return newId;
+			})
+		);
+	}
+
+	getChatroomByID(id: number) : Observable<Chatroom> {
+		return this.http.get<Chatroom>(`${this.apiURL}/${id}`);
+	}
+
+	getAllChatrooms() : Observable<Chatroom[]> {
+		return this.http.get<Chatroom[]>(`${this.apiURL}`);
+	}
 }
