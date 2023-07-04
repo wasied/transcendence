@@ -4,21 +4,21 @@
 		"id": 1,
 		"username": "user1",
 		"password": "password1",
-		"profile_image_url": "https://www.w3schools.com/w3images/avatar2.png",
+		"profileImageURL": "https://www.w3schools.com/w3images/avatar2.png",
 		"phone_number": "123-456-7890"
 	  },
 	  {
 		"id": 2,
 		"username": "user2",
 		"password": "password2",
-		"profile_image_url": "https://www.w3schools.com/howto/img_avatar.png",
+		"profileImageURL": "https://www.w3schools.com/howto/img_avatar.png",
 		"phone_number": "234-567-8901"
 	  },
 	  {
 		"id": 3,
 		"username": "user3",
 		"password": "password3",
-		"profile_image_url": "https://www.w3schools.com/w3images/avatar6.png",
+		"profileImageURL": "https://www.w3schools.com/w3images/avatar6.png",
 		"phone_number": "345-678-9012"
 	  }
 	],

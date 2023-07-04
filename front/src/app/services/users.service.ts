@@ -1,90 +1,66 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { User } from "../models/user.model";
+import { Observable, map, switchMap } from "rxjs";
 
 @Injectable ({
 	providedIn: 'root'
 })
 export class UserService {
-	// hardcoded for demo purpose
-	users: User[] = [
-		{
-			id: 1,
-			username: 'cjulienn',
-			password: '12345',
-			profileImageURL: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Glock_17-removebg-preview.png',
-			phoneNumber: '+524434830186',
-			updatedAt: new Date(),
-			createdAt: new Date()
-		},
-		{
-			id: 2,
-			username: 'opiron',
-			password: '123456',
-			profileImageURL: 'https://www.nps.gov/articles/000/images/SAMA_2236-11.jpg?maxwidth=1300&autorotate=false&quality=78&format=webp',
-			phoneNumber: '+4455667788',
-			updatedAt: new Date(),
-			createdAt: new Date()
-		}
-	]
 
-	// return id
-	returnNewId() : number {
-		let newId: number = 0;
-		const users:User[] = this.users;
+	constructor(private http: HttpClient) {};
+
+	private apiURL: string = 'http://localhost:3000/users'; // change that in final product
 	
-		newId = users.length + 1;
-		return newId;
+	// return new id as an observable (TO BE LATER HANDLED BY BACK END)
+	returnNewId() : Observable<number> {
+		return this.getAllUsers().pipe(
+			map(users => {
+				const maxId = Math.max(...users.map(user => user.id));
+				const newId = maxId + 1;
+				return newId;
+			})
+		);
 	}
 
-	getUserById(id: number) : User {		
-		const userToFind: User | undefined = this.users.find(user => user.id === id);
-
-		if (!userToFind)
-			throw console.error('getUserById : user not found'); // temporary
-		else
-			return userToFind;
+	getAllUsers() : Observable<User[]> {
+		return this.http.get<User[]>(`${this.apiURL}`);
 	}
 
-	getIdByUser(username: string) : number | undefined {
-		for (let user of this.users)
-		{
-			if (username == user.username)
-				return user.id; 
-		}
-		return undefined;
-	}
-
-	fromFormToUser(form: FormGroup) : User {
-
-		let newUser: User = {
-			id: this.returnNewId(),
-			username: form.get('username')?.value,
-			password: form.get('password')?.value,
-			profileImageURL: form.get('profileImageURL')?.value,
-			phoneNumber: form.get('phoneNumber')?.value,
-			createdAt: new Date,
-			updatedAt: new Date
-		}
-		return newUser;
+	getUserById(id: number) : Observable<User> {				
+		return this.http.get<User>(`${this.apiURL}/${id}`);
 	}
 	
-	// to work with placeholder, replace by http requests
-	addUser(form: FormGroup) : number {
-		let user: User = this.fromFormToUser(form);
-		
-		this.users.push(user);
-		return user.id; 
+	addNewUser(form: FormGroup) : Observable<User> {
+		// add variables from the form
+		const username: string = form.get('username')?.value;
+		const password: string = form.get('password')?.value;
+		const profileImageURL: string = form.get('profileImageURL')?.value;
+		const phoneNumber: string = form.get('phoneNumber')?.value;
+
+		return this.returnNewId().pipe(
+			switchMap(newId => {
+				const newUser: User = {
+					id : newId,
+					username: username,
+					password: password,
+					profileImageURL: profileImageURL,
+					phoneNumber: phoneNumber,
+					createdAt: new Date(),
+					updatedAt: new Date()
+				};
+				return this.http.post<User>(this.apiURL, newUser);
+			})
+		);	
 	}
 
-	delUser(id: number) : void {
-		this.users = this.users.filter(arr_id => arr_id.id != id);
+	deleteUser(id: number) : Observable<void> {
+		return this.http.delete<void>(`${this.apiURL}/${id}`);
 	}
 
-	// debug only
-	displayUsers() : void {
-		this.users.forEach((val) => {
-			console.log(val);
-		});
+	// use a partial user to be more DRY (can updated every fields or just some)
+	modifyUser(id: number, partialUser: Partial<User>) : Observable<User> {
+		return this.http.put<User>(`${this.apiURL}/${id}`, partialUser);
 	}
 }

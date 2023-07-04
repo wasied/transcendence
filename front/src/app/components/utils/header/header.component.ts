@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/users.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,7 @@ import { UserService } from 'src/app/services/users.service';
 })
 export class HeaderComponent implements OnInit {
 
-  user!: User;
+  user$!: Observable<User>;
   
   constructor (private userService: UserService,
     private route: ActivatedRoute,
@@ -23,9 +24,7 @@ export class HeaderComponent implements OnInit {
   // retrieve the user: User object to exploit the data
   getUserData() : void {
     const userId: number = +this.route.snapshot.params['id'];
-    console.log(`userId = ${userId}`); // debug
-    this.user = this.userService.getUserById(userId);
-    console.log(`userId in this.user = ${this.user.id}`); // debug
+    this.user$ = this.userService.getUserById(userId);
   }
 
   onClickOnChatrooms() : void {

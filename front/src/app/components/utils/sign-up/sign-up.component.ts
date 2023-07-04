@@ -27,7 +27,6 @@ export class SignUpComponent implements OnInit {
       imageUrl: [null],
       phoneNumber: [null]
     });
-
     // observable op
     this.signUpVals$ = this.signUpForm.valueChanges.pipe(
       map(formValue => ({
@@ -37,13 +36,15 @@ export class SignUpComponent implements OnInit {
   }
 
   // should be temporary to store values in an array, updating the array
-  onSubmitForm() : void {
-  
-    // add user to service
-    const id: number = this.userService.addUser(this.signUpForm);
-    // check that it worked (debug)
-    this.userService.displayUsers();
-    // triggers new component
-    this.router.navigateByUrl(`/main/${id}`); // change that
+  onSubmitForm() : void {  
+    // add user to service, triggers new component
+    this.userService.addNewUser(this.signUpForm).subscribe({
+      next: response => {
+        this.router.navigate(['/main', response.id]);  
+        console.log('User created succesfully', response);
+      },
+      error: error => console.error('Error creating user', error),
+      complete: () => console.log('completed')     
+    });
   };
 }
