@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Achievement } from 'src/app/models/achievement.model';
 import { AchievementsService } from 'src/app/services/achievements.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-achievements',
@@ -9,11 +10,11 @@ import { AchievementsService } from 'src/app/services/achievements.service';
 })
 export class AchievementsComponent implements OnInit {
   
-  achievements!: Achievement[];
-  
   constructor (private achievementsService: AchievementsService) {}
 
+  achievements$!: Observable<Achievement[]>;
+
   ngOnInit(): void {
-    this.achievements = this.achievementsService.achievements;
+    this.achievements$ = this.achievementsService.getAllAchievements();
   }
 }

@@ -7,11 +7,12 @@ import { Observable, map, switchMap } from "rxjs";
 @Injectable ({
 	providedIn: 'root'
 })
-export class UserService {
+export class UsersService {
 
 	constructor(private http: HttpClient) {};
 
 	private apiURL: string = 'http://localhost:3000/users'; // change that in final product
+	private currentUserId: number = -1;
 	
 	// return new id as an observable (TO BE LATER HANDLED BY BACK END)
 	returnNewId() : Observable<number> {
@@ -30,6 +31,10 @@ export class UserService {
 
 	getUserById(id: number) : Observable<User> {				
 		return this.http.get<User>(`${this.apiURL}/${id}`);
+	}
+
+	getUserByUsername(username: string) : Observable<User> {
+		return this.http.get<User>(`${this.apiURL}?username=${username}`);
 	}
 	
 	addNewUser(form: FormGroup) : Observable<User> {
@@ -62,5 +67,17 @@ export class UserService {
 	// use a partial user to be more DRY (can updated every fields or just some)
 	modifyUser(id: number, partialUser: Partial<User>) : Observable<User> {
 		return this.http.put<User>(`${this.apiURL}/${id}`, partialUser);
+	}
+	
+	storeUserId(id: number) : void {
+		this.currentUserId = id;
+	}
+
+	delUserId(id: number) : void {
+		this.currentUserId = -1;
+	}
+
+	getUserId() : number {
+		return this.currentUserId;
 	}
 }

@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 export class HeaderComponent implements OnInit {
 
   user$!: Observable<User>;
+  private currentId!: number;
   
   constructor (private userService: UserService,
     private route: ActivatedRoute,
@@ -23,24 +24,24 @@ export class HeaderComponent implements OnInit {
 
   // retrieve the user: User object to exploit the data
   getUserData() : void {
-    const userId: number = +this.route.snapshot.params['id'];
-    this.user$ = this.userService.getUserById(userId);
+    this.currentId = this.userService.getUserId();
+    this.user$ = this.userService.getUserById(this.currentId);
   }
 
   onClickOnChatrooms() : void {
-    this.router.navigate(['main', this.user.id, 'chatrooms']);
+    this.router.navigate(['main', 'chatrooms']);
   }
 
   onClickOnMessages() : void {
-    this.router.navigate(['main', this.user.id, 'direct_messages']);
+    this.router.navigate(['main', 'direct_messages']);
   }
 
   onClickOnFriends() : void {
-    this.router.navigate(['main', this.user.id, 'friends']);
+    this.router.navigate(['main', 'friends']);
   }
 
   onClickOnProfilePicture() : void {
-    this.router.navigate(['main', this.user.id, 'profile', this.user.id]);
+    this.router.navigate(['main', 'profile']);
   }
 
   onClickPlay() : void {

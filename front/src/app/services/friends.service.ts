@@ -1,8 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Observable, map, switchMap } from "rxjs";
+import { Observable, map, switchMap, filter } from "rxjs";
 import { Friend } from "../models/friend.model";
+import { User } from "../models/user.model";
+import { UsersService } from "./users.service";
 
 
 @Injectable({
@@ -10,10 +12,10 @@ import { Friend } from "../models/friend.model";
 })
 export class FriendService
 {
+	constructor (private http : HttpClient,
+				 private usersService: UsersService) {};
 
-	constructor (private http : HttpClient) {};
-
-	private apiURL : string = 'http://localhost:3000/'; // modify this
+	private apiURL : string = 'http://localhost:3000/friends';
 
 	returnNewId() : Observable<number> {
 		return this.getAllFriends().pipe(
@@ -54,5 +56,13 @@ export class FriendService
 
 	delFriend(id: number) : Observable<void> {
 		return this.http.delete<void>(`${this.apiURL}/${id}`);
+	}
+
+	getCurrentUserFriends() : Observable<Friend[]> {
+		const currentId: number = this.usersService.getUserId();
+
+		return this.http.get<Friend[]>(`${this.apiURL}`).pipe(
+			map(friends => friends.filter(friend => friend.userId === currentId))
+		);
 	}
 }

@@ -235,6 +235,35 @@
 		"blocker_id1": 2,
 		"blocker_id2": 3
 	  }
-	]
+	],
+	"stats": [
+		{
+		  "id": 1,
+		  "userId": 1,
+		  "victories": 5,
+		  "defeats": 2,
+		  "gamesPlayed": 7,
+		  "ratio": 2.5,
+		  "totalTimePlayed": "00:30:00"
+		},
+		{
+		  "id": 2,
+		  "userId": 2,
+		  "victories": 3,
+		  "defeats": 4,
+		  "gamesPlayed": 7,
+		  "ratio": 0.75,
+		  "totalTimePlayed": "00:45:00"
+		},
+		{
+		  "id": 3,
+		  "userId": 3,
+		  "victories": 4,
+		  "defeats": 3,
+		  "gamesPlayed": 7,
+		  "ratio": 1.33,
+		  "totalTimePlayed": "01:00:00"
+		}
+	  ]
   }
   

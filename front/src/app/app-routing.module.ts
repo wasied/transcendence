@@ -11,13 +11,13 @@ import { ProfileSelfComponent } from "./components/views/profile-self/profile-se
 
 const routes: Routes = [
 	{path: '', component: LandingPageComponent},
-	{path: 'main/:id', component: MainMenuComponent},
+	{path: 'main', component: MainMenuComponent},
 	{path: 'signup', component: SignUpComponent},
 	{path: 'signin', component:SignInComponent},
-	{path: 'main/:id/chatrooms', component:ChatroomsViewComponent},
-	{path: 'main/:id/direct_messages', component:DirectMessagesViewComponent},
-	{path: 'main/:id/friends', component:FriendsViewComponent},
-	{path: 'main/:id/profile/:id', component:ProfileSelfComponent}
+	{path: 'main/chatrooms', component:ChatroomsViewComponent},
+	{path: 'main/direct_messages', component:DirectMessagesViewComponent},
+	{path: 'main/friends', component:FriendsViewComponent},
+	{path: 'main/profile', component:ProfileSelfComponent}
 ];
 
 @NgModule({

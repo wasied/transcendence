@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Gamecard } from 'src/app/models/game-card.model';
 import { GamecardService } from 'src/app/services/game-card.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-game-cards',
@@ -9,11 +10,11 @@ import { GamecardService } from 'src/app/services/game-card.service';
 })
 export class GameCardsComponent implements OnInit{
 
-  gameCards!: Gamecard[];
+  gameCards$!: Observable<Gamecard[]>;
 
   constructor (private gamecardService: GamecardService) {}
   
   ngOnInit(): void {
-    this.gameCards = this.gamecardService.gamecard;
+    this.gameCards$ = this.gamecardService.getAllGameCards();
   }
 }

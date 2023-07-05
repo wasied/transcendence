@@ -17,9 +17,9 @@ export class StatsComponent implements OnInit {
   constructor (private userService: UserService,
                private statsService: StatsService) {}
   
-  ngOnInit(): void {
-    this.users = this.userService.users;
-    this.stats = this.statsService.stats;
+  ngOnInit(): void { // wip !
+    // this.users = this.userService.users;
+    // this.stats = this.statsService.stats;
   }
 
   // matchUserIdAndStats() : number {

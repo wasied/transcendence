@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Chatroom } from 'src/app/models/chatroom.model';
 import { ChatroomsService } from 'src/app/services/chatrooms.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-chatrooms',
@@ -9,11 +10,11 @@ import { ChatroomsService } from 'src/app/services/chatrooms.service';
 })
 export class ChatroomsComponent implements OnInit {
   
-  chatrooms!: Chatroom[];
+  chatrooms$!: Observable<Chatroom[]>;
   
   constructor (private chatroomService: ChatroomsService) {}
   
   ngOnInit(): void {
-    this.chatrooms = this.chatroomService.chatrooms;
+    this.chatrooms$ = this.chatroomService.getAllChatrooms();
   }
 }

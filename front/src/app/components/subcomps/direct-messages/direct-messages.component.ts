@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DirectMessage } from 'src/app/models/direct-message.model';
 import { DirectMessagesSevice } from 'src/app/services/direct-messages.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-direct-messages',
@@ -9,11 +10,11 @@ import { DirectMessagesSevice } from 'src/app/services/direct-messages.service';
 })
 export class DirectMessagesComponent implements OnInit {
 
-  directMessages!: DirectMessage[];
+  directMessages$!: Observable<DirectMessage[]>;
 
   constructor (private directMessageService: DirectMessagesSevice) {}
   
   ngOnInit(): void {
-    this.directMessages = this.directMessageService.directMessages;
+    this.directMessages$ = this.directMessageService.getAllDirectMsgs();
   }
 }

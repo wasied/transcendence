@@ -10,7 +10,7 @@ export class AchievementsService {
 
 	constructor (private http: HttpClient) {};
 
-	private apiURL: string = '';
+	private apiURL: string = 'http://localhost:3000/achievements_lists';
 
 	getAchievementById(id: number) : Observable<Achievement> {
 		return this.http.get<Achievement>(`${this.apiURL}/${id}`);

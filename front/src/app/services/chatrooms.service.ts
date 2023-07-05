@@ -10,7 +10,7 @@ export class ChatroomsService {
 
 	constructor (private http: HttpClient) {};
 
-	private apiURL: string = ''; // change that
+	private apiURL: string = 'http://localhost:3000/chatrooms'; // change that
 
 	returnNewId() : Observable<number> {
 		return this.getAllChatrooms().pipe(

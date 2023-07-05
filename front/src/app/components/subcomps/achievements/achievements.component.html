@@ -1,4 +1,4 @@
-<div class="flex justify-center w-screen">
+<div *ngIf="achievements$ | async as achievements" class="flex justify-center w-screen">
 	<div class="w-screen w-3/5">
 		<app-achievement class="p-1" *ngFor="let achievementElem of achievements" 
 		[achievement]="achievementElem"></app-achievement>

@@ -11,7 +11,7 @@ export class DirectMessagesSevice {
 
 	constructor (private http: HttpClient) {};
 
-	private apiURL : string = ''; // add that
+	private apiURL : string = 'http://localhost:3000/chatrooms_messages'; // add that
 
 	returnNewId() : Observable<number> {
 		return this.getAllDirectMsgs().pipe(
