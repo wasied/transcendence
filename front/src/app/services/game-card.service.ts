@@ -1,27 +1,30 @@
 import { Injectable } from "@angular/core";
 import { catchError, forkJoin, map, Observable, of } from "rxjs";
 import { Gamecard } from "../models/game-card.model";
-import { Session } from "../models/session.model";
 import { User } from "../models/user.model";
-import { SessionsService } from "./sessions.service";
 import { UsersService } from "./users.service";
+import { Session } from "../models/session.model";
+import { SessionsUser } from "../models/sessions-user.model";
+import { SessionsUsersService } from "./sessions-users.service";
+import { SessionsService } from "./sessions.service";
 
 @Injectable({
 	providedIn: 'root'
 })
 export class GamecardService {
 
-	constructor (private sessionsService: SessionsService,
-				 private usersService: UsersService) {};
+	constructor (private usersService: UsersService,
+				 private sessionsService: SessionsService,
+				 private sessionsUsersService: SessionsUsersService) {};
 
-	getGameCards(): Observable<Gamecard[]> {
+	getAllGameCards(): Observable<Gamecard[]> {
 		return forkJoin({
-			users: this.usersService.getAllUsers(),
-			sessions: this.sessionsService.getAllSessions()
-		}).pipe(
-			map(({users, sessions}) => 
-				sessions.filter(session => session.ended === false)
-				.map(session => this.createGameCard(session, users))
+			users: this.usersService.getUsersInActiveSession(),
+			sessions: this.sessionsService.getActiveSessions(),
+			sessionsUsers: this.sessionsUsersService.getActiveParticipantsSessionUsers()
+		}).pipe(map(
+			({users, sessions, sessionsUsers}) => 
+				sessions.map(session => this.createGameCards(session, users, sessionsUsers))
 			),
 			catchError(error => {
 				console.error(error);
@@ -30,19 +33,26 @@ export class GamecardService {
 		);
 	}
 	
-	private createGameCard(session: Session, users: User[]): Gamecard
+	private createGameCards(session: Session, users: User[], sessionUsers: SessionsUser[]): Gamecard
 	{	
-		const firstPlayer = users.find(user => user.id === session.id);
-		const secondPlayer = users.find(user => user.id === session.id);
+		const relevantSessionUsers = sessionUsers.filter(sessionUser => sessionUser.session_id === session.id);
+		const usersInSession = relevantSessionUsers.map(sessionUser => {
+			const user = users.find(user => user.id === sessionUser.user_id);
 
-		if (!firstPlayer || !secondPlayer)
+			if (!user) {
+				throw new Error(`User with ID ${sessionUser.user_id} not found!`);
+			}
+			return user;
+		});
+
+		if (!usersInSession || usersInSession.length != 2)
 			throw new Error('user not found !'); // change the message
 
 		return new Gamecard(
-			firstPlayer.id,
-			secondPlayer.id,
-			firstPlayer.username,
-			secondPlayer.username
+			usersInSession[0].id,
+			usersInSession[1].id,
+			usersInSession[0].username,
+			usersInSession[1].username
 		);
 	}
 }

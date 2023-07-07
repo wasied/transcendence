@@ -27,25 +27,6 @@ export class FriendService
 		);
 	}
 
-	// addNewFriend(form: FormGroup) : Observable<Friend> {
-		
-	// 	const friendUsername: string = form.get('friendUsername')?.value;
-
-	// 	return this.returnNewId().pipe(
-	// 		switchMap(newId => {
-	// 			const NewFriend: Friend = {
-	// 				id: newId,
-	// 				userId: ,
-	// 				friendId: ,
-	// 				friendName: ,
-	// 				friendStatus: ,
-	// 				createdAt: new Date()
-	// 			};
-	// 			return this.http.post<>();
-	// 		})	
-	// 	);
-	// }
-
 	getFriendById(id: number) : Observable<Friend> {
 		return this.http.get<Friend>(`${this.apiURL}/${id}`);
 	}

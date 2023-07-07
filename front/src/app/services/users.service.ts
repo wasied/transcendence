@@ -29,6 +29,10 @@ export class UsersService {
 		return this.http.get<User[]>(`${this.apiURL}`);
 	}
 
+	getUsersInActiveSession() : Observable<User[]> {
+		return this.http.get<User[]>(`${this.apiURL}/active`);
+	}
+
 	getUserById(id: number) : Observable<User> {				
 		return this.http.get<User>(`${this.apiURL}/${id}`);
 	}
@@ -80,4 +84,6 @@ export class UsersService {
 	getUserId() : number {
 		return this.currentUserId;
 	}
+
+
 }

@@ -1,22 +1,20 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { User } from 'src/app/models/user.model';
-import { UserService } from 'src/app/services/users.service';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css']
 })
-export class SignInComponent implements OnInit, OnDestroy {
+export class SignInComponent implements OnInit {
 
   signInForm!: FormGroup;
 
   constructor (private formBuilder: FormBuilder,
                private router: Router,
-               private userService: UserService) {};
+               private usersService: UsersService) {};
   
   ngOnInit(): void {
     // trigger form
@@ -26,20 +24,15 @@ export class SignInComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngOnDestroy(): void {
-    
-  }
-
   onSubmitForm() : void {
     const username: string = this.signInForm.get('username')?.value;
-    userHasSignedIn$: Observable<User>; 
 
     // retrieve id corresponding to username
     if (!username)
       throw console.error('non existing username');
     console.log(username); // debug
-    this.userService.getUserByUsername(username);
-    this.userService.storeUserId();
+    this.usersService.getUserByUsername(username);
+    this.usersService.storeUserId();
     this.router.navigateByUrl('/main');
   }
 }

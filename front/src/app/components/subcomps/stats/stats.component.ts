@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user.model';
-import { UserService } from 'src/app/services/users.service';
+import { UsersService } from 'src/app/services/users.service';
 import { Stat } from 'src/app/models/stat.model';
 import { StatsService } from 'src/app/services/stats.service';
 
@@ -14,7 +14,7 @@ export class StatsComponent implements OnInit {
   users!: User[];
   stats!: Stat[];
 
-  constructor (private userService: UserService,
+  constructor (private usersService: UsersService,
                private statsService: StatsService) {}
   
   ngOnInit(): void { // wip !

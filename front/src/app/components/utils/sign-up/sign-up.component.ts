@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { UserService } from 'src/app/services/users.service';
+import { UsersService } from 'src/app/services/users.service';
 import { User } from 'src/app/models/user.model';
 import { Observable, map } from 'rxjs';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ export class SignUpComponent implements OnInit {
   signUpVals$!: Observable<User>; // for preview
   
   constructor (private formBuilder: FormBuilder,
-               private userService: UserService,
+               private usersService: UsersService,
                private router: Router) {};
   
   ngOnInit(): void {
@@ -38,7 +38,7 @@ export class SignUpComponent implements OnInit {
   // should be temporary to store values in an array, updating the array
   onSubmitForm() : void {  
     // add user to service, triggers new component
-    this.userService.addNewUser(this.signUpForm).subscribe({
+    this.usersService.addNewUser(this.signUpForm).subscribe({
       next: response => {
         this.router.navigate(['/main', response.id]);  
         console.log('User created succesfully', response);
