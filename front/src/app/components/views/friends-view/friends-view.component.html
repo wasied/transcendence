@@ -1,13 +1,49 @@
-<app-header></app-header>
-<div class="bg-black text-white">
-	<div class="flex flex-col items-center justify-center text-5xl p-8">
-		<h1>FRIENDS</h1>
-	</div>
-	<div class=" flex items-center justify-center p-8">
-		<p>add searchbar there</p>
-	</div>
-	<div class ="flex items-center justify-center p-8">
-		<p>add friend button there</p>
-	</div>
+<div
+  class="flex flex-col justify-center items-center text-gray-200 bg-black mx-auto max-w-5xl"
+>
+  <div class="mt-4 flex flex-col items-center space-y-4">
+    <div class="max-w-3xl inline-flex items-center">
+      <hr class="w-screen m-8" />
+      <span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+        >FRIENDS</span
+      >
+    </div>
+    <ul class="grid lg:grid-cols-3 grid-col-1 gap-4 lg:w-full w-5/6 mx-auto">
+      <li
+        *ngFor="let friend of friends"
+        class="flex items-center space-x-4 rounded text-black bg-gray-200 hover:scale-[102%] lghover:scale-105 transition duration-75 cursor-pointer"
+      >
+        <div class="bg-[#ffc93b] p-2 rounded-l">
+          <ng-container *ngIf="friend.profile_picture_link; else noProfile">
+            <img
+              [src]="friend.profile_picture_link"
+              alt="Profile Picture"
+              class="w-12 h-12 object-fill shadow-md rounded-full hover:shadow-inner"
+            />
+          </ng-container>
+          <ng-template #noProfile>
+            <i
+              class="fa-solid fa-user w-auto h-auto shadow-md text-zinc-800 bg-gray-200 p-4 rounded-full hover:shadow-inner"
+            ></i>
+          </ng-template>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-semibold">{{ friend.name }}</span>
+          <div class="flex items-center text-sm space-x-1">
+            <span
+              class="-mt-0.5"
+              [ngClass]="{
+                'text-green-600': friend.online,
+                'text-red-600': !friend.online
+              }"
+              >●</span
+            >
+            <span class="text-gray-800">{{
+              friend.online ? "online" : "offline"
+            }}</span>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
-<app-friends></app-friends>

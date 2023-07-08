@@ -205,18 +205,33 @@
 	"friends": [
 	  {
 		"id": 1,
-		"user_id1": 1,
-		"user_id2": 2
+		"name": "user1",
+		"online": true,
+		"profile_picture_link" : null
 	  },
 	  {
 		"id": 2,
-		"user_id1": 1,
-		"user_id2": 3
+		"name": "user2",
+		"online": false,
+		"profile_picture_link" : "https://upload.wikimedia.org/wikipedia/commons/a/a7/Meeting_M%C3%A9lenchon_Toulouse_-_2017-04-16_-_Jean-Luc_M%C3%A9lenchon_-_41_%28cropped_2%29.jpg"
 	  },
 	  {
 		"id": 3,
-		"user_id1": 2,
-		"user_id2": 3
+		"name": "user3",
+		"online": true,
+		"profile_picture_link" : null
+	  },
+	  {
+		"id": 4,
+		"name": "user4",
+		"online": true,
+		"profile_picture_link" : null
+	  },
+	  {
+		"id": 5,
+		"name": "user5",
+		"online": true,
+		"profile_picture_link" : "https://upload.wikimedia.org/wikipedia/commons/7/72/Emmanuel_Macron_June_2021_%28cropped%29.jpg"
 	  }
 	],
 	"blocked": [
