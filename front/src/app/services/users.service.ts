@@ -84,6 +84,4 @@ export class UsersService {
 	getUserId() : number {
 		return this.currentUserId;
 	}
-
-
 }

@@ -10,13 +10,22 @@ export class AchievementsService {
 
 	constructor (private http: HttpClient) {};
 
-	private apiURL: string = 'http://localhost:3000/achievements_lists';
+	private apiBaseURL: string = 'http://localhost:3000';
 
 	getAchievementById(id: number) : Observable<Achievement> {
-		return this.http.get<Achievement>(`${this.apiURL}/${id}`);
+		return this.http.get<Achievement>(`${this.apiBaseURL}/${id}`);
 	}
 
 	getAllAchievements() : Observable<Achievement[]> {
-		return this.http.get<Achievement[]>(`${this.apiURL}`);
+		return this.http.get<Achievement[]>(`${this.apiBaseURL}`);
+	}
+
+	getUserAchievements(userId: number) : Observable<Achievement[]> {
+
+		const achievementsOfUsers$ : Observable<Achievement[]> = 
+		this.http.get<Achievement[]>(`${this.apiBaseURL}/users_achievements?userId=${userId}`);
+
+		const getAllAchievements$: Observable<Achievement[]> =
+		this.http.get<Achievement[]>(``);
 	}
 }
