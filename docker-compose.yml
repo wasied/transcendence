@@ -1,0 +1,21 @@
+version: '3'
+services:
+  db:
+    build: ./db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    ports:
+      - "8000:8000"
+volumes:
+  db_data:
+
