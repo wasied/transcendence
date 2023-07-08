@@ -18,7 +18,6 @@ export class FriendsViewComponent {
   
   ngOnInit(): void {
         this.getFriends();
-        console.log(this.friends)
       }
   getFriends(): void {
     this.http.get<any>(this.apiURL).subscribe(friends => {
