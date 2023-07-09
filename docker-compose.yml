@@ -1,21 +1,59 @@
-version: '3'
+version: '3.8'
 services:
-  db:
-    build: ./db
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-  backend:
-    build: ./backend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
   frontend:
-    build: ./frontend
+    depends_on:
+      - backend
+    container_name: client
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: node:18.14
     ports:
-      - "8000:8000"
-volumes:
-  db_data:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - REACT_APP_URL=${APP_URL}
+      - REACT_APP_PORT_FRONT=${FRONTEND_PORT}
+      - REACT_APP_PORT_BACK=${BACKEND_PORT}
 
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: node:18.14
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    volumes:
+      - ./backend:/app
+    environment:
+      - APP_URL=${APP_URL}
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - BACKEND_PORT=${BACKEND_PORT}
+      - AUTH_42_REDIRECT_URI=${AUTH_42_REDIRECT_URI}
+      - AUTH_42_CLIENT_KEY=${AUTH_42_CLIENT_KEY}
+      - AUTH_42_SECRET_KEY=${AUTH_42_SECRET_KEY}
+      - POSTGRES_DB_HOST=${POSTGRES_DB_HOST}
+      - POSTGRES_DB_PORT=${POSTGRES_DB_PORT}
+      - POSTGRES_DB_USER=${POSTGRES_DB_USER}
+      - POSTGRES_DB_PASS=${POSTGRES_DB_PASS}
+      - POSTGRES_DB_NAME=${POSTGRES_DB_NAME}
+
+  postgres:
+    container_name: postegres
+    image: postgres:14.1
+    restart: always
+    hostname: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_DB_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_DB_PASS}
+      - POSTGRES_DB=${POSTGRES_DB_NAME}
+    ports:
+      - "${POSTGRES_DB_PORT}:${POSTGRES_DB_PORT}"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres:
+  name: null
