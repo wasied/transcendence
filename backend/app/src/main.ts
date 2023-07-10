@@ -4,6 +4,6 @@ import * as session from 'express-session';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
-	await app.listen(3000);
+	await app.listen((process.env.BACKEND_API_PORT || 3000));
 }
 bootstrap();

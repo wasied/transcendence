@@ -1,5 +1,6 @@
 version: '3.8'
 services:
+
   frontend:
     depends_on:
       - backend
@@ -8,14 +9,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     image: node:18.14
-    ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:
       - ./frontend:/app
     environment:
       - REACT_APP_URL=${APP_URL}
-      - REACT_APP_PORT_FRONT=${FRONTEND_PORT}
-      - REACT_APP_PORT_BACK=${BACKEND_PORT}
+      - REACT_APP_PORT_BACK=${BACKEND_API_PORT}
 
   backend:
     container_name: backend
@@ -24,13 +22,12 @@ services:
       dockerfile: Dockerfile
     image: node:18.14
     ports:
-      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+      - "${BACKEND_API_PORT}:${BACKEND_API_PORT}"
     volumes:
       - ./backend:/app
     environment:
       - APP_URL=${APP_URL}
-      - FRONTEND_PORT=${FRONTEND_PORT}
-      - BACKEND_PORT=${BACKEND_PORT}
+      - BACKEND_API_PORT=${BACKEND_API_PORT}
       - AUTH_42_REDIRECT_URI=${AUTH_42_REDIRECT_URI}
       - AUTH_42_CLIENT_KEY=${AUTH_42_CLIENT_KEY}
       - AUTH_42_SECRET_KEY=${AUTH_42_SECRET_KEY}
