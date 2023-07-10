@@ -1,25 +1,100 @@
-<div class="bg-black min-h-screen m-0">
-	<div>
-		<app-header></app-header>
-	</div>
-	<div class="pt-32">
-		<div class="">
-			<app-info-security></app-info-security>
-		</div>
-		<div>
-	
-		</div>
-		<div>
-	
-		</div>
-		<div class="w-full flex justify-center p-8">
-			<div class="flex items-center w-4/5 border bg-white"></div>
-		</div>
-		<div class="">
-			<app-friends></app-friends>
-		</div>
-		<div class="">
-			<app-achievements></app-achievements>
-		</div>
-	</div>	
+<div
+  class="flex flex-col justify-center items-center text-center text-gray-200 bg-black mx-auto max-w-5xl"
+>
+  <div class="mt-4 flex flex-col items-center space-y-4">
+    <div class="max-w-3xl inline-flex items-center w-full">
+      <hr class="w-screen m-8" />
+      <span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+        >PROFILE</span
+      >
+    </div>
+    <div>
+      <i
+        class="fa-solid fa-user w-auto h-auto shadow-md text-zinc-800 bg-gray-200 p-4 rounded-full hover:shadow-inner"
+      ></i>
+    </div>
+    <span>Player_username</span>
+    <button
+      class="bg-[#ffc93b] py-1 px-8 rounded-full text-black hover:bg-white"
+    >
+      Game History
+    </button>
+  </div>
+
+  <div class="mt-4">
+    <div class="max-w-3xl inline-flex items-center w-full">
+      <hr class="w-screen m-8" />
+      <span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+        >INFORMATION AND SECURITY</span
+      >
+    </div>
+    <div class="max-w-2xl mx-auto">
+      <ul class="flex flex-col items-center space-y-4">
+        <li class="flex flex-row justify-between items-center w-3/4 mx-auto">
+          <span>Enable Two-Factor Authentification</span>
+          <input
+            id="link-checkbox"
+            type="checkbox"
+            value=""
+            class="w-4 h-4 rounded accent-[#ffc93b] cursor-pointer"
+          />
+        </li>
+        <li class="flex flex-row justify-between items-center w-3/4 mx-auto">
+          <span>Password</span>
+          <a class="text-[#ffc93b] underline" href="">Edit</a>
+        </li>
+        <li class="flex flex-row justify-between items-center w-3/4 mx-auto">
+          <span>Profile Picture</span>
+          <a class="text-[#ffc93b] underline" href="">Edit</a>
+        </li>
+        <li class="flex flex-row justify-between items-center w-3/4 mx-auto">
+          <span>Phone Number</span>
+          <a class="text-[#ffc93b] underline" href="">Edit</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <div class="max-w-3xl inline-flex items-center w-full">
+      <hr class="w-screen m-8" />
+      <span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+        >STATS</span
+      >
+    </div>
+    <div class="max-w-2xl mx-auto">
+      <ul class="flex flex-col items-center">
+        <li
+          class="flex flex-row justify-between items-center w-3/4 mx-auto border-t border-white border-opacity-60 py-1"
+        >
+          <span>Wins</span>
+          <span>{{ user_stats.wins }}</span>
+        </li>
+        <li
+          class="flex flex-row justify-between items-center w-3/4 mx-auto border-t border-white border-opacity-60 py-1"
+        >
+          <span>Defeats</span>
+          <span>{{ user_stats.defeats }}</span>
+        </li>
+        <li
+          class="flex flex-row justify-between items-center w-3/4 mx-auto border-t border-white border-opacity-60 py-1"
+        >
+          <span>Games played</span>
+          <span>{{ user_stats.games_played }}</span>
+        </li>
+        <li
+          class="flex flex-row justify-between items-center w-3/4 mx-auto border-t border-white border-opacity-60 py-1"
+        >
+          <span>Ratio</span>
+          <span>{{ user_stats.ratio }}</span>
+        </li>
+        <li
+          class="flex flex-row justify-between items-center w-3/4 mx-auto border-y border-white border-opacity-60 py-1"
+        >
+          <span>Total Time Playing</span>
+          <span>{{ user_stats.total_time }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

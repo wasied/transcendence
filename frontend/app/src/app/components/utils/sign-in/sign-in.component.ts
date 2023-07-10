@@ -32,7 +32,7 @@ export class SignInComponent implements OnInit {
       throw console.error('non existing username');
     console.log(username); // debug
     this.usersService.getUserByUsername(username);
-    this.usersService.storeUserId();
+    this.usersService.storeUserId(1); //debug
     this.router.navigateByUrl('/main');
   }
 }
