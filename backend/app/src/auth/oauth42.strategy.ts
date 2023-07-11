@@ -11,7 +11,7 @@ export class OAuth42Strategy extends PassportStrategy(Strategy, 'oauth42') {
       tokenURL: 'https://api.intra.42.fr/oauth/token',
       clientID: configService.get('AUTH_42_CLIENT_KEY'),
       clientSecret: configService.get('AUTH_42_SECRET_KEY'),
-      callbackURL: configService.get('AUTH_42_REDIRECT_URI'),
+      callbackURL: configService.get('AUTH_42_RETURN_URI'),
       scope: 'public'
     });
   }
