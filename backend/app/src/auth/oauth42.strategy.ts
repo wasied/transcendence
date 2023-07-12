@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-oauth2';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OAuth42Strategy extends PassportStrategy(Strategy, 'oauth42') {
-  constructor(private configService: ConfigService) {
+  constructor() {
     super({
-      authorizationURL: configService.get('AUTH_42_AUTH_URL'),
+      authorizationURL: process.env.AUTH_42_AUTH_URL,
       tokenURL: 'https://api.intra.42.fr/oauth/token',
-      clientID: configService.get('AUTH_42_CLIENT_KEY'),
-      clientSecret: configService.get('AUTH_42_SECRET_KEY'),
-      callbackURL: configService.get('AUTH_42_RETURN_URI'),
+      clientID: process.env.AUTH_42_CLIENT_KEY,
+      clientSecret: process.env.AUTH_42_SECRET_KEY,
+      callbackURL: process.env.AUTH_42_RETURN_URI,
       scope: 'public'
     });
   }
