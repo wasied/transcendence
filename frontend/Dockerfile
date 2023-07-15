@@ -15,5 +15,4 @@ COPY ./nginx-custom.conf /etc/nginx/conf.d/default.conf
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-RUN npm run start
 ENTRYPOINT ["/entrypoint.sh"]

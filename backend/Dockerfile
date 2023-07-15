@@ -1,6 +1,7 @@
 FROM node:18.14
 
 WORKDIR /app
+
 COPY ./app/package*.json ./
 RUN npm ci
 COPY ./app ./
@@ -21,4 +22,4 @@ RUN echo "POSTGRES_DB_NAME=${POSTGRES_DB_NAME}" >> .env
 
 # Run NestJS
 RUN npm run build
-RUN npm run start:prod
+CMD ["npm", "run", "start:prod"]
