@@ -1,13 +1,21 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Controller, Get, Redirect, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
 	constructor(private authService: AuthService) {}
 
-	@Get('login') // Get ? It depends on the way signIn() works
-	// Connect to URI /auth/login to log in with signIn() thus with Oauth2
-	signIn(@Session() session) {
-		return this.authService.signIn();
+	@Get('login')
+	@Redirect()
+	async signIn() {
+		const url = await this.authService.getSignInURL();
+		return { url: url };
+	}
+
+	@Get('callback')
+	@UseGuards(AuthGuard('oauth42'))
+	callback(@Req() req) {
+		// At this point, the user is authenticated and we can access to his information via req.user
 	}
 }
