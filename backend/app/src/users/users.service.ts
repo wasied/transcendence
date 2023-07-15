@@ -72,7 +72,7 @@ export class UsersService {
 		const result = client.query(
 			"DELETE	FROM blocked	\
 					WHERE id = $1",
-			[block_id]
+			[blocking_id]
 		);
 	}
 }

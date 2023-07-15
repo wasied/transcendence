@@ -26,7 +26,7 @@ export class ChatService {
 
 	create(chat: Chat): void {
 		var result;
-		if (chat.private) {
+		if (chat.hidden) {
 			result = client.query(
 				"INSERT	INTO chatrooms(name, owner_uid, private, password)	\
 						VALUES($1, $2, $3, $4);",
@@ -58,7 +58,7 @@ export class ChatService {
 							WHERE id = $2;				\
 				)										\
 			END IF;",
-			[id, chat_user_id];
+			[id, chat_user_id]
 		);
 	}
 }

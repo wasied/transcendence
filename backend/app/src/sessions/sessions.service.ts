@@ -19,6 +19,8 @@ export class SessionsService {
 						WHERE id = $1;",
 			[session_id]
 		);
+
+		return result;
 	}
 
 	create(automatching: boolean, customization: boolean): void {

@@ -1,7 +1,8 @@
-import { Controller, Body, Post, Put } from '@nestjs/common';
+import { Controller, Body, Param, Get, Post, Put } from '@nestjs/common';
 import { Users } from './users';
 import { User } from './user';
 import { Sessions } from '../sessions/sessions';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
@@ -41,11 +42,11 @@ export class UsersController {
 
 	@Post('block')
 	async create(@Body('blocker_uid') blocker_uid: number, @Body('blocked_uid') blocked_uid: number): Promise<void> {
-		this.blockService.create(blocker_uid, blocked_uid);
+		this.usersService.create(blocker_uid, blocked_uid);
 	}
 
 	@Delete('block')
 	async delete(@Param('blocking_id') blocking_id: number): Promise<void> {
-		this.blockService.delete(blocking_id);
+		this.usersService.delete(blocking_id);
 	}
 }

@@ -1,5 +1,6 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Body, Param, Get, Post, Put } from '@nestjs/common';
 import { Sessions } from './sessions';
+import { SessionsService } from './sessions.service';
 
 @Controller('sessions')
 export class SessionsController {
