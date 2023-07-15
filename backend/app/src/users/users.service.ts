@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Users } from './users';
 import { User } from './user';
 import { Sessions } from '../sessions/sessions';
+import { dbClient } from '../db';
 
 // Store ts-postgres Client instance somewhere
 
 @Injectable()
 export class UsersService {
 	findAll(): Users {
-		const result = client.query(
+		const result = dbClient.query(
 			"SELECT *	FROM users;"
 		);
 
@@ -16,7 +17,7 @@ export class UsersService {
 	}
 
 	findOneByUsername(username: string): User {
-		const result = client.query(
+		const result = dbClient.query(
 			"SELECT *	FROM users	\
 						WHERE username = $1;",
 			[username]
@@ -26,7 +27,7 @@ export class UsersService {
 	}
 
 	findOneById(user_id: number): User {
-		const result = client.query(
+		const result = dbClient.query(
 			"SELECT *	FROM users	\
 						WHERE id = $1;",
 			[user_id]
@@ -36,7 +37,7 @@ export class UsersService {
 	}
 
 	findUserSessions(user_id: number): Sessions {
-		const result = client.query(
+		const result = dbClient.query(
 			"SELECT *	FROM sessions											\
 						WHERE id = (SELECT session_uid	FROM sessions_users		\
 														WHERE user_uid = $1		\
@@ -49,7 +50,7 @@ export class UsersService {
 	}
 
 	create(user: User): void {
-		const result = client.query(
+		const result = dbClient.query(
 			"INSERT	INTO users(username, a2f_key, profile_image_url, phone_number)	\
 					VALUES();"
 		);
@@ -61,7 +62,7 @@ export class UsersService {
 	/*** Block/Unblock users ***/
 
 	block(blocker_uid: number, blocked_uid: number): void {
-		const result = client.query(
+		const result = dbClient.query(
 			"INSERT	INTO blocked(blocker_uid, blocked_uid)	\
 					VALUES($1, $2);",
 			[blocker_uid, blocked_uid]
@@ -69,7 +70,7 @@ export class UsersService {
 	}
 
 	unblock(blocking_id: number): void {
-		const result = client.query(
+		const result = dbClient.query(
 			"DELETE	FROM blocked	\
 					WHERE id = $1",
 			[blocking_id]

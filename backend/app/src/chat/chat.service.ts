@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Chat } from './chat';
 import { Chats } from './chats';
+import { dbClient } from '../db';
 
 // Store ts-postgres Client instance somewhere
 
 @Injectable()
 export class ChatService {
 	findAll(): Chats {
-		const result = client.query(
+		const result = dbClient.query(
 			"SELECT *	FROM chatrooms;"
 		);
 
@@ -15,7 +16,7 @@ export class ChatService {
 	}
 
 	findOne(id: number): Chat {
-		const result = client.query(
+		const result = dbClient.query(
 			"SELECT *	FROM chatrooms	\
 						WHERE id = $1;",
 			[id]
@@ -27,14 +28,14 @@ export class ChatService {
 	create(chat: Chat): void {
 		var result;
 		if (chat.hidden) {
-			result = client.query(
+			result = dbClient.query(
 				"INSERT	INTO chatrooms(name, owner_uid, private, password)	\
 						VALUES($1, $2, $3, $4);",
 				[]
 			);
 		}
 		else {
-			result = client.query(
+			result = dbClient.query(
 				"INSERT	INTO chatrooms(name, owner_uid, private)	\
 						VALUES($1, $2, $3);",
 				[]
@@ -43,12 +44,12 @@ export class ChatService {
 	}
 
 	update(chat: Chat): void {
-		const result = client.query(
-		);
+//		const result = dbClient.query(
+//		);
 	}
 
 	delete(id: number, chat_user_id: number): void {
-		const result = client.query( // We should manage access to calls to API and delete the IF
+		const result = dbClient.query( // We should manage access to calls to API and delete the IF
 			"IF (										\
 				SELECT admin	FROM chatrooms_users	\
 								WHERE id = $1;			\

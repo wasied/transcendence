@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Users } from '../users';
+import { dbClient } from '../../db';
 
 @Injectable()
 export class FriendsService {
 	findAll(user_id): Users {
-		const result = client.query(
+		const result = dbClient.query(
 			"SELECT *	FROM friends	\
 						WHERE user_uid1 = $1;",
 			[user_id]
@@ -14,7 +15,7 @@ export class FriendsService {
 	}
 
 	whoIsOnline(user_id): Users {
-		const result = client.query(
+		const result = dbClient.query(
 			"SELECT *	FROM friends	\
 						WHERE user_uid1 = $1;",
 			{streams: {"online": socket}} // Add socket
@@ -24,7 +25,7 @@ export class FriendsService {
 	}
 
 	create(user_uid1: number, user_uid2: number): void {
-		const result = client.query(
+		const result = dbClient.query(
 			"INSERT	INTO friends(user_uid1, user_uid2)	\
 					VALUES($1, $2);",
 			[user_uid1, user_uid2]
@@ -32,7 +33,7 @@ export class FriendsService {
 	}
 
 	delete(friendship_id: number): void {
-		const result = client.query(
+		const result = dbClient.query(
 			"DELETE	FROM friends	\
 					WHERE id = $1;",
 			[friendship_id]

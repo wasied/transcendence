@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Sessions } from './sessions';
+import { dbClient } from '../db';
 
 @Injectable()
 export class SessionsService {
 	findAllJoinable(): Sessions {
-		const result = client.query(
+		const result = dbClient.query(
 			"SELECT *	FROM sessions		\
 						WHERE ended = false;"
 		);
@@ -13,7 +14,7 @@ export class SessionsService {
 	}
 
 	findOne(session_id: number): Sessions {
-		const result = client.query(
+		const result = dbClient.query(
 			"SELECT *	FROM sessions	\
 						WHERE id = $1;",
 			[session_id]
@@ -23,7 +24,7 @@ export class SessionsService {
 	}
 
 	create(automatching: boolean, customization: boolean): void {
-		const result = client.query(
+		const result = dbClient.query(
 			"INSERT	INTO sessions(automatching, customization, ended)	\
 					VALUES($1, $2, false);",
 			[automatching, customization]
@@ -31,7 +32,7 @@ export class SessionsService {
 	}
 
 	update(id: number, ended: boolean, winner_uid: number): void {
-		const result = client.query(
+		const result = dbClient.query(
 			"UPDATE	sessions		\
 				SET	ended = $1,		\
 					winner_uid = $2	\
