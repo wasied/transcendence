@@ -51,7 +51,7 @@ export class UsersService {
 	create(user: User): void {
 		const result = client.query(
 			"INSERT	INTO users(username, a2f_key, profile_image_url, phone_number)	\
-					VALUES();
+					VALUES();"
 		);
 	}
 

@@ -7,8 +7,8 @@ export class SessionsController {
 	constructor(private readonly sessionsService: SessionsService) {}
 
 	@Get()
-	async findAllPublicJoinable(): Promise<Sessions> {
-		return this.sessionsService.findAllPublic();
+	async findAllJoinable(): Promise<Sessions> {
+		return this.sessionsService.findAllJoinable();
 	}
 
 	@Get(':id')

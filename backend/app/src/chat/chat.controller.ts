@@ -1,7 +1,7 @@
 import { Controller, Body, Param, Get, Post, Put, Delete } from '@nestjs/common';
 import { Chat } from './chat';
 import { Chats } from './chats';
-import { ChatService } from './chatService';
+import { ChatService } from './chat.service';
 
 @Controller('chat')
 export class ChatController {
@@ -14,7 +14,7 @@ export class ChatController {
 
 	@Get(':id')
 	async findOne(@Param('id') id: number): Promise<Chat> {
-		return this.chatService.find(id);
+		return this.chatService.findOne(id);
 	}
 
 	@Post()
@@ -29,6 +29,6 @@ export class ChatController {
 
 	@Delete(':id')
 	async delete(@Body('id') id: number, chat_user_id: number): Promise<void> {
-		this.chatService.delete(id);
+		this.chatService.delete(id, chat_user_id);
 	}
 }

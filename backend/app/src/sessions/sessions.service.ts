@@ -3,11 +3,10 @@ import { Sessions } from './sessions';
 
 @Injectable()
 export class SessionsService {
-	findAllPublicJoinable(): Sessions {
+	findAllJoinable(): Sessions {
 		const result = client.query(
-			"SELECT *	FROM sessions			\
-						WHERE hidden = false	\
-						AND ended = false;"
+			"SELECT *	FROM sessions		\
+						WHERE ended = false;"
 		);
 
 		return result;
