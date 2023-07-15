@@ -4,10 +4,12 @@ import { Injectable } from '@nestjs/common';
 export class AuthService {
 	constructor() {}
 
-	@Redirect('https://intra.42.fr/...') // To redirect request to intra Oauth2 link
-	async	signIn(): Promise<any> {
-		// Implement Oauth2 authentication here
+	async getSignInURL(): Promise<string> {
+		const redirectUri = process.env.AUTH_42_RETURN_URI;
+		const clientId = process.env.AUTH_42_CLIENT_KEY;
+		const authUrl = process.env.AUTH_42_AUTH_URL;
 
-		// Generate and return JWT or session with access_token
+		const oauthUrl = `${authUrl}?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
+		return oauthUrl;
 	}
 }
