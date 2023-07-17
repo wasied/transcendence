@@ -1,5 +1,5 @@
 import { Controller, Body, Param, Get, Post, Put } from '@nestjs/common';
-import { Sessions } from './sessions';
+import { Session } from './session';
 import { SessionsService } from './sessions.service';
 
 @Controller('sessions')
@@ -7,12 +7,12 @@ export class SessionsController {
 	constructor(private readonly sessionsService: SessionsService) {}
 
 	@Get()
-	async findAllJoinable(): Promise<Sessions> {
+	async findAllJoinable(): Promise<Session[]> {
 		return this.sessionsService.findAllJoinable();
 	}
 
 	@Get(':id')
-	async findOne(@Param('id') id: number): Promise<Sessions> {
+	async findOne(@Param('id') id: number): Promise<Session[]> {
 		return this.sessionsService.findOne(id);
 	}
 

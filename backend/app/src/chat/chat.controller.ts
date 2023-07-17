@@ -8,12 +8,12 @@ export class ChatController {
 	constructor(private readonly chatService: ChatService) {}
 
 	@Get()
-	async findAll(): Promise<Chats> {
+	async findAll(): Promise<Chat[]> {
 		return this.chatService.findAll();
 	}
 
 	@Get(':id')
-	async findOne(@Param('id') id: number): Promise<Chat> {
+	async findOne(@Param('id') id: number): Promise<Chat[]> {
 		return this.chatService.findOne(id);
 	}
 

@@ -1,7 +1,6 @@
 import { Controller, Body, Param, Get, Post, Put, Delete } from '@nestjs/common';
-import { Users } from './users';
 import { User } from './user';
-import { Sessions } from '../sessions/sessions';
+import { Session } from '../sessions/session';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -9,22 +8,22 @@ export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@Get()
-	async findAll(): Promise<Users> {
+	async findAll(): Promise<User[]> {
 		return this.usersService.findAll();
 	}
 
 	@Get('/username/:username')
-	async findOneByUsername(@Param('username') username: string): Promise<User> {
+	async findOneByUsername(@Param('username') username: string): Promise<User[]> {
 		return this.usersService.findOneByUsername(username);
 	}
 
 	@Get(':id')
-	async findOneById(@Param('id') id: number): Promise<User> {
+	async findOneById(@Param('id') id: number): Promise<User[]> {
 		return this.usersService.findOneById(id);
 	}
 
 	@Get('sessions/:id')
-	async findUserSessions(@Param('id') id: number): Promise<Sessions> {
+	async findUserSessions(@Param('id') id: number): Promise<Session[]> {
 		return this.usersService.findUserSessions(id);
 	}
 
