@@ -46,16 +46,16 @@ export class ChatService {
 		var result;
 		if (chat.hidden) {
 			result = dbClient.query(
-				`INSERT	INTO chatrooms(name, owner_uid, private, password)
+				`INSERT	INTO chatrooms(name, owner_uid, hidden, password)
 						VALUES($1, $2, $3, $4);`,
-				[]
+				[chat.name, chat.owner_uid, chat.hidden, chat.password]
 			);
 		}
 		else {
 			result = dbClient.query(
-				`INSERT	INTO chatrooms(name, owner_uid, private)
+				`INSERT	INTO chatrooms(name, owner_uid, hidden)
 						VALUES($1, $2, $3);`,
-				[]
+				[chat.name, chat.owner_uid, chat.hidden]
 			);
 		}
 	}
