@@ -96,6 +96,28 @@ export class UsersService {
 	update(user: User): void {
 	}
 
+	findStates(user_ids: number[]): void {
+		// Get users state from db and if one is online, check if he is in a game and return online, offline, or in a game
+	}
+
+	logIn(user_id: number): void {
+		const queryResult = dbClient.query(
+			`UPDATE	users
+					SET 	state=$1
+					WHERE	id=$2;`,
+			["online", user_id]
+		);
+	}
+
+	logOut(user_id: number): void {
+		const queryResult = dbClient.query(
+			`UPDATE	users
+					SET 	state=$1
+					WHERE	id=$2;`,
+			["offline", user_id]
+		);
+	}
+
 	/*** Block/Unblock users ***/
 
 	block(blocker_uid: number, blocked_uid: number): void {

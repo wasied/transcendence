@@ -17,5 +17,6 @@ export class AuthController {
 	@UseGuards(AuthGuard('oauth42'))
 	callback(@Req() req) {
 		// At this point, the user is authenticated and we can access to his information via req.user
+		// call usersService.logIn()
 	}
 }
