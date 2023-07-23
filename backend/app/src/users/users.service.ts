@@ -112,7 +112,7 @@ export class UsersService {
 	logOut(user_id: number): void {
 		const queryResult = dbClient.query(
 			`UPDATE	users
-					SET 	state=$1
+					SET		state=$1
 					WHERE	id=$2;`,
 			["offline", user_id]
 		);

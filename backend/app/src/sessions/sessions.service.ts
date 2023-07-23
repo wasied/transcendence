@@ -49,13 +49,46 @@ export class SessionsService {
 		);
 	}
 
-	update(id: number, ended: boolean, winner_uid: number): void {
+	update(session: Session): void {
+i	}
+
+	join(session_id: number, user_id: number, spectator: boolean): void {
+		if (spectator) {
+			const result = dbClient.query(
+				`INSERT	INTO sessions_users(user_uid, session_uid, spectator)
+						VALUES($1, $2, $3);
+				UPDATE	users
+						SET state = 'Spectating a game'
+						WHERE id = $1;`,
+				[user_id, session_id, spectator]
+			);
+		}
+		else {
+			const result = dbClient.query(
+				`INSERT	INTO sessions_users(user_uid, session_uid, spectator)
+						VALUES($1, $2, $3);
+				UPDATE	users
+						SET state = 'Playing a game'
+						WHERE id = $1;`,
+				[user_id, session_id, spectator]
+			);
+		}
+	}
+
+	end(session_id: number, winner_uid: number): void {
 		const result = dbClient.query(
 			`UPDATE	sessions
-				SET	ended = $1,
-					winner_uid = $2
-			WHERE	id = $3;`,
-			[ended, winner_uid, id]
-		);
+					SET		ended = true,
+							winner_uid = $1
+					WHERE	id=$2;
+			UPDATE	users
+					SET		state = 'online'
+					WHERE	id IN(
+						SELECT user_uid	FROM sessions_users
+										WHERE session_uid = $2
+										AND spectator = false;
+					);`
+		);,
+		[winner_uid, session_id]
 	}
 }

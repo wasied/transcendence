@@ -16,7 +16,7 @@ async function createTables() {
             id SERIAL PRIMARY KEY,
             username VARCHAR(255) UNIQUE NOT NULL,
             password VARCHAR(255) NOT NULL,
-            state VARCHAR(9) NOT NULL,
+            state VARCHAR(255) NOT NULL,
             a2f_key VARCHAR(255),
             profile_image_url VARCHAR(255),
             phone_number VARCHAR(255) UNIQUE,
