@@ -15,6 +15,8 @@ services:
       - NGINX_FRONT_PORT=${NGINX_FRONT_PORT}
 
   backend:
+    depends_on:
+      - postgres
     build:
       context: ./backend
       dockerfile: Dockerfile

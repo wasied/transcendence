@@ -1,29 +1,29 @@
-import { Controller, Body, Post, Put } from '@nestjs/common';
-import { Users } from './users';
+import { Controller, Body, Param, Get, Post, Put, Delete } from '@nestjs/common';
 import { User } from './user';
-import { Sessions } from '../sessions/sessions';
+import { Session } from '../sessions/session';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@Get()
-	findAll(): Promise<Users> {
+	async findAll(): Promise<User[]> {
 		return this.usersService.findAll();
 	}
 
 	@Get('/username/:username')
-	findOneByUsername(@Param('username') username: string): Promise<User> {
+	async findOneByUsername(@Param('username') username: string): Promise<User[]> {
 		return this.usersService.findOneByUsername(username);
 	}
 
 	@Get(':id')
-	findOneById(@Param('id') id: number): Promise<User> {
+	async findOneById(@Param('id') id: number): Promise<User[]> {
 		return this.usersService.findOneById(id);
 	}
 
 	@Get('sessions/:id')
-	findUserSessions(@Param('id') id: number): Promise<Sessions> {
+	async findUserSessions(@Param('id') id: number): Promise<Session[]> {
 		return this.usersService.findUserSessions(id);
 	}
 
@@ -40,12 +40,12 @@ export class UsersController {
 	/*** Block/Unblock ***/
 
 	@Post('block')
-	async create(@Body('blocker_uid') blocker_uid: number, @Body('blocked_uid') blocked_uid: number): Promise<void> {
-		this.blockService.create(blocker_uid, blocked_uid);
+	async block(@Body('blocker_uid') blocker_uid: number, @Body('blocked_uid') blocked_uid: number): Promise<void> {
+		this.usersService.block(blocker_uid, blocked_uid);
 	}
 
 	@Delete('block')
-	async delete(@Param('blocking_id') blocking_id: number): Promise<void> {
-		this.blockService.delete(blocking_id);
+	async unblock(@Param('blocking_id') blocking_id: number): Promise<void> {
+		this.usersService.unblock(blocking_id);
 	}
 }

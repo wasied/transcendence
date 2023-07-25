@@ -1,19 +1,19 @@
 import { Controller, Body, Param, Get, Post, Put, Delete } from '@nestjs/common';
 import { Chat } from './chat';
-import { Chats } from './chats';
+import { ChatService } from './chat.service';
 
 @Controller('chat')
 export class ChatController {
 	constructor(private readonly chatService: ChatService) {}
 
 	@Get()
-	async findAll(): Promise<Chats> {
+	async findAll(): Promise<Chat[]> {
 		return this.chatService.findAll();
 	}
 
 	@Get(':id')
-	async findOne(@Param('id') id: number): Promise<Chat> {
-		return this.chatService.find(id);
+	async findOne(@Param('id') id: number): Promise<Chat[]> {
+		return this.chatService.findOne(id);
 	}
 
 	@Post()
@@ -28,6 +28,6 @@ export class ChatController {
 
 	@Delete(':id')
 	async delete(@Body('id') id: number, chat_user_id: number): Promise<void> {
-		this.chatService.delete(id);
+		this.chatService.delete(id, chat_user_id);
 	}
 }
