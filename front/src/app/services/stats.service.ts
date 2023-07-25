@@ -19,4 +19,8 @@ export class StatsService {
 	getStatById(id: number) : Observable<Stat> {
 		return this.http.get<Stat>(`${this.apiUrl}/${id}`);
 	}
+
+	getStatsFromUserById(userId: number) : Observable<Stat> {
+		return this.http.get<Stat>(`${this.apiUrl}/${userId}`);
+	}
 }

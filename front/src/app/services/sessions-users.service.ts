@@ -10,7 +10,7 @@ export class SessionsUsersService {
 
 	constructor (private http: HttpClient) {};
 
-	private apiUrl: string = ''; // change this
+	private apiUrl: string = 'http://localhost:3000/sessions_users'; // change this
 
 	getAllSessionsUsers() : Observable<SessionsUser[]> {
 		return this.http.get<SessionsUser[]>(`${this.apiUrl}`);
@@ -20,11 +20,16 @@ export class SessionsUsersService {
 		return this.http.get<SessionsUser>(`${this.apiUrl}/${id}`);
 	}
 
+	// used for display game history (returns sessionUsers that had compete against a given user (or are this user))
+	getSessionUsersImplyingGivenUser(userId: number) : Observable<SessionsUser[]> {
+		return this.http.get<SessionsUser[]>(`${this.apiUrl}`); // modify this
+	}
+
 	getActiveSessionUsers() : Observable<SessionsUser[]> {
-		return this.http.get<SessionsUser[]>(`${this.apiUrl}`, {params: { alive: true } });
+		return this.http.get<SessionsUser[]>(`${this.apiUrl}`, { params: { alive: true } });
 	}
 
 	getActiveParticipantsSessionUsers() : Observable<SessionsUser[]> {
-		return this.http.get<SessionsUser[]>(`${this.apiUrl}`, {params: { alive: true, spectator: false}} );
+		return this.http.get<SessionsUser[]>(`${this.apiUrl}`, { params: { alive: true, spectator: false }} );
 	}
 }

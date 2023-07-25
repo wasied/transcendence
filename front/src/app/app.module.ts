@@ -37,6 +37,7 @@ import { ProfileBadgeComponent } from './components/subcomps/profile-badge/profi
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalFormComponent } from './components/utils/modal-form/modal-form.component';
 import { StatsComponent } from './components/subcomps/stats/stats.component';
+import { GameComponent } from './components/views/game/game.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { StatsComponent } from './components/subcomps/stats/stats.component';
     ProfileBadgeComponent,
     ModalFormComponent,
     StatsComponent,
+    GameComponent,
   ],
   imports: [
     BrowserModule,

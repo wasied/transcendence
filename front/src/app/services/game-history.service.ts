@@ -5,8 +5,8 @@ import { SessionsService } from "./sessions.service";
 import { Session } from "../models/session.model";
 import { User } from "../models/user.model";
 import { UsersService } from "./users.service";
-import { SessionsUser } from "../models/sessions-user.model";
 import { SessionsUsersService } from "./sessions-users.service";
+import { SessionsUser } from "../models/sessions-user.model";
 
 @Injectable({
 	providedIn: 'root'
@@ -15,16 +15,16 @@ export class GameHistoryService {
 
 	constructor (private usersService: UsersService,
 				 private sessionsService: SessionsService,
-				 private sessionsUserService: SessionsUsersService) {};
+				 private sessionsUsersService: SessionsUsersService) {};
 
 	getGameHistory(playerId: number): Observable<GameHistory[]> {
 		
 		return forkJoin({
-			users: this.usersService.getAllUsers(),
-			sessions: this.sessionsService.getSessionsByUserId(playerId),
-			sessionsUsers: this.sessionsUserService.getAllSessionsUsers()
+			users: this.usersService.getUsersHavingPlayedWithGivenUser(playerId),
+			sessions: this.sessionsService.getSessionsHistoryByUserId(playerId),
+			sessionsUsers: this.sessionsUsersService.getSessionUsersImplyingGivenUser(playerId)
 		}).pipe(map(
-			({ users, sessions, sessionsUsers}) => 
+			({ users, sessionsUsers , sessions }) => 
 				sessions.map(session => this.createGameHistory(session, sessionsUsers, users))
 			),
 			catchError(error => {
@@ -34,9 +34,9 @@ export class GameHistoryService {
 		) as Observable<GameHistory[]>;
 	}
 
-	private createGameHistory(session: Session, sessionsUser: SessionsUser[], users: User[]): GameHistory
+	private createGameHistory(session: Session, sessionsUsers: SessionsUser[] , users: User[]): GameHistory
 	{	
-		const relevantSessionsUsers = sessionsUser.filter(sessionUser => sessionUser.session_id === session.id);
+		const relevantSessionsUsers = sessionsUsers.filter(sessionUser => sessionUser.session_id === session.id);
 
 		if (!relevantSessionsUsers) {
 			throw new Error(`User with ID not found!`);

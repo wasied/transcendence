@@ -13,16 +13,6 @@ export class DirectMessagesSevice {
 
 	private apiURL : string = 'http://localhost:3000/chatrooms_messages'; // add that
 
-	returnNewId() : Observable<number> {
-		return this.getAllDirectMsgs().pipe(
-			map(directMsgs => {
-				const maxId = Math.max(...directMsgs.map(directMsg => directMsg.id));
-				const newId = maxId + 1;
-				return newId;
-			})
-		);
-	}
-
 	// addNewDirectMsg(form : FormGroup) : Observable<DirectMessage> {
 		
 	// 	const otherPlayerId: string = form.get('otherPlayerId')?.value;
@@ -53,8 +43,4 @@ export class DirectMessagesSevice {
 	delDirectMsg(id: number) : Observable<void> {
 		return this.http.delete<void>(`${this.apiURL}/${id}`);
 	}
-
-	// modifyDirectMsg(id: number) : Observable<DirectMessage> {
-
-	// }
 }

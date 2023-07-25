@@ -12,7 +12,7 @@ export class UsersService {
 	constructor(private http: HttpClient) {};
 
 	private apiURL: string = 'http://localhost:3000/users'; // change that in final product
-	private currentUserId: number = -1;
+	private currentUserId: number = -1; // change this
 	
 	// return new id as an observable (TO BE LATER HANDLED BY BACK END)
 	returnNewId() : Observable<number> {
@@ -24,17 +24,23 @@ export class UsersService {
 			})
 		);
 	}
-
+	
 	getAllUsers() : Observable<User[]> {
 		return this.http.get<User[]>(`${this.apiURL}`);
 	}
 
+	getUserById(id: number) : Observable<User> {
+		return this.http.get<User>(`${this.apiURL}/${id}`);
+	}
+
+	// should be used for displaying 
 	getUsersInActiveSession() : Observable<User[]> {
 		return this.http.get<User[]>(`${this.apiURL}/active`);
 	}
 
-	getUserById(id: number) : Observable<User> {				
-		return this.http.get<User>(`${this.apiURL}/${id}`);
+	// should be used to display game history
+	getUsersHavingPlayedWithGivenUser(userId: number) : Observable<User[]> {
+		return this.http.get<User[]>(`${this.apiURL}`); // change url of course
 	}
 
 	getUserByUsername(username: string) : Observable<User> {
@@ -73,7 +79,9 @@ export class UsersService {
 		return this.http.put<User>(`${this.apiURL}/${id}`, partialUser);
 	}
 	
-	storeUserId(id: number) : void {
+	storeUserId(id: number) : void {		
+		if (id != -1)
+			throw console.error('there is already a user id that is store for this session');
 		this.currentUserId = id;
 	}
 
@@ -81,7 +89,7 @@ export class UsersService {
 		this.currentUserId = -1;
 	}
 
-	getUserId() : number {
+	getCurrentUserId() : number {
 		return this.currentUserId;
 	}
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Achievement } from 'src/app/models/achievement.model';
 import { AchievementsService } from 'src/app/services/achievements.service';
 import { Observable } from 'rxjs';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-achievements',
@@ -10,11 +11,15 @@ import { Observable } from 'rxjs';
 })
 export class AchievementsComponent implements OnInit {
   
-  constructor (private achievementsService: AchievementsService) {}
+  constructor (private achievementsService: AchievementsService,
+               private usersService: UsersService) {}
 
   achievements$!: Observable<Achievement[]>;
+  
 
   ngOnInit(): void {
-    this.achievements$ = this.achievementsService.getAllAchievements();
+    const currentUserId: number = this.usersService.getCurrentUserId();
+    this.achievements$ = this.achievementsService.getAllAchievements(); // change this after to 
+    // display only player achievements
   }
 }

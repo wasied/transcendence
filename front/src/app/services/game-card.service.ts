@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 import { catchError, forkJoin, map, Observable, of } from "rxjs";
 import { Gamecard } from "../models/game-card.model";
 import { User } from "../models/user.model";
+import { SessionsUser } from "../models/sessions-user.model";
 import { UsersService } from "./users.service";
 import { Session } from "../models/session.model";
-import { SessionsUser } from "../models/sessions-user.model";
-import { SessionsUsersService } from "./sessions-users.service";
 import { SessionsService } from "./sessions.service";
+import { SessionsUsersService } from "./sessions-users.service";
 
 @Injectable({
 	providedIn: 'root'
