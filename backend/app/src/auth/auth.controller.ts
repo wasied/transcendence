@@ -1,4 +1,4 @@
-import { Controller, Get, Redirect, Req, UseGuards } from '@nestjs/common';
+import { Controller, Body, Get, Post, Redirect, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -6,9 +6,14 @@ import { AuthGuard } from '@nestjs/passport';
 export class AuthController {
 	constructor(private authService: AuthService) {}
 
+	@Post('signup')
+	async signUp(@Body('username') username: string): Promise<void> {
+		this.authService.signUp(username);
+	}
+
 	@Get('login')
 	@Redirect()
-	async signIn() {
+	async signIn(): Promise<Object> {
 		const url = await this.authService.getSignInURL();
 		return { url: url };
 	}

@@ -1,8 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-	constructor() {}
+	constructor(private readonly usersService: UsersService) {}
+
+	signUp(username: string): void {
+		this.usersService.create({
+			id: 0,
+			username: username,
+			a2f_key: "",
+			profile_picture_url: process.env.DEFAULT_PROFILE_IMAGE_URL,
+			updated_at: "",
+			created_at: ""
+		});
+	}
 
 	async getSignInURL(): Promise<string> {
 		const redirectUri = process.env.AUTH_42_RETURN_URI;

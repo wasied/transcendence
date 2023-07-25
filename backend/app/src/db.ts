@@ -18,8 +18,7 @@ async function createTables() {
             password VARCHAR(255) NOT NULL,
             state VARCHAR(255) NOT NULL,
             a2f_key VARCHAR(255),
-            profile_image_url VARCHAR(255),
-            phone_number VARCHAR(255) UNIQUE,
+            profile_picture_url VARCHAR(255),
             updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
         );

@@ -33,8 +33,8 @@ export class UsersController {
 	}
 
 	@Put()
-	async update(@Body('user') user: User): Promise<void> {
-		this.usersService.update(user);
+	async updateProfilePicture(@Body('id') id: number, @Body('url') url: string): Promise<void> {
+		this.usersService.updateProfilePicture(id, url);
 	}
 
 	/*** Block/Unblock ***/

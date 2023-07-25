@@ -87,13 +87,19 @@ export class UsersService {
 
 	create(user: User): void {
 		const queryResult = dbClient.query(
-			`INSERT	INTO users(username, a2f_key, profile_image_url, phone_number)
-					VALUES($1, $2, $3 $4);`,
-			[user.username, user.a2f_key, user.profile_image_url, user.phone_number]
+			`INSERT	INTO users(username, a2f_key, profile_picture_url, state)
+					VALUES($1, $2, $3, $4);`,
+			[user.username, user.a2f_key, user.profile_picture_url, "online"]
 		);
 	}
 
-	update(user: User): void {
+	updateProfilePicture(user_id: number, url: string): void {
+		const queryResult = dbClient.query(
+			`UPDATE	users
+					SET		profile_picture_url = $1,
+					WHERE	id = $2`,
+			[url, user_id]
+		);
 	}
 
 	findStates(user_ids: number[]): void {

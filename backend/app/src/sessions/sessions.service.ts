@@ -50,7 +50,7 @@ export class SessionsService {
 	}
 
 	update(session: Session): void {
-i	}
+	}
 
 	join(session_id: number, user_id: number, spectator: boolean): void {
 		if (spectator) {
@@ -87,8 +87,8 @@ i	}
 						SELECT user_uid	FROM sessions_users
 										WHERE session_uid = $2
 										AND spectator = false;
-					);`
-		);,
+					);`,
 		[winner_uid, session_id]
+		);
 	}
 }
