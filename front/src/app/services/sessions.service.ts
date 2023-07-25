@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { Session } from "../models/session.model";
 
 @Injectable ({
@@ -10,6 +10,23 @@ export class SessionsService {
 
 	constructor (private http: HttpClient) {};
 
+	private hardcodedSessions: Session[] = [{
+		id: 1,
+		autoMatching: true,
+		customization: true,
+		ended: false,
+		winner_id: 1,
+		createdAt: new Date(),
+		updatedAt: new Date()
+	}];
+
+	getHarcodedSessions(): Observable<Session[]> {
+		return of(this.hardcodedSessions);
+	}
+
+	
+	// with observables
+	
 	private apiURL = 'http://localhost:3000/sessions'; // change this
 
 	getAllSessions() : Observable<Session[]> {

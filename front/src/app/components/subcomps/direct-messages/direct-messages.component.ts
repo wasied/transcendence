@@ -5,19 +5,22 @@ import { Observable } from 'rxjs';
 import { UsersService } from 'src/app/services/users.service';
 
 @Component({
-  selector: 'app-direct-messages',
-  templateUrl: './direct-messages.component.html',
-  styleUrls: ['./direct-messages.component.css']
+	selector: 'app-direct-messages',
+	templateUrl: './direct-messages.component.html',
+	styleUrls: ['./direct-messages.component.css']
 })
 export class DirectMessagesComponent implements OnInit {
 
-  directMessages$!: Observable<DirectMessage[]>;
+	directMessages$!: Observable<DirectMessage[]>;
 
-  constructor (private directMessageService: DirectMessagesSevice,
-               private usersService: UsersService) {}
+	constructor (private directMessageService: DirectMessagesSevice,
+				 private usersService: UsersService) {}
   
-  ngOnInit(): void {
-    const currentUserId: number = this.usersService.getCurrentUserId();
-    this.directMessages$ = this.directMessageService.getAllDirectMsgs();
-  }
+	ngOnInit(): void {
+		this.directMessages$ = this.directMessageService.getAllDirectMsgs();
+	}
+
+	loadDirectMessages() : Observable<DirectMessage[]> {
+		return this.directMessageService.gethardcodedDirectMessages();
+	}
 }

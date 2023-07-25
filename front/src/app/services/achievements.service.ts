@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { Achievement } from "../models/achievement.model";
 
 @Injectable({
@@ -10,8 +10,22 @@ export class AchievementsService {
 
 	constructor (private http: HttpClient) {};
 
-	private apiBaseURL: string = 'http://localhost:3000/achievements_lists'; // modify that
+	hardcodedAchievements: Achievement[] = [{
+		id: 1,
+		userId: 1,
+		date: new Date(),
+		achievementName: 'test',
+		description: 'description test'
+	}];
 
+	getHarcodedAchievements() : Observable<Achievement[]> { // for testing only
+		return of(this.hardcodedAchievements);
+	}
+
+	// with observables
+	
+	private apiBaseURL: string = 'http://localhost:3000/achievements_lists'; // modify that
+	
 	getAchievementById(id: number) : Observable<Achievement> {
 		return this.http.get<Achievement>(`${this.apiBaseURL}/${id}`);
 	}

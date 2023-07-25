@@ -17,6 +17,20 @@ export class GamecardService {
 				 private sessionsService: SessionsService,
 				 private sessionsUsersService: SessionsUsersService) {};
 
+	private hardcodedGameCards: Gamecard[] = [{
+		playerOneId: 1,
+		playerTwoId: 2,
+		playerOne: 'player 1',
+		playerTwo: 'player 2'
+	}];
+	
+	getHardcodedGameCards(): Observable<Gamecard[]> {
+		return of(this.hardcodedGameCards);
+	}
+
+
+	// with observables
+
 	getAllGameCards(): Observable<Gamecard[]> {
 		return forkJoin({
 			users: this.usersService.getUsersInActiveSession(),

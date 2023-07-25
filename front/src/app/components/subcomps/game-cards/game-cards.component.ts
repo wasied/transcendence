@@ -4,17 +4,21 @@ import { GamecardService } from 'src/app/services/game-card.service';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-game-cards',
-  templateUrl: './game-cards.component.html',
-  styleUrls: ['./game-cards.component.css']
+	selector: 'app-game-cards',
+	templateUrl: './game-cards.component.html',
+	styleUrls: ['./game-cards.component.css']
 })
 export class GameCardsComponent implements OnInit{
 
-  gameCards$!: Observable<Gamecard[]>;
+	gameCards$!: Observable<Gamecard[]>;
 
-  constructor (private gamecardService: GamecardService) {}
+	constructor (private gamecardService: GamecardService) {}
   
-  ngOnInit(): void {
-    this.gameCards$ = this.gamecardService.getAllGameCards();
-  }
+	ngOnInit(): void {
+		this.gameCards$ = this.loadGameCards();
+	}
+
+	loadGameCards() : Observable<Gamecard[]> {
+		return this.gamecardService.getHardcodedGameCards();
+	}
 }

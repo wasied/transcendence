@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { Chatroom } from "../models/chatroom.model";
 
 @Injectable({
@@ -10,8 +10,27 @@ export class ChatroomsService {
 
 	constructor (private http: HttpClient) {};
 
-	private apiURL: string = 'http://localhost:3000/chatrooms'; // change that
+	private hardcodedChatrooms: Chatroom[] = [
+		{
+			id: 1,
+			chatroomName: 'tstChatroom',
+			ownerId: 1,
+			owner: 'test player',
+			accessStatus: 'public',
+			participants: ['test ,player'],
+			participantsId: [1]
+		}
+	];
 
+	getHardcodedChatrooms() : Observable<Chatroom[]> {
+		return of(this.hardcodedChatrooms);
+	}
+
+	
+	// with observables
+
+	private apiURL: string = 'http://localhost:3000/chatrooms'; // change that
+	
 	getChatroomByID(id: number) : Observable<Chatroom> {
 		return this.http.get<Chatroom>(`${this.apiURL}/${id}`);
 	}

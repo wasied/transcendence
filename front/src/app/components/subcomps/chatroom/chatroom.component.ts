@@ -2,11 +2,11 @@ import { Component, Input } from '@angular/core';
 import { Chatroom } from 'src/app/models/chatroom.model';
 
 @Component({
-  selector: 'app-chatroom',
-  templateUrl: './chatroom.component.html',
-  styleUrls: ['./chatroom.component.css']
+	selector: 'app-chatroom',
+	templateUrl: './chatroom.component.html',
+	styleUrls: ['./chatroom.component.css']
 })
 export class ChatroomComponent {
   
-  @Input () chatroom!: Chatroom;
+	@Input () chatroom!: Chatroom;
 }

@@ -17,6 +17,21 @@ export class GameHistoryService {
 				 private sessionsService: SessionsService,
 				 private sessionsUsersService: SessionsUsersService) {};
 
+	private hardcodedGameHistory: GameHistory[] = [{
+		userId: 1,
+		opponentId: 2,
+		opponentPseudo: 'player 2',
+		opponentStatus: 'online',
+		yourScore: 7,
+		opponentScore: 3
+	}];
+
+	getHardcodedGameHistory(): Observable<GameHistory[]> {
+		return of(this.hardcodedGameHistory);
+	}
+	
+	// with observables
+	
 	getGameHistory(playerId: number): Observable<GameHistory[]> {
 		
 		return forkJoin({

@@ -5,21 +5,22 @@ import { Observable } from 'rxjs';
 import { UsersService } from 'src/app/services/users.service';
 
 @Component({
-  selector: 'app-achievements',
-  templateUrl: './achievements.component.html',
-  styleUrls: ['./achievements.component.css']
+	selector: 'app-achievements',
+	templateUrl: './achievements.component.html',
+	styleUrls: ['./achievements.component.css']
 })
 export class AchievementsComponent implements OnInit {
   
-  constructor (private achievementsService: AchievementsService,
-               private usersService: UsersService) {}
+	achievements$!: Observable<Achievement[]>;
 
-  achievements$!: Observable<Achievement[]>;
-  
+	constructor (private achievementsService: AchievementsService,
+				 private usersService: UsersService) {}
 
-  ngOnInit(): void {
-    const currentUserId: number = this.usersService.getCurrentUserId();
-    this.achievements$ = this.achievementsService.getAllAchievements(); // change this after to 
-    // display only player achievements
-  }
+	ngOnInit(): void {
+		this.achievements$ = this.loadAchievements();
+	}
+
+	loadAchievements() : Observable<Achievement[]> {
+		return this.achievementsService.getHarcodedAchievements();
+	}
 }

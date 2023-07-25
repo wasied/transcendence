@@ -11,7 +11,7 @@ import { UsersService } from 'src/app/services/users.service';
 })
 export class FriendsComponent implements OnInit {
 
-  @Input() user: string;
+  //@Input() user: string;
   friends$!: Observable<Friend[]>;
 
   constructor (private friendsService: FriendService,
@@ -22,6 +22,6 @@ export class FriendsComponent implements OnInit {
   }
 
   loadFriends() : Observable<Friend[]> {
-
+    return (this.friendsService.getHardcodedFriends());
   }
 }

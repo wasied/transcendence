@@ -5,19 +5,22 @@ import { Observable } from 'rxjs';
 import { UsersService } from 'src/app/services/users.service';
 
 @Component({
-  selector: 'app-chatrooms',
-  templateUrl: './chatrooms.component.html',
-  styleUrls: ['./chatrooms.component.css']
+	selector: 'app-chatrooms',
+	templateUrl: './chatrooms.component.html',
+	styleUrls: ['./chatrooms.component.css']
 })
 export class ChatroomsComponent implements OnInit {
   
-  chatrooms$!: Observable<Chatroom[]>;
+	chatrooms$!: Observable<Chatroom[]>;
   
-  constructor (private chatroomService: ChatroomsService,
-               private usersService: UsersService) {}
+	constructor (private chatroomService: ChatroomsService,
+				 private usersService: UsersService) {}
   
-  ngOnInit(): void {
-    const currentUserId: number = this.usersService.getCurrentUserId();
-    this.chatrooms$ = this.chatroomService.getAllChatrooms();
-  }
+	ngOnInit(): void {
+		this.chatrooms$ = this.loadChatrooms();
+	}
+
+	loadChatrooms() : Observable<Chatroom[]> {
+		return this.chatroomService.getHardcodedChatrooms();
+	}
 }
