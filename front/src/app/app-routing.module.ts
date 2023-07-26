@@ -1,13 +1,15 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { SignInComponent } from "./components/utils/sign-in/sign-in.component";
-import { SignUpComponent } from "./components/utils/sign-up/sign-up.component";
-import { ChatroomsViewComponent } from "./components/views/chatrooms-view/chatrooms-view.component";
-import { DirectMessagesViewComponent } from "./components/views/direct-messages-view/direct-messages-view.component";
-import { FriendsViewComponent } from "./components/views/friends-view/friends-view.component";
-import { LandingPageComponent } from "./components/views/landing-page/landing-page.component";
-import { MainMenuComponent } from "./components/views/main-menu/main-menu.component";
-import { ProfileSelfComponent } from "./components/views/profile-self/profile-self.component";
+import { MainMenuModule } from "./views/main-menu/main-menu.module";
+
+import { ChatroomsViewComponent } from "./views/chat/components/chatrooms-view/chatrooms-view.component";
+import { DirectMessagesViewComponent } from "./views/direct-messages/components/direct-messages-view/direct-messages-view.component";
+import { FriendsViewComponent } from "./views/friends-view/friends-view/friends-view.component";
+import { LandingPageComponent } from "./views/landing-page/components/landing-page/landing-page.component";
+import { ProfileSelfComponent } from "./views/profile-self/components/profile-self/profile-self.component";
+import { MainMenuComponent } from "./views/main-menu/main-menu/main-menu.component";
+import { SignInComponent } from "./shared/components/utils/sign-in/sign-in.component";
+import { SignUpComponent } from "./shared/components/utils/sign-up/sign-up.component";
 
 const routes: Routes = [
 	{path: '', component: LandingPageComponent},
@@ -22,7 +24,8 @@ const routes: Routes = [
 
 @NgModule({
 	imports: [
-		RouterModule.forRoot(routes)
+		RouterModule.forRoot(routes),
+		MainMenuModule
 	],
 	exports: [
 		RouterModule
