@@ -11,9 +11,6 @@ export class UsersService {
 
 	constructor(private http: HttpClient) {};
 
-	private apiURL: string = 'http://localhost:3000/users'; // change that in final product
-	private currentUserId: number = -1; // change this
-
 	private harcodedUsers: User[]  = [{
 		id: 1,
 		username: 'testUser',
@@ -24,9 +21,14 @@ export class UsersService {
 		createdAt: new Date()
 	}];
 
+	private apiURL: string = 'http://localhost:3000/users'; // change that in final product
+	private currentUserId: number = -1; // change this
+
 	getHardcodedUsers() : Observable<User[]> {
 		return of(this.harcodedUsers);
 	}
+
+	
 
 	// with observables
 	
