@@ -5,46 +5,47 @@ import { UsersService } from 'src/app/core/services/users.service';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+	selector: 'app-header',
+	templateUrl: './header.component.html',
+	styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
 
-  user$!: Observable<User>;
-  private currentId!: number;
+	// user$!: Observable<User>;
+	private currentId!: number;
+	currentUser!: User;
   
-  constructor (private usersService: UsersService,
-    private route: ActivatedRoute,
-    private router: Router) {}
-  
-  ngOnInit(): void {
-    this.getUserData();
-  }
+	constructor (private usersService: UsersService,
+    			 private route: ActivatedRoute,
+    			 private router: Router) {}
 
-  // retrieve the user: User object to exploit the data
-  getUserData() : void {
-    // this.currentId = this.usersService.getUserId();
-    this.user$ = this.usersService.getUserById(this.currentId);
-  }
+  	ngOnInit(): void {
+		this.getUserData();
+  	}
 
-  onClickOnChatrooms() : void {
-    this.router.navigate(['main', 'chatrooms']);
-  }
+	getUserData() : void {
+    	// this.currentId = this.usersService.getUserId();
+    	// this.user$ = this.usersService.getUserById(this.currentId);
+		this.currentUser = this.usersService.retrieveHardcodedUser(); // change this agter optimization
+  	}
 
-  onClickOnMessages() : void {
-    this.router.navigate(['main', 'direct_messages']);
-  }
+  	onClickOnChatrooms() : void {
+		this.router.navigate(['main', 'chatrooms']);
+  	}
 
-  onClickOnFriends() : void {
-    this.router.navigate(['main', 'friends']);
-  }
+  	onClickOnMessages() : void {
+		this.router.navigate(['main', 'direct_messages']);
+  	}
 
-  onClickOnProfilePicture() : void {
-    this.router.navigate(['main', 'profile']);
-  }
+	onClickOnFriends() : void {
+		this.router.navigate(['main', 'friends']);
+  	}
 
-  onClickPlay() : void {
-    
-  }
+  	onClickOnProfilePicture() : void {
+    	this.router.navigate(['main', 'profile']);
+  	}
+
+	onClickPlay() : void {
+		console.log('not implemented yet');
+  	}
 }

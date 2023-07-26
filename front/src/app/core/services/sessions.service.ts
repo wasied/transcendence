@@ -23,8 +23,6 @@ export class SessionsService {
 	getHarcodedSessions(): Observable<Session[]> {
 		return of(this.hardcodedSessions);
 	}
-
-	
 	// with observables
 	
 	private apiURL = 'http://localhost:3000/sessions'; // change this

@@ -8,15 +8,16 @@ import { Router } from '@angular/router';
 })
 export class HeaderLpComponent implements OnInit {
   
-  constructor(private router: Router) {};
+	constructor(private router: Router) {};
   
-  ngOnInit(): void {}
+	ngOnInit(): void {}
 
-  onAddNewUser() : void {
-    this.router.navigateByUrl('/signup');
-  }
+	onAddNewUser() : void { // do not use this one for now
+		this.router.navigateByUrl('/signup');
+	}
 
-  onSignIn() : void {
-    this.router.navigateByUrl('/signin');
-  }
+	onSignIn() : void {
+		// this.router.navigateByUrl('/signin'); use is after
+		this.router.navigateByUrl('/main');
+	}
 }

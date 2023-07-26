@@ -1,31 +1,25 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { SignInComponent } from "./shared/components/utils/sign-in/sign-in.component";
-import { SignUpComponent } from "./shared/components/utils/sign-up/sign-up.component";
-
-import { MainMenuComponent } from "./views/main-menu/main-menu/main-menu.component";
-import { LandingPageComponent } from "./views/landing-page/components/landing-page/landing-page.component";
-
 const routes: Routes = [
-	{path: '', component: LandingPageComponent},
-	{path: 'main', component: MainMenuComponent},
-	{path: 'signup', component: SignUpComponent}, // try to do it with a modal
-	{path: 'signin', component:SignInComponent}, // try to do it with a modal
+	{path: '', loadChildren:
+	() => import('./views/landing-page/landing-page.module').then(m => m.LandingPageModule)},
+	{path: 'main', loadChildren:
+	() => import('./views/main-menu/main-menu.module').then(m => m.MainMenuModule)},
 	// child routing modules
 	{path: 'main/friends', loadChildren:
-	() => import('./views/friends-view/friends-view-routing.module').then(m => m.FriendsViewRoutingModule)},
+	() => import('./views/friends-view/friends-view.module').then(m => m.FriendsViewModule)},
 	{ path: 'main/games', loadChildren:
-	() => import('./views/games-view/games-view-routing.module').then(m => m.GamesViewRoutingModule)},
+	() => import('./views/games-view/games-view.module').then(m => m.GamesViewModule)},
 	{ path: 'main/match_history', loadChildren:
-	() => import('./views/match-history-view/match-history-routing.module').then(m => m.MatchHistoryRoutingModule)},
+	() => import('./views/match-history-view/match-history-view.module').then(m => m.MatchHistoryViewModule)},
 	{ path: 'main/profile', loadChildren:
-	() => import('./views/profile/profile-router.module').then(m => m.ProfileRoutingModule)},
+	() => import('./views/profile/profile.module').then(m => m.ProfileModule)},
 	// core features of the game (chatroom, pong game, direct messages)
 	{path: 'main/chatrooms', loadChildren:
-	() => import('./views/chat/chat-routing.module').then(m => m.ChatRoutingModule)},
+	() => import('./views/chat/chat.module').then(m => m.ChatModule)},
 	{path: 'main/direct_messages', loadChildren: 
-	() => import('./views/direct-messages/direct-messages-routing.module').then(m => m.DirectMessagesRoutingModule)}
+	() => import('./views/direct-messages/direct-messages.module').then(m => m.DirectMessagesModule)}
 ];
 
 @NgModule({

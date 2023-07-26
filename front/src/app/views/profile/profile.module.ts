@@ -6,6 +6,8 @@ import { ProfileSelfComponent } from './components/profile-self/profile-self.com
 import { ProfileOtherComponent } from './components/profile-other/profile-other.component';
 import { InfoSecurityComponent } from './components/info-security/info-security.component';
 
+import { ProfileRoutingModule } from './profile-router.module';
+
 @NgModule({
 	declarations: [
 		ProfileSelfComponent,
@@ -14,7 +16,8 @@ import { InfoSecurityComponent } from './components/info-security/info-security.
 	],
 	imports: [
 		CommonModule,
-		SharedModule
+		SharedModule,
+		ProfileRoutingModule
 	]
 })
 export class ProfileModule { }

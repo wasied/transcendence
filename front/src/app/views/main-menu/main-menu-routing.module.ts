@@ -1,14 +1,14 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-import { MatchHistoryViewComponent } from "./match-history-view/match-history-view.component"; 
+import { MainMenuComponent } from "./main-menu/main-menu.component";
 
 const routes: Routes = [
-	{path: '', component: MatchHistoryViewComponent }
+	{path: '', component: MainMenuComponent }
 ];
 
 @NgModule ({
 	imports: [RouterModule.forChild(routes)],
 	exports: [RouterModule]
 })
-export class MatchHistoryRoutingModule {}
+export class MainMenuRoutingModule {}
