@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { CheckboxComponent } from './components/utils/checkbox/checkbox.component';
 import { CustomButtonComponent } from './components/utils/custom-button/custom-button.component';
@@ -31,7 +32,8 @@ import { GameCardsComponent } from './components/subcomps/game-cards/game-cards.
 		GameCardsComponent
 	],
 	imports: [
-    	CommonModule
+    	CommonModule,
+		ReactiveFormsModule
 	],
 	exports: [
 		CheckboxComponent,

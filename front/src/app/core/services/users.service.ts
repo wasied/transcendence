@@ -28,9 +28,9 @@ export class UsersService {
 		return of(this.harcodedUsers);
 	}
 
-	retrieveHardcodedUser() : User { // change this after auth service is implemented
+	retrieveHardcodedUser() : Observable<User> { // change this after auth service is implemented
 		this.storeUserId(this.harcodedUsers[0].id);
-		return this.harcodedUsers[0];
+		return of(this.harcodedUsers[0]);
 	}
 	
 	// with observables

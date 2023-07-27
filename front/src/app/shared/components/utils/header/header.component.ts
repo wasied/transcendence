@@ -13,7 +13,7 @@ export class HeaderComponent implements OnInit {
 
 	// user$!: Observable<User>;
 	private currentId!: number;
-	currentUser!: User;
+	user$!: Observable<User>;
   
 	constructor (private usersService: UsersService,
     			 private route: ActivatedRoute,
@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit {
 	getUserData() : void {
     	// this.currentId = this.usersService.getUserId();
     	// this.user$ = this.usersService.getUserById(this.currentId);
-		this.currentUser = this.usersService.retrieveHardcodedUser(); // change this agter optimization
+		this.user$ = this.usersService.retrieveHardcodedUser(); // change this agter optimization
   	}
 
   	onClickOnChatrooms() : void {
