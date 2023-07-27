@@ -13,11 +13,11 @@ export class ChatroomsService {
 	private hardcodedChatrooms: Chatroom[] = [
 		{
 			id: 1,
-			chatroomName: 'tstChatroom',
+			chatroomName: 'testChatroom',
 			ownerId: 1,
 			owner: 'test player',
 			accessStatus: 'public',
-			participants: ['test ,player'],
+			participants: ['test', 'player'],
 			participantsId: [1]
 		}
 	];
@@ -25,7 +25,6 @@ export class ChatroomsService {
 	getHardcodedChatrooms() : Observable<Chatroom[]> {
 		return of(this.hardcodedChatrooms);
 	}
-
 	
 	// with observables
 

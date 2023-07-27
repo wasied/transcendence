@@ -21,6 +21,10 @@ export class ChatroomsComponent implements OnInit {
 	}
 
 	loadChatrooms() : Observable<Chatroom[]> {
-		return this.chatroomService.getHardcodedChatrooms();
+		return this.chatroomService.getHardcodedChatrooms(); // change that
+	}
+
+	deleteChatroom(chatroom: Chatroom) {
+		console.log('delete the chatroom : logic not implemented yet');
 	}
 }

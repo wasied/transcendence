@@ -7,7 +7,7 @@ import { DirectMessage } from "../models/direct-message.model";
 @Injectable({
 	providedIn: 'root'
 })
-export class DirectMessagesSevice {
+export class DirectMessagesService {
 
 	constructor (private http: HttpClient) {};
 
@@ -21,8 +21,6 @@ export class DirectMessagesSevice {
 	gethardcodedDirectMessages() : Observable<DirectMessage[]> {
 		return of(this.hardcodedDirectMessages);
 	}
-
-
 
 	// with observables
 

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { CheckboxComponent } from './components/utils/checkbox/checkbox.component';
 import { CustomButtonComponent } from './components/utils/custom-button/custom-button.component';
@@ -15,6 +16,9 @@ import { FriendsComponent } from './components/subcomps/friends/friends.componen
 import { StatsComponent } from './components/subcomps/stats/stats.component';
 import { GameCardComponent } from './components/subcomps/game-card/game-card.component';
 import { GameCardsComponent } from './components/subcomps/game-cards/game-cards.component';
+import { MessageComponent } from './components/subcomps/message/message.component';
+import { ChatComponent } from './components/subcomps/chat/chat.component';
+import { DisplayMsgTimestampPipe } from './display-msg-timestamp.pipe';
 
 @NgModule({
 	declarations: [
@@ -29,11 +33,15 @@ import { GameCardsComponent } from './components/subcomps/game-cards/game-cards.
     	FriendComponent,
     	FriendsComponent,
 		GameCardComponent,
-		GameCardsComponent
+		GameCardsComponent,
+		MessageComponent,
+		ChatComponent,
+		DisplayMsgTimestampPipe
 	],
 	imports: [
     	CommonModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		FormsModule
 	],
 	exports: [
 		CheckboxComponent,
@@ -47,7 +55,10 @@ import { GameCardsComponent } from './components/subcomps/game-cards/game-cards.
 		FriendComponent,
 		FriendsComponent,
 		GameCardComponent,
-		GameCardsComponent
+		GameCardsComponent,
+		MessageComponent,
+		ChatComponent,
+		DisplayMsgTimestampPipe
 	]
 })
 export class SharedModule { }

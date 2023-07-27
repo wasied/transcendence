@@ -1,4 +1,4 @@
-<div *ngIf="directMessages$ | async as directMessages" class="bg-black flex flex-col items-center">
+<div *ngIf="directMessages$ | async as directMessages" class="bg-black flex flex-col items-center text-white">
 	<app-direct-message class="w-4/5" *ngFor="let dmItem of directMessages" 
 	[directMessage]="dmItem"></app-direct-message>
 </div>

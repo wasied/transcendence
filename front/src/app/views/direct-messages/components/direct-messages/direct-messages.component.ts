@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DirectMessage } from 'src/app/core/models/direct-message.model';
-import { DirectMessagesSevice } from 'src/app/core/services/direct-messages.service'; 
+import { DirectMessagesService } from 'src/app/core/services/direct-messages.service'
 import { Observable } from 'rxjs';
 import { UsersService } from 'src/app/core/services/users.service'; 
 
@@ -13,14 +13,14 @@ export class DirectMessagesComponent implements OnInit {
 
 	directMessages$!: Observable<DirectMessage[]>;
 
-	constructor (private directMessageService: DirectMessagesSevice,
+	constructor (private directMessageService: DirectMessagesService,
 				 private usersService: UsersService) {}
   
 	ngOnInit(): void {
-		this.directMessages$ = this.directMessageService.getAllDirectMsgs();
+		this.directMessages$ = this.loadDirectMessages();
 	}
 
-	loadDirectMessages() : Observable<DirectMessage[]> {
+	loadDirectMessages() : Observable<DirectMessage[]> { // update this
 		return this.directMessageService.gethardcodedDirectMessages();
 	}
 }

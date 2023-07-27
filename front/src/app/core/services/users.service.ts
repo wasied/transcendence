@@ -90,8 +90,6 @@ export class UsersService {
 	}
 	
 	storeUserId(id: number) : void {		
-		if (id != -1)
-			throw console.error('there is already a user id that is store for this session');
 		this.currentUserId = id;
 	}
 

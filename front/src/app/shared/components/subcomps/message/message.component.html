@@ -1,0 +1,12 @@
+<div class="flex m-4" [ngClass]="{'justify-end': sender === 'me'}">
+	<div *ngIf="sender !== 'me'" class="flex items-start mr-2">
+		<img [src]="photoUrl" class="w-10 h-10 rounded-full object-cover">
+	</div>
+	<div class="p-4 rounded-lg max-w-3xl break-all text-black w-screen" 
+	[ngClass]="{'bg-yellow-500 ml-auto': sender === 'me', 'bg-white mr-auto': sender === 'other'}">
+		<p>{{ text }}</p>
+	  	<p class="text-xs">
+			<span>{{ timestamp | displayMsgTimestamp }}</span>
+	  	</p>
+	</div>
+</div>
