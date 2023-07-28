@@ -1,1 +1,47 @@
-<p>stats works!</p>
+<div class="mt-4" *ngIf="stats | async as user_stats">
+    <div class="max-w-3xl inline-flex items-center w-full">
+    	<hr class="w-screen m-8" />
+      	<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+        	>STATS</span
+      	>
+    </div>
+    <div class="max-w-2xl mx-auto">
+    	<ul class="flex flex-col items-center">
+        	<li
+          	class="flex flex-row justify-between items-center w-3/4 mx-auto border-t border-white 
+			border-opacity-60 py-1"
+        	>
+          		<span>Wins</span>
+          		<span>{{ user_stats.victories }}</span>
+        	</li>
+        	<li
+          	class="flex flex-row justify-between items-center w-3/4 mx-auto border-t border-white 
+			border-opacity-60 py-1"
+        	>
+          		<span>Defeats</span>
+          		<span>{{ user_stats.defeats }}</span>
+        	</li>
+			<li
+			class="flex flex-row justify-between items-center w-3/4 mx-auto border-t border-white 
+			border-opacity-60 py-1"
+			>
+				<span>Games played</span>
+				<span>{{ user_stats.gamesPlayed }}</span>
+			</li>
+			<li
+			class="flex flex-row justify-between items-center w-3/4 mx-auto border-t border-white 
+			border-opacity-60 py-1"
+			>
+				<span>Ratio</span>
+				<span>{{ user_stats.ratio }}</span>
+			</li>
+			<li
+			class="flex flex-row justify-between items-center w-3/4 mx-auto border-y border-white 
+			border-opacity-60 py-1"
+			>
+				<span>Total Time Playing</span>
+				<span>{{ user_stats.totalTimePlaying }}</span>
+			</li>
+      	</ul>
+    </div>
+</div>

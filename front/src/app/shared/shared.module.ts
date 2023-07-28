@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { CheckboxComponent } from './components/utils/checkbox/checkbox.component';
 import { CustomButtonComponent } from './components/utils/custom-button/custom-button.component';
 import { HeaderComponent } from './components/utils/header/header.component';
-import { ModalFormComponent } from './components/utils/modal-form/modal-form.component';
 import { SeparatorLineComponent } from './components/utils/separator-line/separator-line.component';
 
 import { AchievementComponent } from './components/subcomps/achievement/achievement.component';
@@ -19,13 +18,13 @@ import { GameCardsComponent } from './components/subcomps/game-cards/game-cards.
 import { MessageComponent } from './components/subcomps/message/message.component';
 import { ChatComponent } from './components/subcomps/chat/chat.component';
 import { DisplayMsgTimestampPipe } from './display-msg-timestamp.pipe';
+import { ModalComponent } from './components/utils/modal/modal.component';
 
 @NgModule({
 	declarations: [
 		CheckboxComponent,
 		CustomButtonComponent,
 		HeaderComponent,
-		ModalFormComponent,
     	SeparatorLineComponent,
     	StatsComponent,
     	AchievementComponent,
@@ -36,7 +35,8 @@ import { DisplayMsgTimestampPipe } from './display-msg-timestamp.pipe';
 		GameCardsComponent,
 		MessageComponent,
 		ChatComponent,
-		DisplayMsgTimestampPipe
+		DisplayMsgTimestampPipe,
+  		ModalComponent
 	],
 	imports: [
     	CommonModule,
@@ -47,7 +47,6 @@ import { DisplayMsgTimestampPipe } from './display-msg-timestamp.pipe';
 		CheckboxComponent,
 		CustomButtonComponent,
 		HeaderComponent,
-		ModalFormComponent,
 		SeparatorLineComponent,
 		StatsComponent,
 		AchievementComponent,
@@ -58,7 +57,8 @@ import { DisplayMsgTimestampPipe } from './display-msg-timestamp.pipe';
 		GameCardsComponent,
 		MessageComponent,
 		ChatComponent,
-		DisplayMsgTimestampPipe
+		DisplayMsgTimestampPipe,
+		ModalComponent
 	]
 })
 export class SharedModule { }

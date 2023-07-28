@@ -7,6 +7,7 @@ import { ProfileOtherComponent } from './components/profile-other/profile-other.
 import { InfoSecurityComponent } from './components/info-security/info-security.component';
 
 import { ProfileRoutingModule } from './profile-router.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
 	declarations: [
@@ -17,7 +18,8 @@ import { ProfileRoutingModule } from './profile-router.module';
 	imports: [
 		CommonModule,
 		SharedModule,
-		ProfileRoutingModule
+		ProfileRoutingModule,
+		ReactiveFormsModule
 	]
 })
 export class ProfileModule { }

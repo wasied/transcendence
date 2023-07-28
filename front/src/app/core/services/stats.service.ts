@@ -24,6 +24,10 @@ export class StatsService {
 		return of(this.hardcodedStats);
 	}
 
+	getHardcodedStat() : Observable<Stat> { // placeholder
+		return of(this.hardcodedStats[0]);
+	}
+
 	// with DB
 	
 	private apiUrl : string = 'http://localhost:3000/stats';

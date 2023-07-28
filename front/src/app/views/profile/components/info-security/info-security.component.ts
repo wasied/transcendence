@@ -1,21 +1,96 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormGroupDirective, Validator, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-info-security',
-  templateUrl: './info-security.component.html',
-  styleUrls: ['./info-security.component.css']
+	selector: 'app-info-security',
+	templateUrl: './info-security.component.html'
 })
 export class InfoSecurityComponent {
 
-  onClickOnEditPassword() : void {
+	PasswordForm!: FormGroup;
+	PicForm!: FormGroup;
+	TelForm!: FormGroup;
+	
+	showModalPassword: boolean = false;
+	showModalPic: boolean = false;
+	showModalTel: boolean = false;
 
-  }
+	constructor (private formBuilder: FormBuilder) {
+		this.PasswordForm = this.formBuilder.group({
+			oldPassword: ['', Validators.required],
+			newPassword: ['', Validators.required],
+			newPassword2: ['', Validators.required]
+		});
 
-  onClickOnEditPic() : void {
+		this.PicForm = this.formBuilder.group({
+			newPicURL: ['', Validators.required]
+		});
 
-  }
+		this.TelForm = this.formBuilder.group({
+			newPhone : ['', Validators.required]
+		});
+	};
+	
+	onToggleTwoFactorAuth(event: Event): void {
+		const target = event.target as HTMLInputElement;
+  		const isChecked = target.checked;
 
-  onClickOnEditNumber() : void {
-    
-  }
+		if (isChecked) {
+    		console.log('tickbox checked')
+			// code to enable two-factor authentication
+  		} else {
+			console.log('tickbox unchecked');
+    		// code to disable two-factor authentication
+  		}
+	}
+	
+	onClickEditPassword() : void {
+    	console.log('edit passwd : need to be implemented');
+  	}
+
+  	onClickEditPic() : void {
+		console.log('edit profile pic : need to be implemented');
+  	}
+
+  	onClickEditNumber() : void {
+		console.log('edit number : need to be implemented');
+  	}
+
+	// forms functions
+	onSubmitNewPassword() : void {
+		console.log('new password submitted : not implemented yet');
+	}
+
+	onSubmitNewPic() : void {
+		console.log('new profile picture submitted : not implemented yet');
+	}
+
+	onSubmitNewPhone() : void {
+		console.log('new phone submitted : not implemented yet');
+	}
+
+	// modal functions
+	openModalPassword() : void {
+		this.showModalPassword = true;
+	}
+	
+	closeModalPassword() : void {
+		this.showModalPassword = false;
+	}
+
+	openModalPic() : void {
+		this.showModalPic = true;
+	}
+
+	closeModalPic() : void {
+		this.showModalPic = false;
+	}
+
+	openModalTel() : void {
+		this.showModalTel = true;
+	}
+
+	closeModalTel() : void {
+		this.showModalTel = false;
+	}
 }
