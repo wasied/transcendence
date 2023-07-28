@@ -14,6 +14,7 @@ export class HeaderComponent implements OnInit {
 	// user$!: Observable<User>;
 	private currentId!: number;
 	user$!: Observable<User>;
+	isMenuOpen = false;
   
 	constructor (private usersService: UsersService,
     			 private route: ActivatedRoute,
@@ -48,4 +49,8 @@ export class HeaderComponent implements OnInit {
 	onClickPlay() : void {
 		console.log('not implemented yet');
   	}
+
+	  toggleMenu(): void {
+		this.isMenuOpen = !this.isMenuOpen;
+	  }
 }
