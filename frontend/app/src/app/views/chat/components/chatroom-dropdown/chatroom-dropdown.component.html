@@ -1,0 +1,5 @@
+<button (click)="toggleDropdown()">Participants</button>
+
+<div *ngIf="isOpen">
+  <p *ngFor="let participant of participants">{{ participant }}</p>
+</div>

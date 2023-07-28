@@ -1,0 +1,6 @@
+<div *ngIf="gameCards$ | async as gameCards" class="bg-black w-full flex justify-center">
+	<div class="w-4/5">
+		<app-game-card *ngFor="let gameCardElem of gameCards" 
+		[gameCard]="gameCardElem"></app-game-card>
+	</div>
+</div>

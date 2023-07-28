@@ -1,9 +1,13 @@
 {
   "dependencies": {
+<<<<<<< HEAD
+    "phaser": "^3.60.0"
+=======
     "@nestjs/config": "^3.0.0",
     "@nestjs/jwt": "^10.1.0",
     "@nestjs/passport": "^10.0.0",
     "dotenv": "^16.3.1",
     "passport-oauth2": "^1.7.0"
+>>>>>>> main
   }
 }

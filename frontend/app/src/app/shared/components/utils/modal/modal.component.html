@@ -1,0 +1,7 @@
+<div *ngIf="showModal" class="fixed z-10 inset-0 flex items-center justify-center">
+	<div class="bg-white p-6 rounded shadow-md">
+		<ng-content></ng-content>
+		<button class="mt-4 px-4 py-2 bg-gray-300 rounded" (click)="closeModal()">Close</button>
+	</div>
+</div>
+ 

@@ -1,0 +1,20 @@
+<div class="text-white">
+	<!-- add 🗣️ as an image there -->
+
+	<!-- access a chatroom from this button -->
+	<button (click)="accessChatroom(chatroom.id)">Access Chatroom</button>
+
+	<p> {{ this.chatroom.chatroomName }}</p>
+	<p>Owner : {{ this.chatroom.owner }}</p>
+	<!-- <div [ngSwitch]="this.chatroom.ownerStatus">
+		<p>Owner : {{ this.chatroom.owner }} 
+			<span *ngSwitchCase="'online'">🟢</span>
+			<span *ngSwitchCase="'offline'">🔴</span>
+			<span *ngSwitchCase="'busy'">🟡</span>
+			<span *ngSwitchDefault>⚫</span>
+		</p>
+	</div> -->
+	<app-chatroom-dropdown [participants]="this.chatroom.participants"></app-chatroom-dropdown>
+	<!-- add a modal there for the access status -->
+	<button (click)="deleteChatroom()">Delete chatroom</button>
+</div>

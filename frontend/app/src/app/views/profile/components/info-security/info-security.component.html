@@ -1,0 +1,64 @@
+<div class="mt-4">
+    <div class="max-w-3xl inline-flex items-center w-full">
+    	<hr class="w-screen m-8" />
+    	<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+        >INFORMATION AND SECURITY</span
+	>
+    </div>
+    <div class="max-w-2xl mx-auto">
+    	<ul class="flex flex-col items-center space-y-4">
+    		<li class="flex flex-row justify-between items-center w-3/4 mx-auto">
+          		<span>Enable Two-Factor Authentification</span>
+          		<input
+            		id="link-checkbox"
+            		type="checkbox"
+            		value=""
+            		class="w-4 h-4 rounded accent-[#ffc93b] cursor-pointer"
+					(change)="onToggleTwoFactorAuth($event)"
+          		/>
+        	</li>
+        	<li class="flex flex-row justify-between items-center w-3/4 mx-auto">
+          		<span>Password</span>
+          		<button (click)="openModalPassword()" class="text-[#ffc93b] underline">Edit</button>
+        	</li>
+        	<li class="flex flex-row justify-between items-center w-3/4 mx-auto">
+          		<span>Profile Picture</span>
+          		<button (click)="openModalPic()" class="text-[#ffc93b] underline" >Edit</button>
+        	</li>
+        	<li class="flex flex-row justify-between items-center w-3/4 mx-auto">
+          		<span>Phone Number</span>
+          		<button (click)="openModalTel()" class="text-[#ffc93b] underline">Edit</button>
+        	</li>
+      	</ul>
+    </div>
+
+	<app-modal [showModal]="showModalPassword" (close)="closeModalPassword()">
+  		<div class="flex flex-col justify-center items-center bg-white text-black">
+    		<form [formGroup]="PasswordForm" (ngSubmit)="onSubmitNewPassword()">
+      		<div class="mb-4">
+        		<label class="block">Old Password</label>
+        		<input type="password" formControlName="oldPassword" class="w-full px-3 py-2 border rounded">
+      		</div>
+      		<div class="mb-4">
+        		<label class="block">New Password</label>
+        		<input type="password" formControlName="newPassword" class="w-full px-3 py-2 border rounded">
+      		</div>
+      		<div class="mb-4">
+        		<label class="block">Confirm New Password</label>
+        		<input type="password" formControlName="newPassword2" class="w-full px-3 py-2 border rounded">
+      		</div>
+      		<button type="submit" class="w-full py-2 bg-blue-500 text-white rounded">Change Password</button>
+    		</form>
+  		</div>
+	</app-modal>
+
+
+
+	  <app-modal [showModal]="showModalPic" (close)="closeModalPic()">
+		<!-- Pic Form Goes Here -->
+	  </app-modal>
+	  <app-modal [showModal]="showModalTel" (close)="closeModalTel()">
+		<!-- Tel Form Goes Here -->
+	  </app-modal>
+</div>
+
