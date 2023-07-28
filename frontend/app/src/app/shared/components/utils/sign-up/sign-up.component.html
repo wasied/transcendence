@@ -1,0 +1,56 @@
+<div class="flex justify-center items-center w-screen h-screen bg-black">
+  <div
+    class="flex justify-between items-center w-4/12 bg-yellow-500 rounded-xl p-8"
+  >
+    <form class="w-full" [formGroup]="signUpForm" (ngSubmit)="onSubmitForm()">
+      <div class="flex justify-between items-center w-full my-2">
+        <label class="text-2xl" for="username">Username</label>
+        <input
+          class="placeholder:"
+          placeholder="John Doe"
+          id="username"
+          type="text"
+          formControlName="username"
+          required
+        />
+      </div>
+      <div class="flex justify-between items-center w-full my-2">
+        <label class="text-2xl" for="password">Password</label>
+        <input
+          placeholder="*******"
+          id="password"
+          type="password"
+          formControlName="password"
+          required
+        />
+      </div>
+      <div class="flex justify-between items-center w-full my-2">
+        <label class="text-2xl" for="imageUrl">Image URL</label>
+        <input
+          placeholder="your_profile_pic.jpeg"
+          id="imageUrl"
+          type="text"
+          formControlName="imageUrl"
+        />
+      </div>
+      <div class="flex justify-between items-center w-full my-2">
+        <label class="text-2xl" for="phoneNumber">Phone Number</label>
+        <input
+          placeholder="+33123442232"
+          id="phoneNumber"
+          type="tel"
+          formControlName="phoneNumber"
+        />
+      </div>
+      <div class="w-full m-8"></div>
+      <div class="flex justify-center items-center rounded-xl">
+        <button
+          type="submit"
+          class="w-8/12 border border-2 border-black rounded-2xl hover:bg-white hover:text-black bg-black text-white"
+        >
+          SIGN UP
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

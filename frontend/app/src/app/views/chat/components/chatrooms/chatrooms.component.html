@@ -1,0 +1,4 @@
+<div *ngIf="chatrooms$ | async as chatrooms">
+	<app-chatroom *ngFor="let chatroomCard of chatrooms" [chatroom]="chatroomCard"
+	(deleteRequest)="deleteChatroom($event)"></app-chatroom>
+</div>
