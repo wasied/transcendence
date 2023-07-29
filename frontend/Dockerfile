@@ -5,6 +5,8 @@ WORKDIR /app
 COPY ./app/package*.json ./
 RUN npm ci
 COPY ./app ./
+
+ENV WEBSOCKET_PORT ${WEBSOCKET_PORT}
 RUN npm run build
 
 # Stage 2: Serve app with nginx server

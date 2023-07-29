@@ -23,6 +23,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - ${BACKEND_API_PORT}:${BACKEND_API_PORT}
+      - ${WEBSOCKET_PORT}:${WEBSOCKET_PORT}
     environment:
       - APP_URL=${APP_URL}
       - BACKEND_API_PORT=${BACKEND_API_PORT}
