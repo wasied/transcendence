@@ -28,23 +28,23 @@ export class SessionsUsersService {
 	
 	private apiUrl: string = 'http://localhost:3000/sessions_users'; // change this
 
+	// retrieve all session users
 	getAllSessionsUsers() : Observable<SessionsUser[]> {
 		return this.http.get<SessionsUser[]>(`${this.apiUrl}`);
 	}
 
+	// retrieve a sessionUser by it's id
 	getSessionUserById(id: number) : Observable<SessionsUser> {
 		return this.http.get<SessionsUser>(`${this.apiUrl}/${id}`);
 	}
 
-	// used for display game history (returns sessionUsers that had compete against a given user (or are this user))
+	// used for display game history (returns sessionUsers that had compete against a given user 
+	// (or are this user))
 	getSessionUsersImplyingGivenUser(userId: number) : Observable<SessionsUser[]> {
-		return this.http.get<SessionsUser[]>(`${this.apiUrl}`); // modify this
+		return this.http.get<SessionsUser[]>(`${this.apiUrl}`);
 	}
 
-	getActiveSessionUsers() : Observable<SessionsUser[]> {
-		return this.http.get<SessionsUser[]>(`${this.apiUrl}`, { params: { alive: true } });
-	}
-
+	// used to display that are currently on a game, as players but not spectators
 	getActiveParticipantsSessionUsers() : Observable<SessionsUser[]> {
 		return this.http.get<SessionsUser[]>(`${this.apiUrl}`, { params: { alive: true, spectator: false }} );
 	}

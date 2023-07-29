@@ -25,7 +25,6 @@ export class FriendService
 		return of(this.hardcodedFriends);
 	}
 
-
 	// with DB
 	
 	private apiURL : string = 'http://localhost:3000/friends';
@@ -45,13 +44,8 @@ export class FriendService
 		return this.http.get<Friend[]>(`${this.apiURL}`);
 	}
 
-	// retrieve the two opponents of a game session, after a matchmaking process
-	getOpponentsFromGameSession() : Observable<Friend[]> {
-		return this.http.get<Friend[]>(`${this.apiURL}`);
-	}
-
-	// delete a friend, using the friends id 
-	delFriend(id: number) : Observable<void> {
-		return this.http.delete<void>(`${this.apiURL}/${id}`);
+	// delete a friend, using the friends id and the user id
+	delFriend(UserId: number, FriendId: number) : Observable<void> {
+		return this.http.delete<void>(`${this.apiURL}`);
 	}
 }
