@@ -6,7 +6,6 @@ const routes: Routes = [
 	() => import('./views/landing-page/landing-page.module').then(m => m.LandingPageModule)},
 	{path: 'main', loadChildren:
 	() => import('./views/main-menu/main-menu.module').then(m => m.MainMenuModule)},
-	// child routing modules
 	{path: 'main/friends', loadChildren:
 	() => import('./views/friends-view/friends-view.module').then(m => m.FriendsViewModule)},
 	{ path: 'main/games', loadChildren:
@@ -15,6 +14,13 @@ const routes: Routes = [
 	() => import('./views/match-history-view/match-history-view.module').then(m => m.MatchHistoryViewModule)},
 	{ path: 'main/profile', loadChildren:
 	() => import('./views/profile/profile.module').then(m => m.ProfileModule)},
+	// game menus
+	{ path: 'main/game_params', loadChildren:
+	() => import('./views/game-params/game-params.module').then(m => m.GameParamsModule)},
+	{ path: 'main/game_lobby', loadChildren:
+	() => import('./views/game-lobby/game-lobby.module').then(m => m.GameLobbyModule)},
+	{ path: 'main/exit_game', loadChildren:
+	() => import('./views/game-exit/game-exit.module').then(m => m.GameExitModule)},
 	// core features of the game (chatroom, pong game, direct messages)
 	{path: 'main/chatrooms', loadChildren:
 	() => import('./views/chat/chat.module').then(m => m.ChatModule)},

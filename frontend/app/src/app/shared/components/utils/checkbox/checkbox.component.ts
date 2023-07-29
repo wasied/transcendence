@@ -1,22 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-checkbox',
-  templateUrl: './checkbox.component.html',
-  styleUrls: ['./checkbox.component.css']
+	selector: 'app-checkbox',
+	templateUrl: './checkbox.component.html'
 })
-export class CheckboxComponent implements OnInit {
-  form!: FormGroup;
-  
-  ngOnInit() : void {
-    this.form = new FormGroup({
-      myCheckbox: new FormControl(false)
-    });
-  }
+export class CheckboxComponent {
+	@Output() checkboxChange = new EventEmitter<boolean>();
 
-  // add code that will enable two factor authentication there
-  onClickingOnCheckbox() : void {
-
-  }
+	onChange(event: Event) {
+		const element = event.target as HTMLInputElement;
+		this.checkboxChange.emit(element.checked);
+	}
 }

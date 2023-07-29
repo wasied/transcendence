@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit {
   	}
 
 	onClickPlay() : void {
-		console.log('not implemented yet');
+		this.router.navigate(['main', 'game_params']);
   	}
 
 	  toggleMenu(): void {

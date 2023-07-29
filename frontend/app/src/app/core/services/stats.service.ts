@@ -30,16 +30,19 @@ export class StatsService {
 
 	// with DB
 	
-	private apiUrl : string = 'http://localhost:3000/stats';
+	private apiUrl : string = 'http://localhost:3000/stats'; // change that
 
+	// to have all stats from every player
 	getAllStats() : Observable<Stat[]> {
 		return this.http.get<Stat[]>(`${this.apiUrl}`);
 	}
 
+	// to get the stats based on it's id
 	getStatById(id: number) : Observable<Stat> {
 		return this.http.get<Stat>(`${this.apiUrl}/${id}`);
 	}
 
+	// to get the stats pertaining to a given player, based on the player's id
 	getStatsFromUserById(userId: number) : Observable<Stat> {
 		return this.http.get<Stat>(`${this.apiUrl}/${userId}`);
 	}

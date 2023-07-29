@@ -23,7 +23,8 @@
     "allowSyntheticDefaultImports": true,
     "lib": [
       "ES2022",
-      "dom"
+      "dom",
+      "DOM"
     ],
     "skipLibCheck": true // supress typescript from checking Phaser (because of compatibility problems)
   },
