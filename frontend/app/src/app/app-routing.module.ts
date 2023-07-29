@@ -9,11 +9,13 @@ import { LandingPageComponent } from "./components/views/landing-page/landing-pa
 import { MainMenuComponent } from "./components/views/main-menu/main-menu.component";
 import { ProfileSelfComponent } from "./components/views/profile-self/profile-self.component";
 
+import { WhitePageComponent } from "./components/views/white-page/white-page.component";
+
 const routes: Routes = [
 	{path: '', component: LandingPageComponent},
 	{path: 'main', component: MainMenuComponent},
 	{path: 'signup', component: SignUpComponent},
-	{path: 'signin', component:SignInComponent},
+	{path: 'signin', component: WhitePageComponent},
 	{path: 'main/chatrooms', component:ChatroomsViewComponent},
 	{path: 'main/direct_messages', component:DirectMessagesViewComponent},
 	{path: 'main/friends', component:FriendsViewComponent},
