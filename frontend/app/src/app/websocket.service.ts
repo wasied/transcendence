@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EnvironmentService } from './environment.service';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -7,8 +7,8 @@ import { EnvironmentService } from './environment.service';
 export class WebsocketService {
   ws: WebSocket;
 
-  constructor(private envService: EnvironmentService) {
-    this.ws = new WebSocket(`ws://backend:${this.envService.get('WEBSOCKET_PORT')}`);
+  constructor() {
+    this.ws = new WebSocket(`ws://backend:${environment.websocketPort}`);
   }
 
   sendMessage(msg: string) {
