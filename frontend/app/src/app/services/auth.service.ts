@@ -1,27 +1,25 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { Router } from '@angular/router';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AuthService {
 
-	constructor (private http: HttpClient) {};
+	constructor (private http: HttpClient, private router: Router) {};
 
-	private apiURL: string = 'http://localhost:8080/auth/login'; // change that
+	private apiURL: string = 'http://localhost:8080/auth';
 	authURL!: string;
-	authObs$!: Observable<string>;
+	authObs$!: Observable<any>;
 
-	retrieveURL() : Observable<string> {
-		return this.http.get<string>(`${this.apiURL}`);
+	retrieveURL() : Observable<any> {
+		return this.http.get<any>(`${this.apiURL}/url`);
 	}
 
-	subscribeObservable() : void {
-		this.authObs$.subscribe(value => {
-			console.log(value);
-			this.authURL = value;
-		});
+	async subscribeObservable(): Promise<void> {
+		this.authURL = (await this.authObs$.toPromise()).url;
 		window.location.href = this.authURL;
 	}
 

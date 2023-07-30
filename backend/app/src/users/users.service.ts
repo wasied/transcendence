@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user';
 import { Session } from '../sessions/session';
 import { dbClient } from '../db';
@@ -87,9 +87,9 @@ export class UsersService {
 
 	create(user: User): void {
 		const queryResult = dbClient.query(
-			`INSERT	INTO users(username, a2f_key, profile_picture_url, state)
-					VALUES($1, $2, $3, $4);`,
-			[user.username, user.a2f_key, user.profile_picture_url, "online"]
+			`INSERT	INTO users(id, username, status, a2f_key, profile_picture_url)
+					VALUES($1, $2, $3, $4, $5);`,
+			[user.id, user.username, "online", user.a2f_key, user.profile_picture_url]
 		);
 	}
 
@@ -102,14 +102,28 @@ export class UsersService {
 		);
 	}
 
-	findStates(user_ids: number[]): void {
-		// Get users state from db and if one is online, check if he is in a game and return online, offline, or in a game
+	async isOnline(user_id: number[]): Promise<boolean> {
+		const queryResult = await dbClient.query(
+			`SELECT status	FROM users
+							WHERE id = $1;`,
+			[user_id]
+		);
+		if (!queryResult.rows.length || !queryResult.rows[0] || !queryResult.rows[0].length)
+			throw new HttpException("User not found.", HttpStatus.NOT_FOUND);
+
+		if (queryResult.rows[0][0] === "offline")
+			return false;
+		else
+			return true;
+	}
+
+	findStatus(user_id: number[]): void {
 	}
 
 	logIn(user_id: number): void {
 		const queryResult = dbClient.query(
 			`UPDATE	users
-					SET 	state=$1
+					SET 	status=$1
 					WHERE	id=$2;`,
 			["online", user_id]
 		);
@@ -118,7 +132,7 @@ export class UsersService {
 	logOut(user_id: number): void {
 		const queryResult = dbClient.query(
 			`UPDATE	users
-					SET		state=$1
+					SET		status=$1
 					WHERE	id=$2;`,
 			["offline", user_id]
 		);

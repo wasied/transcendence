@@ -20,6 +20,5 @@ export class HeaderLpComponent implements OnInit {
 
   onSignIn() : void {
     this.authService.triggerAuth();
-    this.router.navigateByUrl('/signin');
   }
 }

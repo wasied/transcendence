@@ -13,11 +13,10 @@ export const dbClient = new Client(config);
 async function createTables() {
     await dbClient.query(`
         CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
+            id INT PRIMARY KEY,
             username VARCHAR(255) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            state VARCHAR(255) NOT NULL,
-            a2f_key VARCHAR(255),
+            status VARCHAR(255) NOT NULL,
+            a2f_key VARCHAR(255) DEFAULT NULL,
             profile_picture_url VARCHAR(255),
             updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
             created_at TIMESTAMP NOT NULL DEFAULT NOW()

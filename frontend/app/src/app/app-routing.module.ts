@@ -15,7 +15,7 @@ const routes: Routes = [
 	{path: '', component: LandingPageComponent},
 	{path: 'main', component: MainMenuComponent},
 	{path: 'signup', component: SignUpComponent},
-	{path: 'signin', component: WhitePageComponent},
+	{path: 'auth/redirect', component: WhitePageComponent},
 	{path: 'main/chatrooms', component:ChatroomsViewComponent},
 	{path: 'main/direct_messages', component:DirectMessagesViewComponent},
 	{path: 'main/friends', component:FriendsViewComponent},
