@@ -131,25 +131,24 @@ async function createTables() {
         );
     `);
 
-    await dbClient.query(`
-        ALTER TABLE friends ADD FOREIGN KEY (user_uid1) REFERENCES users (id);
-        ALTER TABLE friends ADD FOREIGN KEY (user_uid2) REFERENCES users (id);
-        ALTER TABLE users_achievements ADD FOREIGN KEY (user_uid) REFERENCES users (id);
-        ALTER TABLE users_achievements ADD FOREIGN KEY (achievement_uid) REFERENCES achievements_list (id);
-        ALTER TABLE sessions ADD FOREIGN KEY (winner_uid) REFERENCES users (id);
-        ALTER TABLE sessions_users ADD FOREIGN KEY (user_uid) REFERENCES users (id);
-        ALTER TABLE sessions_users ADD FOREIGN KEY (session_uid) REFERENCES sessions (id);
-        ALTER TABLE blocked ADD FOREIGN KEY (blocker_uid) REFERENCES users (id);
-        ALTER TABLE blocked ADD FOREIGN KEY (blocked_uid) REFERENCES users (id);
-        ALTER TABLE chatrooms ADD FOREIGN KEY (owner_uid) REFERENCES users (id);
-        ALTER TABLE chatrooms_users ADD FOREIGN KEY (chatroom_uid) REFERENCES chatrooms (id);
-        ALTER TABLE chatrooms_users ADD FOREIGN KEY (user_uid) REFERENCES users (id);
-        ALTER TABLE chatrooms_messages ADD FOREIGN KEY (chatroom_user_uid) REFERENCES chatrooms_users (id);
-        ALTER TABLE chatrooms_punishments ADD FOREIGN KEY (chatroom_user_admin_uid) REFERENCES chatrooms_users (id);
-        ALTER TABLE chatrooms_punishments ADD FOREIGN KEY (chatroom_user_target_uid) REFERENCES chatrooms_users (id);
-        ALTER TABLE chatrooms_invitations ADD FOREIGN KEY (chatroom_user_uid) REFERENCES chatrooms_users (id);
-        ALTER TABLE chatrooms_invitations ADD FOREIGN KEY (session_user_uid) REFERENCES sessions_users (id);
-    `);
+    await dbClient.query("ALTER TABLE friends ADD FOREIGN KEY (user_uid1) REFERENCES users (id);");
+    await dbClient.query("ALTER TABLE friends ADD FOREIGN KEY (user_uid2) REFERENCES users (id);");
+    await dbClient.query("ALTER TABLE users_achievements ADD FOREIGN KEY (user_uid) REFERENCES users (id);");
+    await dbClient.query("ALTER TABLE users_achievements ADD FOREIGN KEY (achievement_uid) REFERENCES achievements_list (id);");
+    await dbClient.query("ALTER TABLE sessions ADD FOREIGN KEY (winner_uid) REFERENCES users (id);");
+    await dbClient.query("ALTER TABLE sessions_users ADD FOREIGN KEY (user_uid) REFERENCES users (id);");
+    await dbClient.query("ALTER TABLE sessions_users ADD FOREIGN KEY (session_uid) REFERENCES sessions (id);");
+    await dbClient.query("ALTER TABLE blocked ADD FOREIGN KEY (blocker_uid) REFERENCES users (id);");
+    await dbClient.query("ALTER TABLE blocked ADD FOREIGN KEY (blocked_uid) REFERENCES users (id);");
+    await dbClient.query("ALTER TABLE chatrooms ADD FOREIGN KEY (owner_uid) REFERENCES users (id);");
+    await dbClient.query("ALTER TABLE chatrooms_users ADD FOREIGN KEY (chatroom_uid) REFERENCES chatrooms (id);");
+    await dbClient.query("ALTER TABLE chatrooms_users ADD FOREIGN KEY (user_uid) REFERENCES users (id);");
+    await dbClient.query("ALTER TABLE chatrooms_messages ADD FOREIGN KEY (chatroom_user_uid) REFERENCES chatrooms_users (id);");
+    await dbClient.query("ALTER TABLE chatrooms_punishments ADD FOREIGN KEY (chatroom_user_admin_uid) REFERENCES chatrooms_users (id);");
+    await dbClient.query("ALTER TABLE chatrooms_punishments ADD FOREIGN KEY (chatroom_user_target_uid) REFERENCES chatrooms_users (id);");
+    await dbClient.query("ALTER TABLE chatrooms_invitations ADD FOREIGN KEY (chatroom_user_uid) REFERENCES chatrooms_users (id);");
+    await dbClient.query("ALTER TABLE chatrooms_invitations ADD FOREIGN KEY (session_user_uid) REFERENCES sessions_users (id);");
+
 }
 
 

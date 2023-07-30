@@ -12,11 +12,11 @@ export class HeaderLpComponent implements OnInit {
   
   constructor(private router: Router, private authService: AuthService) {};
   
-  ngOnInit(): void {}
+	ngOnInit(): void {}
 
-  onAddNewUser() : void {
-    this.router.navigateByUrl('/signup');
-  }
+	onAddNewUser() : void { // do not use this one for now
+		this.router.navigateByUrl('/signup');
+	}
 
   onSignIn() : void {
     this.authService.triggerAuth();

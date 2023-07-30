@@ -88,7 +88,7 @@ export class SessionsService {
 										WHERE session_uid = $2
 										AND spectator = false;
 					);`,
-		[winner_uid, session_id]
+			[winner_uid, session_id]
 		);
 	}
 }
