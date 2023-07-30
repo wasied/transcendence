@@ -1,4 +1,5 @@
-import { Controller, Body, Param, Get, Post, Put, Delete } from '@nestjs/common';
+import { Controller, Body, Param, Request, Get, Post, Put, Delete, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { User } from './user';
 import { Session } from '../sessions/session';
 import { UsersService } from './users.service';
@@ -10,6 +11,12 @@ export class UsersController {
 	@Get()
 	async findAll(): Promise<User[]> {
 		return this.usersService.findAll();
+	}
+
+	@Get('me')
+	@UseGuards(AuthGuard('jwt'))
+	async findMe(@Request() request: any) {
+		return request.user;
 	}
 
 	@Get('/username/:username')
@@ -33,8 +40,8 @@ export class UsersController {
 	}
 
 	@Put()
-	async update(@Body('user') user: User): Promise<void> {
-		this.usersService.update(user);
+	async updateProfilePicture(@Body('id') id: number, @Body('url') url: string): Promise<void> {
+		this.usersService.updateProfilePicture(id, url);
 	}
 
 	/*** Block/Unblock ***/
