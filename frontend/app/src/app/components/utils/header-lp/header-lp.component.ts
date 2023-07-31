@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { AuthService } from 'src/app/services/auth.service';
+
 @Component({
   selector: 'app-header-lp',
   templateUrl: './header-lp.component.html',
@@ -8,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class HeaderLpComponent implements OnInit {
   
-	constructor(private router: Router) {};
+  constructor(private router: Router, private authService: AuthService) {};
   
 	ngOnInit(): void {}
 
@@ -16,8 +18,7 @@ export class HeaderLpComponent implements OnInit {
 		this.router.navigateByUrl('/signup');
 	}
 
-	onSignIn() : void {
-		// this.router.navigateByUrl('/signin'); use is after
-		this.router.navigateByUrl('/main');
-	}
+  onSignIn() : void {
+    this.authService.triggerAuth();
+  }
 }

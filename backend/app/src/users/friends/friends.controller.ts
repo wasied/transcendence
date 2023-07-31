@@ -1,4 +1,4 @@
-import { Controller, Body, Param, Get, Post, Delete } from '@nestjs/common';
+import { Controller, Body, Param, Request, Get, Post, Delete } from '@nestjs/common';
 import { User } from '../user';
 import { FriendsService } from './friends.service';
 
@@ -6,9 +6,9 @@ import { FriendsService } from './friends.service';
 export class FriendsController {
 	constructor(private readonly friendsService: FriendsService) {}
 
-	@Get(':id') // Get id of user you want to see the friends of
-	async findAll(@Param('id') id: number): Promise<User[]> {
-		return this.friendsService.findAll(id);
+	@Get()
+	async findAll(@Request() request: any): Promise<User[]> {
+		return this.friendsService.findAll(request.id);
 	}
 
 /*

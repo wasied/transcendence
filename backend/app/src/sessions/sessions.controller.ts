@@ -21,8 +21,10 @@ export class SessionsController {
 		this.sessionsService.create(automatching, customization);
 	}
 
+/*
 	@Put()
 	async update(@Body('id') id: number, @Body('ended') ended: boolean, @Body('winner_uid') winner_uid: number): Promise<void> {
 		//this.sessionsService.update(id, ended, winner_uid);
 	}
+*/
 }
