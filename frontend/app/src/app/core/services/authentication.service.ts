@@ -7,13 +7,31 @@ import { Observable } from "rxjs";
 })
 export class AuthenticationService {
 
+	private authToken42: string | null = null;
 	private doubleAuthActivated: boolean = false;
 	private apiURL: string = 'http://localhost:8080/auth';
 	authURL!: string;
 	authObs$!: Observable<any>;
 
 	constructor (private http: HttpClient) {}
+
+	getAuthToken42() : string | null {
+		return this.authToken42;
+	}
+
+	rmAuthToken42() : void {
+		this.authToken42 = null;
+	}
 	
+	storeAuthToken42(token: string) : void {
+		if (!this.authToken42) {
+			this.authToken42 = token;
+		} else {
+			// raise error here
+		}
+		console.log('stored token is : ', this.authToken42);
+	}
+
 	// should activate/deactivate 2fa, returning a status : success on success
 	change2faStatus() : Observable<{status: string}> {
 		this.doubleAuthActivated = !this.doubleAuthActivated;
