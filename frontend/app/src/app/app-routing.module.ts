@@ -1,7 +1,11 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
+import { WhitePageComponent } from "./components/views/white-page/white-page.component";
+
 const routes: Routes = [
+	{path: 'auth/redirect', component: WhitePageComponent},
+    
 	{path: '', loadChildren:
 	() => import('./views/landing-page/landing-page.module').then(m => m.LandingPageModule)},
 	{path: 'main', loadChildren:

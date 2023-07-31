@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Friend } from 'src/app/models/friend.model';
 import { FriendService } from 'src/app/services/friends.service';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import axios from '../../../axios';
 
 @Component({
   selector: 'app-friends-view',
@@ -12,16 +12,20 @@ import { HttpClient } from '@angular/common/http';
 export class FriendsViewComponent {
   friends: any[] = []; // Store the friends' data
 
-  constructor (private http: HttpClient) {}
+  constructor () {}
 
-  private apiURL : string = 'http://localhost:3000/friends';
+  private apiURI : string = '/users/friends';
   
   ngOnInit(): void {
         this.getFriends();
       }
   getFriends(): void {
-    this.http.get<any>(this.apiURL).subscribe(friends => {
-      this.friends = friends;
+    axios.get(this.apiURI)
+    .then((response) => {
+      this.friends = response.data;
+    })
+    .catch((err) => {
+      console.log(err);
     });
   }
 }

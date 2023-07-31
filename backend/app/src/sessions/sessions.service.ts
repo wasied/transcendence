@@ -58,7 +58,7 @@ export class SessionsService {
 				`INSERT	INTO sessions_users(user_uid, session_uid, spectator)
 						VALUES($1, $2, $3);
 				UPDATE	users
-						SET state = 'Spectating a game'
+						SET status = 'Spectating a game'
 						WHERE id = $1;`,
 				[user_id, session_id, spectator]
 			);
@@ -68,7 +68,7 @@ export class SessionsService {
 				`INSERT	INTO sessions_users(user_uid, session_uid, spectator)
 						VALUES($1, $2, $3);
 				UPDATE	users
-						SET state = 'Playing a game'
+						SET status = 'Playing a game'
 						WHERE id = $1;`,
 				[user_id, session_id, spectator]
 			);
@@ -82,7 +82,7 @@ export class SessionsService {
 							winner_uid = $1
 					WHERE	id=$2;
 			UPDATE	users
-					SET		state = 'online'
+					SET		status = 'online'
 					WHERE	id IN(
 						SELECT user_uid	FROM sessions_users
 										WHERE session_uid = $2
