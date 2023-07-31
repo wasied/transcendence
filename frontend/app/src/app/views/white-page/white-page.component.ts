@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
-import axios, { setAuthToken } from '../../../axios';
-import { HttpClient } from '@angular/common/http';
+import { setAuthToken } from '../../axios';
 
 @Component({
   selector: 'app-white-page',
@@ -12,7 +10,6 @@ import { HttpClient } from '@angular/common/http';
 })
 export class WhitePageComponent {
 	constructor(
-		private http: HttpClient,
 		private route: ActivatedRoute,
 		private router: Router
 	) {};

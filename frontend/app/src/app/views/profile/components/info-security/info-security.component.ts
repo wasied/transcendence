@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormGroupDirective, Validator, Validators } from '@angular/forms';
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
 
 @Component({
 	selector: 'app-info-security',
@@ -15,7 +16,7 @@ export class InfoSecurityComponent {
 	showModalPic: boolean = false;
 	showModalTel: boolean = false;
 
-	constructor (private formBuilder: FormBuilder) {
+	constructor (private formBuilder: FormBuilder, private auth: AuthenticationService) {
 		this.PasswordForm = this.formBuilder.group({
 			oldPassword: ['', Validators.required],
 			newPassword: ['', Validators.required],
@@ -36,11 +37,9 @@ export class InfoSecurityComponent {
   		const isChecked = target.checked;
 
 		if (isChecked) {
-    		console.log('tickbox checked')
-			// code to enable two-factor authentication
+			this.auth.change2faStatus();
   		} else {
-			console.log('tickbox unchecked');
-    		// code to disable two-factor authentication
+    		this.auth.change2faStatus();
   		}
 	}
 	

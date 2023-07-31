@@ -9,14 +9,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { WhitePageComponent } from './components/views/white-page/white-page.component';
+import { WhitePageComponent } from './views/white-page/white-page.component';
 
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
 	declarations: [
 		AppComponent,
-    WhitePageComponent,
+    	WhitePageComponent,
 	],
 	imports: [
     	BrowserModule,
