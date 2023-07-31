@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
 
 @Component({
   selector: 'app-header-lp',
@@ -8,7 +9,8 @@ import { Router } from '@angular/router';
 })
 export class HeaderLpComponent implements OnInit {
   
-	constructor(private router: Router) {};
+	constructor(private router: Router,
+				private authService: AuthenticationService) {};
   
 	ngOnInit(): void {}
 
@@ -17,9 +19,6 @@ export class HeaderLpComponent implements OnInit {
 	}
 
 	onSignIn() : void {
-		// this.router.navigateByUrl('/signin'); use is after
-		//this.router.navigateByUrl('/main');
-
-		window.location.href = '`${process.env.AUTH_42_OAUTH_URL}/authorize?client_id=${process.env.AUTH_42_CLIENT_KEY}&redirect_uri=${AUTH_42_RETURN_URI}&response_type=codeˋ';
+		this.authService.triggerAuth();
 	}
 }

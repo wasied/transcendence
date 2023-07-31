@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { WhitePageComponent } from "./components/views/white-page/white-page.component";
+import { WhitePageComponent } from "./views/white-page/white-page.component";
 
 const routes: Routes = [
 	{path: 'auth/redirect', component: WhitePageComponent},
