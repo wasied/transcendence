@@ -41,7 +41,6 @@ export class ChatroomsService {
 		return this.http.get<Chatroom>(`${this.apiURL}/${id}`);
 	}
 
-
 	// back end should be able to retrieve id of owner and participants, and attribute a new id 
 	// to newly create chatroom
 	createChatroom(newName: string, newOwner: string, newAccesStatus: string) : Observable<Chatroom> {

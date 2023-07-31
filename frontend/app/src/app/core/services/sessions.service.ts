@@ -25,8 +25,7 @@ export class SessionsService {
 	}
 	
 	
-	
-	// with observables
+	// with DB
 	
 	private apiURL = 'http://localhost:3000/sessions'; // change this
 
