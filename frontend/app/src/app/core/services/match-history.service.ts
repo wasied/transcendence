@@ -11,7 +11,7 @@ import { SessionsUser } from "../models/sessions-user.model";
 @Injectable({
 	providedIn: 'root'
 })
-export class GameHistoryService {
+export class MatchHistoryService {
 
 	constructor (private usersService: UsersService,
 				 private sessionsService: SessionsService,

@@ -1,0 +1,11 @@
+<!-- Display when matchmaking process is currently proceed -->
+<div class="text-white" *ngIf="!isMatched">
+	<p>{{ this.loadingMessage }}</p>
+</div>
+
+<!-- Display when matchmaking process has been completed -->
+<div class="text-white" *ngIf="isMatched">
+	<!-- put player card there -->
+	<p>VS</p>
+	<!-- put opponent there -->
+</div>

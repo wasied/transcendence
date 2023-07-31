@@ -23,25 +23,29 @@ export class SessionsService {
 	getHarcodedSessions(): Observable<Session[]> {
 		return of(this.hardcodedSessions);
 	}
-	// with observables
+	
+	
+	// with DB
 	
 	private apiURL = 'http://localhost:3000/sessions'; // change this
 
+	// return all the game sessions
 	getAllSessions() : Observable<Session[]> {
 		return this.http.get<Session[]>(`${this.apiURL}`);
 	}
 
-	// can be use to display all sessions that are currently active, to display in spectator mode menu
-	getActiveSessions() : Observable<Session[]> {
-		return this.http.get<Session[]>(`${this.apiURL}`, { params: { isEnded: false } });
-	}
-
+	// return one session based on it's id
 	getSessionById(id: number) : Observable<Session> {
 		return this.http.get<Session>(`${this.apiURL}/${id}`);
 	}
 
-	// used to display history of a given user
+	// Can be use to display all sessions that are currently active, to display in spectator mode menu
+	getActiveSessions() : Observable<Session[]> {
+		return this.http.get<Session[]>(`${this.apiURL}`, { params: { isEnded: false } });
+	}
+
+	// Returns the history of every session where a given player has participated. Used in game history.
 	getSessionsHistoryByUserId(userId: number) : Observable<Session[]> {		
-		return this.http.get<Session[]>(`${this.apiURL}`); // change this
+		return this.http.get<Session[]>(`${this.apiURL}`);
 	}
 }

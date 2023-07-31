@@ -25,29 +25,27 @@ export class FriendService
 		return of(this.hardcodedFriends);
 	}
 
-
-	// with observables
+	// with DB
 	
 	private apiURL : string = 'http://localhost:3000/friends';
 
+	// retrieve all friends
+	getAllFriends() : Observable<Friend[]> {
+		return this.http.get<Friend[]>(`${this.apiURL}`);
+	}
+	
+	// returns a friend by its id
 	getFriendById(id: number) : Observable<Friend> {
 		return this.http.get<Friend>(`${this.apiURL}/${id}`);
 	}
 
-	getFriendByUsername(username: string) : Observable<Friend> {
-		return this.http.get<Friend>(`${this.apiURL}?username=${username}`);
-	}
-
-	getAllFriends() : Observable<Friend[]> {
+	// retrieve all friends of a given user, identified by it's id
+	getFriendsByUserId(userId: number) : Observable<Friend[]> {
 		return this.http.get<Friend[]>(`${this.apiURL}`);
 	}
 
-	delFriend(id: number) : Observable<void> {
-		return this.http.delete<void>(`${this.apiURL}/${id}`);
-	}
-
-	// api from backend should be able to retrieve all friends of a given user, identified by it's id
-	getFriendsByUserId(userId: number) : Observable<Friend[]> {
-		return this.http.get<Friend[]>(`${this.apiURL}`); // modify that
+	// delete a friend, using the friends id and the user id
+	delFriend(UserId: number, FriendId: number) : Observable<void> {
+		return this.http.delete<void>(`${this.apiURL}`);
 	}
 }

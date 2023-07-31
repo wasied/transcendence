@@ -18,6 +18,8 @@ export class HeaderLpComponent implements OnInit {
 
 	onSignIn() : void {
 		// this.router.navigateByUrl('/signin'); use is after
-		this.router.navigateByUrl('/main');
+		//this.router.navigateByUrl('/main');
+
+		window.location.href = '`${process.env.AUTH_42_OAUTH_URL}/authorize?client_id=${process.env.AUTH_42_CLIENT_KEY}&redirect_uri=${AUTH_42_RETURN_URI}&response_type=codeˋ';
 	}
 }

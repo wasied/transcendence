@@ -26,20 +26,23 @@ export class ChatroomsService {
 		return of(this.hardcodedChatrooms);
 	}
 	
-	// with observables
+
+	// with DB
 
 	private apiURL: string = 'http://localhost:3000/chatrooms'; // change that
 	
+	// get all chatrooms from the DB
+	getAllChatrooms() : Observable<Chatroom[]> {
+		return this.http.get<Chatroom[]>(`${this.apiURL}`);
+	}
+
+	// get a chatroom based on the chatroom's id
 	getChatroomByID(id: number) : Observable<Chatroom> {
 		return this.http.get<Chatroom>(`${this.apiURL}/${id}`);
 	}
 
-	getAllChatrooms() : Observable<Chatroom[]> { // should be sufficient (need to display all chatrooms)
-		return this.http.get<Chatroom[]>(`${this.apiURL}`);
-	}
-
-	// modify this later, the attribution of a new id should be handled by the back end
-	// back end should be able to retrieve id of owner and participants, and attribute a new id to newly create chatroom
+	// back end should be able to retrieve id of owner and participants, and attribute a new id 
+	// to newly create chatroom
 	createChatroom(newName: string, newOwner: string, newAccesStatus: string) : Observable<Chatroom> {
 		return this.http.post<Chatroom>(`${this.apiURL}`, 
 		{ chatroomName: newName, owner: newOwner, accesStatus: newAccesStatus });
@@ -59,13 +62,14 @@ export class ChatroomsService {
 		{ accessStatus: newAccessRights });
 	}
 
+	
 	addParticipantToChatroom(chatroomiId: number, participantName: string) : Observable<Chatroom> {
-		return this.http.put<Chatroom>(`${this.apiURL}/${chatroomiId}`, // change this
+		return this.http.put<Chatroom>(`${this.apiURL}/${chatroomiId}`,
 		{ participantName });
 	}
 
 	// should trigger the backend to destroy a participant from participants[], retrieving it's id using username
 	delParticipantFromChatroom(participantName: string) : Observable<void> {
-		return this.http.delete<void>(`${this.apiURL}/${participantName}`); // modify this
+		return this.http.delete<void>(`${this.apiURL}/${participantName}`);
 	}
 }
