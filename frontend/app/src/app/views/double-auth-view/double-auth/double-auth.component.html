@@ -1,0 +1,13 @@
+<form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+	<div>
+		<label for="password">Password</label>
+		<input id="code" type="password" formControlName="code">
+	</div>
+	<button type="submit">Submit</button>
+</form>
+
+
+<!-- Display response here -->
+<div *ngIf="response$ | async as response">
+	{{ response | json }}
+</div>
