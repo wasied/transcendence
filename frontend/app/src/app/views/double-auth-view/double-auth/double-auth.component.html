@@ -8,6 +8,6 @@
 
 
 <!-- Display response here -->
-<div *ngIf="response$ | async as response">
+<div *ngIf="serverResponse$ | async as response">
 	{{ response | json }}
 </div>

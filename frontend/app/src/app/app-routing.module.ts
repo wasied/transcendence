@@ -8,6 +8,8 @@ const routes: Routes = [
     
 	{path: '', loadChildren:
 	() => import('./views/landing-page/landing-page.module').then(m => m.LandingPageModule)},
+	{path: 'auth/2fa', loadChildren:
+	() => import('./views/double-auth-view/double-auth.module').then(m => m.DoubleAuthModule)},
 	{path: 'main', loadChildren:
 	() => import('./views/main-menu/main-menu.module').then(m => m.MainMenuModule)},
 	{path: 'main/friends', loadChildren:

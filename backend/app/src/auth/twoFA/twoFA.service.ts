@@ -13,12 +13,18 @@ export class TwoFAService {
 			const payload = { id: user_id };
 			const accessToken = this.jwtService.sign(payload);
 
-			return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}` };
+			return {
+				success: true,
+				url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}`
+			};
 		}
 		else {
 			throw new HttpException("Bad code.", HttpStatus.UNAUTHORIZED);
 
-			return { url: `${process.env.APP_URL}/auth/2fa` };
+			return {
+				success: false,
+				url: undefined
+			};
 		}
 	}
 
@@ -29,24 +35,31 @@ export class TwoFAService {
 		var qrCodeImageUrl;
 		qrcode.toDataURL(otpAuthUrl, (err, imageUrl) => {
 			if (err)
-				qrCodeImageUrl = "";
+				qrCodeImageUrl = undefined;
 			else
 				qrCodeImageUrl = imageUrl;
 		});
 
 		return {
+			success: true,
 			qrCodeImageUrl: qrCodeImageUrl,
 			secret: secret
-		}
+		};
 	}
 
-	disable(user_id: number): void {
+	disable(user_id: number): Object {
 		const queryResult = dbClient.query(
 			`UPDATE	users
 					SET a2f_key = NULL
 					WHERE id = $1`,
 			[user_id]
 		);
+
+		return {
+			success: true,
+			qrCodeImageURl: undefined,
+			secret: undefined
+		};
 	}
 
 	async isEnabled(user_id: number): Promise<boolean> {

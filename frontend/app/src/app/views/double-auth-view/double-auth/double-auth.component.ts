@@ -11,10 +11,10 @@ import { Router } from '@angular/router';
 export class DoubleAuthComponent implements OnInit {
 	
 	authForm!: FormGroup;
-	serverResponse$!: Observable<{status :string}>;
+	serverResponse$!: Observable<{ success: boolean, url: string }>;
 
 	constructor (private formBuilder: FormBuilder, 
-				 private auth: AuthenticationService,
+				 private authenticationService: AuthenticationService,
 				 private router: Router) {}
 
 	ngOnInit(): void {
@@ -26,13 +26,15 @@ export class DoubleAuthComponent implements OnInit {
 	onSubmit() : void {
 		const authData = this.authForm.value;
 
-      	this.serverResponse$ = this.auth.sendAuthData(authData).pipe(
+		this.serverResponse$ = this.authenticationService.handle2fa(authData).pipe(
 			tap({
 				next: response => {
 					console.log(response);
-					if (response.status === 'ok') { // adjust this based on actual response structure
+					if (response.success) {
 						console.log('should trigger redir with success');
-						//this.router.navigate(['/main']);
+						this.router.navigateByUrl(response.url);
+					}
+					else {
 					}
 				},
 				error: error => console.log(error)
