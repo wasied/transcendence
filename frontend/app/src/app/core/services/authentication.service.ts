@@ -12,14 +12,28 @@ export class AuthenticationService {
 	authObs$!: Observable<any>;
 
 	constructor (private http: HttpClient) {}
+
+	storeTokenOnLocalSession(token: string) : void {
+		sessionStorage.setItem('authToken', token);
+	}
+
+	getTokenOnLocalSession() : string | null {
+		return sessionStorage.getItem('authToken');
+	}
+
+	delTokenFromLocalSession() : void {
+		sessionStorage.removeItem('authToken');
+	}
 	
-	change2faStatus() : Promise<Observable<{ success: boolean, qrCodeUrl: string, secret: string }> > {
+	change2faStatus() : Observable<{ success: boolean, qrCodeUrl: string, secret: string }> {
 		this.doubleAuthActivated = !this.doubleAuthActivated;
 
-		if (this.doubleAuthActivated)
-			return this.http.get<{ success: boolean, qrCodeUrl: string, secret: string }>(`${this.apiURL}/2fa/enable`);
+		if (this.doubleAuthActivated) // should be post no ?
+			return this.http.get<{ success: boolean, qrCodeUrl: string, 
+				secret: string }>(`${this.apiURL}/2fa/enable`);
 		else
-			return this.http.get<{ success: boolean, qrCodeUrl: string, secret: string }>(`${this.apiURL}/2fa/disable`);
+			return this.http.get<{ success: boolean, qrCodeUrl: string, 
+				secret: string }>(`${this.apiURL}/2fa/disable`);
 	}
 
 	handle2fa(code: string) : Observable<{ success: boolean, url: string }> {
@@ -30,6 +44,7 @@ export class AuthenticationService {
 		return this.http.get<{ url: string }>(`${this.apiURL}/url`);
 	}
 
+	// not good
 	async triggerAuth() : Promise<void> {
 		this.authObs$ = this.retrieveURL();
 		const authURL = (await this.authObs$.toPromise()).url;
