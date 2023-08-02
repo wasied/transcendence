@@ -1,20 +1,47 @@
-<div class="text-white">
-	<!-- add 🗣️ as an image there -->
-
-	<!-- access a chatroom from this button -->
-	<button (click)="accessChatroom(chatroom.id)">Access Chatroom</button>
-
-	<p> {{ this.chatroom.chatroomName }}</p>
-	<p>Owner : {{ this.chatroom.owner }}</p>
-	<!-- <div [ngSwitch]="this.chatroom.ownerStatus">
-		<p>Owner : {{ this.chatroom.owner }} 
-			<span *ngSwitchCase="'online'">🟢</span>
-			<span *ngSwitchCase="'offline'">🔴</span>
-			<span *ngSwitchCase="'busy'">🟡</span>
-			<span *ngSwitchDefault>⚫</span>
-		</p>
-	</div> -->
-	<app-chatroom-dropdown [participants]="this.chatroom.participants"></app-chatroom-dropdown>
-	<!-- add a modal there for the access status -->
-	<button (click)="deleteChatroom()">Delete chatroom</button>
+<button
+  class="bg-[#ffc93b] p-2 rounded-l h-full flex items-center"
+  (click)="accessChatroom(chatroom.id)"
+  id="joinChatRoom"
+>
+  <i
+    class="fa-solid fa-comments h-12 w-12 shadow-md text-zinc-800 bg-gray-200 p-4 rounded-full hover:shadow-inner"
+  ></i>
+</button>
+<div class="flex flex-col py-1">
+  <span class="font-semibold">{{ chatroom.chatroomName }}</span>
+  <div class="flex flex-col">
+    <div class="flex items-center text-sm space-x-1">
+      <span class="">Owner:</span>
+      <a class="text-gray-600" href=""> {{ chatroom.owner }}</a>
+    </div>
+    <div
+      id="participants"
+      class="text-sm flex flex-col mt-2"
+      [class.hidden]="!showParticipants"
+    >
+      <span class="">Participants:</span>
+      <a
+        *ngFor="let participant of chatroom.participants"
+        class="text-gray-600"
+        href=""
+        >{{ participant }}</a
+      >
+    </div>
+  </div>
+</div>
+<div class="flex justify-between w-full">
+  <button
+    class="p-2"
+    (click)="toggleParticipants()"
+    [id]="showParticipants ? 'showParticipants' : 'hideParticipants'"
+  >
+    <i class="ml-2 fa fa-chevron-down" [class.hidden]="showParticipants"></i>
+    <i class="ml-2 fa fa-chevron-up" [class.hidden]="!showParticipants"></i>
+  </button>
+  <div class="flex justify-end space-x-4 px-4">
+    <button class="p-2" id="lock"><i class="fa fa-lock"></i></button>
+    <button class="p-2" id="delete" (click)="deleteChatroom()">
+      <i class="fa-solid fa-x"></i>
+    </button>
+  </div>
 </div>

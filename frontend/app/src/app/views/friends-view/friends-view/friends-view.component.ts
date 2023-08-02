@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./friends-view.component.css']
 })
 export class FriendsViewComponent {
-  friends: any[] = []; // Store the friends' data
+  friends: any[] = [{name: "test"}, {name: "test2", online:true}]; // Store the friends' data
 
   constructor (private http: HttpClient) {}
 
