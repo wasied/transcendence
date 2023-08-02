@@ -17,13 +17,13 @@
     	</div>
     	<div class="flex flex-row space-x-4 pr-4">
       		<div class="flex items-center justify-center">
-				<button class="text-xl" type="button">Go To DM session</button>
+				<button (click)="goToDMSession(directMessage.id)" class="text-xl" type="button">Go To DM session</button>
 			</div>
 			<div class="flex items-center justify-center">
-       			<button class="text-3xl" type="button">🚫</button>
+       			<button (click)="blockDMSession()" class="text-3xl" type="button">🚫</button>
       		</div>
       		<div class="flex items-center justify-center">
-        		<button class="text-3xl" type="button">❌</button>
+        		<button (click)="rmDMSession()" class="text-3xl" type="button">❌</button>
       		</div>
     	</div>
   	</div>

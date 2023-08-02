@@ -50,7 +50,7 @@ export class HeaderComponent implements OnInit {
 		this.router.navigate(['main', 'game_params']);
   	}
 
-	  toggleMenu(): void {
+	toggleMenu(): void {
 		this.isMenuOpen = !this.isMenuOpen;
-	  }
+	}
 }

@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Friend } from 'src/app/core/models/friend.model'; 
 import { FriendService } from 'src/app/core/services/friends.service'; 
 import { Observable } from 'rxjs';
-import { UsersService } from 'src/app/core/services/users.service'; 
 
 @Component({
   selector: 'app-friends',
@@ -11,17 +10,16 @@ import { UsersService } from 'src/app/core/services/users.service';
 })
 export class FriendsComponent implements OnInit {
 
-  //@Input() user: string;
-  friends$!: Observable<Friend[]>;
+	@Input() userId!: number;
+	friends$!: Observable<Friend[]>;
 
-  constructor (private friendsService: FriendService,
-               private usersService: UsersService) {}
+	constructor (private friendsService: FriendService) {};
   
-  ngOnInit(): void {
-    this.friends$ = this.loadFriends();
-  }
+	ngOnInit(): void {
+		this.friends$ = this.loadFriends();
+	}
 
-  loadFriends() : Observable<Friend[]> {
-    return (this.friendsService.getHardcodedFriends());
-  }
+	loadFriends() : Observable<Friend[]> {
+		return (this.friendsService.getHardcodedFriends()); // change the logic after
+	}
 }

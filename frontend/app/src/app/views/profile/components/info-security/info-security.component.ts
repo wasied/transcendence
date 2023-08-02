@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormGroupDirective, Validator, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 
 @Component({
@@ -44,7 +44,7 @@ export class InfoSecurityComponent {
 	}
 	
 	onClickEditPassword() : void {
-    	console.log('edit passwd : need to be implemented');
+    	console.log('edit password : need to be implemented');
   	}
 
   	onClickEditPic() : void {

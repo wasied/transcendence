@@ -1,0 +1,3 @@
+<div *ngIf="matchHistory$ | async as matchHistory">
+	<app-match-history-elem *ngFor="let elem of matchHistory" [matchHistoryElem]="elem"></app-match-history-elem>
+</div>

@@ -14,8 +14,6 @@ const routes: Routes = [
 	() => import('./views/friends-view/friends-view.module').then(m => m.FriendsViewModule)},
 	{ path: 'main/games', loadChildren:
 	() => import('./views/games-view/games-view.module').then(m => m.GamesViewModule)},
-	{ path: 'main/match_history', loadChildren:
-	() => import('./views/match-history-view/match-history-view.module').then(m => m.MatchHistoryViewModule)},
 	{ path: 'main/profile', loadChildren:
 	() => import('./views/profile/profile.module').then(m => m.ProfileModule)},
 	// game menus

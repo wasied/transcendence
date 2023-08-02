@@ -22,6 +22,10 @@ export class DirectMessagesService {
 		return of(this.hardcodedDirectMessages);
 	}
 
+	getHardcodedDirectMessageById(id: number) : Observable<DirectMessage> {
+		return of(this.hardcodedDirectMessages[id - 1]);
+	}
+
 	// with observables
 
 	private apiURL : string = 'http://localhost:3000/chatrooms_messages'; // add that

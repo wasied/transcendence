@@ -1,0 +1,10 @@
+<!-- <app-header></app-header> -->
+<div>
+	<app-profile-badge
+		[userId]="idOfUserProfile" 
+		[buttonText]="'Back To Profile'" 
+		(buttonAction)="goBackToProfile()"
+	></app-profile-badge>
+	<h1 class="text-white">MATCH HISTORY</h1>
+	<app-match-history></app-match-history>
+</div>

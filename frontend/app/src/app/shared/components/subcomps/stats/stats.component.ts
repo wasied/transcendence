@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/core/models/user.model'; 
-import { UsersService } from 'src/app/core/services/users.service';
+import { Component, Input, OnInit } from '@angular/core';
 import { Stat } from 'src/app/core/models/stat.model'; 
 import { StatsService } from 'src/app/core/services/stats.service';
 import { Observable } from 'rxjs';
@@ -12,18 +10,12 @@ import { Observable } from 'rxjs';
 })
 export class StatsComponent implements OnInit {
 
-	users!: User[];
+	@Input() userId!: number;
 	stats!: Observable<Stat>;
 
-  	constructor (private usersService: UsersService,
-                 private statsService: StatsService) {}
+  	constructor (private statsService: StatsService) {}
   
   	ngOnInit(): void {
-    	// this.users = this.userService.users;
-    	this.stats = this.statsService.getHardcodedStat();
-  	}
-
-  	matchUserIdAndStats() : number {
-		return (1); // placeholder
+    	this.stats = this.statsService.getHardcodedStat(); // change this
   	}
 }

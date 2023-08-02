@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-profile-self',
@@ -7,19 +7,16 @@ import { HttpClient } from '@angular/common/http';
 	styleUrls: ['./profile-self.component.css']
 })
 export class ProfileSelfComponent {
-	userID = 1; // Temporary
-	user_stats : any = {};
+	
+	idOfUserProfile!: number;
 
-	constructor (private http: HttpClient) {}
-	private apiURL : string = 'http://localhost:3000/stats';
+	constructor (private router: Router) {};
 
 	ngOnInit(): void {
-		this.getStats();
+		this.idOfUserProfile = 1; // temporary, retrieve the id from sessionStorage
 	}
 
-	getStats(): void {
-		this.http.get<any>(this.apiURL).subscribe(stats => {
-			this.user_stats = stats[this.userID];
-		});
+	goToGameHistory() : void {
+		this.router.navigate(['main', 'profile', 'match_history']);
 	}
 }

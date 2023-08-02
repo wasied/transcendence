@@ -1,15 +1,12 @@
 <app-header></app-header>
 <div class="bg-black text-white">
-  <div class="flex flex-col items-center">
-    <div class="p-8 text-5xl">
-      <h1>GAMES</h1>
-    </div>
-    <div>
-      <p>add back to game menu button</p>
-    </div>
-    <div>
-      <p>add searchbar</p>
-    </div>
-  </div>
+	<div class="flex flex-col items-center">
+    	<div class="p-8 text-5xl">
+      		<h1>GAMES</h1>
+    	</div>
+    	<div>
+    		<app-custom-button [title]="'Back to Game Menu'" (onClick)="onGoBackToGameMenu()"></app-custom-button>
+    	</div>
+	</div>
 </div>
 <app-game-cards></app-game-cards>
