@@ -1,25 +1,24 @@
-<div class="flex h-20 rounded-3xl overflow-hidden my-12 bg-white">
-	<div class="flex">
-		<div class="w-6 bg-yellow-500"></div>
-		<img class="h-20 w-20" src="../../../assets/imgs/ping_pong_raquettes.jpeg" alt="pong logo">
-	</div>
-	<div class="flex items-center justify-center w-full">
-		<div class="flex items-center justify-center w-2/5">
-			<img class="h-16 w-16 rounded-full" src="../../../assets/imgs/picture-profile-empty.jpg" alt="profile picture">
-			<div class="flex flex-col m-4">
-				<h1 class="text-3xl">{{this.gameCard.playerOne}}</h1>
-				<p class="text-xl underline">See Stats</p>
-			</div>
-		</div>
-		<div class="flex justify-center w-1/5">
-			<p class="text-3xl">VS</p>
-		</div>
-		<div class="flex items-center justify-center w-2/5">
-			<img class="h-16 w-16 rounded-full" src="../../../assets/imgs/picture-profile-empty.jpg" alt="profile picture">
-			<div class="flex flex-col m-4">
-				<h1 class="text-3xl">{{this.gameCard.playerTwo}}</h1>
-				<p class="text-xl underline">See Stats</p>
-			</div>
-		</div>
-	</div>
+<div
+  class="flex items-center space-x-4 rounded text-black bg-gray-200 transition duration-75 cursor-pointer"
+>
+  <div
+    class="bg-[#ffc93b] p-2 rounded-l flex items-center justify-center"
+    id="joinChatRoom"
+  >
+    <i
+      class="fa-solid fa-table-tennis-paddle-ball h-16 w-16 shadow-md text-zinc-800 bg-gray-200 p-4 rounded-full hover:shadow-inner flex items-center justify-center text-2xl"
+    ></i>
+  </div>
+  <div class="w-full flex justify-between items-center px-8">
+    <div class="flex flex-col">
+      <span class="text-lg font-semibold">{{ gameCard.playerOne }}</span>
+      <button class="text-sm underline">See Stats</button>
+      <!-- Go to profile -->
+    </div>
+    <span>VS</span>
+    <div class="flex flex-col">
+      <span class="text-lg font-semibold">{{ gameCard.playerTwo }}</span>
+      <button class="text-sm underline">See Stats</button>
+    </div>
+  </div>
 </div>
