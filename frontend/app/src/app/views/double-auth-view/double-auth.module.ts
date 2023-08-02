@@ -5,6 +5,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { DoubleAuthComponent } from './double-auth/double-auth.component';
 import { DoubleAuthRoutingModule } from './double-auth-routing.module';
 
+import { ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
 	  DoubleAuthComponent
@@ -12,7 +14,8 @@ import { DoubleAuthRoutingModule } from './double-auth-routing.module';
   imports: [
     CommonModule,
     SharedModule,
-	DoubleAuthRoutingModule
+	DoubleAuthRoutingModule,
+	ReactiveFormsModule
   ]
 })
 export class DoubleAuthModule { }

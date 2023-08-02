@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -9,35 +9,56 @@ export class AuthenticationService {
 
 	private doubleAuthActivated: boolean = false;
 	private apiURL: string = 'http://localhost:8080/auth';
-	authURL!: string;
 	authObs$!: Observable<any>;
 
 	constructor (private http: HttpClient) {}
+
+	storeTokenOnLocalSession(token: string) : void {
+		sessionStorage.setItem('authToken', token);
+	}
+
+	getTokenOnLocalSession() : string | null {
+		return sessionStorage.getItem('authToken');
+	}
+
+	delTokenFromLocalSession() : void {
+		sessionStorage.removeItem('authToken');
+	}
 	
-	// should activate/deactivate 2fa, returning a status : success on success
-	change2faStatus() : Observable<{status: string}> {
+	async change2faStatus() : Promise<any> {
 		this.doubleAuthActivated = !this.doubleAuthActivated;
-		const body = { myBoolean: this.doubleAuthActivated };
 
-		return this.http.post<{ status: string }>('http://localhost:3000/my-endpoint', body);
+		var headers = new HttpHeaders();
+		headers = headers.append('Authorization', `Bearer ${this.getTokenOnLocalSession()}`);
+
+		if (this.doubleAuthActivated) {
+			const response = await this.http.get<{ success: boolean, /*qrCodeUrl: string,*/
+				secret: string }>(`${this.apiURL}/2fa/enable`, { headers: headers }).toPromise();
+			if (!response)
+				return ; // handle err
+			console.log(response.secret);
+
+			return response;
+		}
+		else
+			return await this.http.get<{ success: boolean, /*qrCodeUrl: string,*/
+				secret: string }>(`${this.apiURL}/2fa/disable`, { headers: headers }).toPromise();
 	}
 
-	// send code to the back to 2fa
-	sendAuthData(authData: string) : Observable<{status: string}> {
-		return this.http.post<{status: string}>('replace-by-endpoint', authData);
+	handle2fa(userId: number, code: string) : Observable<{ success: boolean, url: string }> {
+		return this.http.post<{ success: boolean, url: string }>(`${this.apiURL}/2fa`, {
+			id: userId,
+			code: code
+		});
 	}
 
-	retrieveURL() : Observable<any> {
-		return this.http.get<any>(`${this.apiURL}/url`);
+	retrieveURL() : Observable<{ url: string }> {
+		return this.http.get<{ url: string }>(`${this.apiURL}/url`);
 	}
 
-	async subscribeObservable(): Promise<void> {
-		this.authURL = (await this.authObs$.toPromise()).url;
-		window.location.href = this.authURL;
-	}
-
-	triggerAuth() : void {
+	async triggerAuth() : Promise<void> {
 		this.authObs$ = this.retrieveURL();
-		this.subscribeObservable();
+		const authURL = (await this.authObs$.toPromise()).url;
+		window.location.href = authURL;
 	}
 }

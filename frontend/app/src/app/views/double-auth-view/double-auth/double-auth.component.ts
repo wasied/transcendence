@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -11,28 +12,39 @@ import { Router } from '@angular/router';
 export class DoubleAuthComponent implements OnInit {
 	
 	authForm!: FormGroup;
-	serverResponse$!: Observable<{status :string}>;
+	serverResponse$!: Observable<{ success: boolean, url: string }>;
+	userId!: number;
 
-	constructor (private formBuilder: FormBuilder, 
-				 private auth: AuthenticationService,
-				 private router: Router) {}
+	constructor (
+		private route: ActivatedRoute,
+		private formBuilder: FormBuilder,
+		private authenticationService: AuthenticationService,
+		private router: Router
+	) {}
 
 	ngOnInit(): void {
+		const userId = this.route.snapshot.queryParamMap.get('user_id');
+		if (!userId || userId === "")
+			return ; // handling err there
+		this.userId = +userId;
+
 		this.authForm = this.formBuilder.group({
 			code: ['']
 		});
 	}
 
 	onSubmit() : void {
-		const authData = this.authForm.value;
+		const code = this.authForm.controls['code'].value;
 
-      	this.serverResponse$ = this.auth.sendAuthData(authData).pipe(
+		this.serverResponse$ = this.authenticationService.handle2fa(this.userId, code).pipe(
 			tap({
 				next: response => {
 					console.log(response);
-					if (response.status === 'ok') { // adjust this based on actual response structure
+					if (response.success) {
 						console.log('should trigger redir with success');
-						//this.router.navigate(['/main']);
+						this.router.navigateByUrl(response.url);
+					}
+					else {
 					}
 				},
 				error: error => console.log(error)

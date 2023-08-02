@@ -1,23 +1,26 @@
-import { Controller, Redirect, Request, Body, Get, Post } from '@nestjs/common';
+import { Controller, Redirect, Request, Body, Get, Post, UseGuards } from '@nestjs/common';
 import { TwoFAService } from './twoFA.service';
+import { RequestWithUser } from '../../utils/RequestWithUser';
+import { AuthGuard } from '@nestjs/passport';
 
-@Controller('2fa')
+@Controller('auth/2fa')
 export class TwoFAController {
 	constructor(private twoFAService: TwoFAService) {}
 
 	@Post()
-	@Redirect()
-	async handle2fa(@Request() request: any, @Body('code') code: string): Promise<Object> {
-		return await this.twoFAService.handle2fa(request.user.id, code);
+	async handle2fa(@Body() body: { id: number, code: any }): Promise<Object> {
+		return await this.twoFAService.handle2fa(body.id, body.code);
 	}
 
-	@Post('enable')
-	async enable(@Body('id') id: number): Promise<Object> {
-		return this.twoFAService.enable(id);
+	@Get('enable')
+	@UseGuards(AuthGuard('jwt'))
+	async enable(@Request() request: RequestWithUser): Promise<Object> {
+		return this.twoFAService.enable(request.user.id);
 	}
 
-	@Post('disable')
-	async disable(@Body('id') id: number): Promise<void> {
-		this.twoFAService.disable(id);
+	@Get('disable')
+	@UseGuards(AuthGuard('jwt'))
+	async disable(@Request() request: RequestWithUser): Promise<Object> {
+		return this.twoFAService.disable(request.user.id);
 	}
 }

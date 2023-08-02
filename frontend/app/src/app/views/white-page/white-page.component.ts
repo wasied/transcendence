@@ -1,24 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
-import { setAuthToken } from '../../axios';
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
 
 @Component({
   selector: 'app-white-page',
   templateUrl: './white-page.component.html',
   styleUrls: ['./white-page.component.css']
 })
-export class WhitePageComponent {
+export class WhitePageComponent implements OnInit {
 	constructor(
 		private route: ActivatedRoute,
-		private router: Router
+		private router: Router,
+		private authService: AuthenticationService
 	) {};
 
-	async ngOnInit(): Promise<void> {
+	ngOnInit(): void {
 		const accessToken = this.route.snapshot.queryParamMap.get('access_token');
 		if (!accessToken || accessToken === "")
-			return ;
-		setAuthToken(accessToken);
+			return ; // handling err there
+		this.authService.storeTokenOnLocalSession(accessToken);
 		this.router.navigateByUrl('/main');
 	}
 }

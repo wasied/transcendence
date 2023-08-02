@@ -1,4 +1,4 @@
-import { Controller, Body, Query, Get, Post, Redirect, Req, UseGuards } from '@nestjs/common';
+import { Controller, Body, Query, Get, Post, Redirect, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { TwoFAService } from './twoFA/twoFA.service';
