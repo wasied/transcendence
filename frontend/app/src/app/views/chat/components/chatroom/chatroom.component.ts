@@ -19,7 +19,7 @@ export class ChatroomComponent {
 	ngAfterViewInit() {
 		// Button Tooltip
 		this.initializeTooltips()
-	  }
+	}
 
 	initializeTooltips() {
 		tippy(this.elementRef.nativeElement.querySelector('#joinChatRoom'), {

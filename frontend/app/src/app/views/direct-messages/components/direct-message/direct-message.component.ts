@@ -1,12 +1,40 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { DirectMessage } from 'src/app/core/models/direct-message.model'; 
+import tippy from 'tippy.js';
 
 @Component({
 	selector: 'app-direct-message',
 	templateUrl: './direct-message.component.html',
-	styleUrls: ['./direct-message.component.css']
+	styleUrls: ['./direct-message.component.css'],
+	encapsulation: ViewEncapsulation.None,  // Needed to apply tooltip CSS
 })
 export class DirectMessageComponent {
 
 	@Input() directMessage!: DirectMessage;
+
+	constructor(private router: Router, private elementRef: ElementRef) {}
+
+	ngAfterViewInit() {
+		// Button Tooltip
+		this.initializeTooltips()
+	}
+
+	initializeTooltips() {
+		tippy(this.elementRef.nativeElement.querySelector('#block'), {
+			content: 'Block user',
+			arrow: true,
+			theme: 'custom-theme',
+			duration: [100, 100],
+			placement: 'bottom',
+		});
+		tippy(this.elementRef.nativeElement.querySelector('#delete'), {
+			content: 'Delete this contact',
+			arrow: true,
+			theme: 'custom-theme',
+			duration: [100, 100],
+			placement: 'bottom',
+		});
+	}
+
 }
