@@ -13,6 +13,8 @@ import { WhitePageComponent } from './views/white-page/white-page.component';
 
 import { SharedModule } from './shared/shared.module';
 
+import { AuthHttpClient } from './auth-http-client';
+
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -28,7 +30,7 @@ import { SharedModule } from './shared/shared.module';
     	CoreModule,
 		SharedModule
 	],
-	providers: [],
+	providers: [AuthHttpClient],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

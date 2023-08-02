@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -11,18 +12,21 @@ export class AuthenticationService {
 	private apiURL: string = 'http://localhost:8080/auth';
 	authObs$!: Observable<any>;
 
-	constructor (private http: HttpClient) {}
+	constructor (
+		private http: HttpClient,
+		private authHttp: AuthHttpClient
+	) {}
 
 	storeTokenOnLocalSession(token: string) : void {
-		sessionStorage.setItem('authToken', token);
+		localStorage.setItem('authToken', token);
 	}
 
 	getTokenOnLocalSession() : string | null {
-		return sessionStorage.getItem('authToken');
+		return localStorage.getItem('authToken');
 	}
 
 	delTokenFromLocalSession() : void {
-		sessionStorage.removeItem('authToken');
+		localStorage.removeItem('authToken');
 	}
 	
 	async change2faStatus() : Promise<any> {
@@ -32,8 +36,8 @@ export class AuthenticationService {
 		headers = headers.append('Authorization', `Bearer ${this.getTokenOnLocalSession()}`);
 
 		if (this.doubleAuthActivated) {
-			const response = await this.http.get<{ success: boolean, /*qrCodeUrl: string,*/
-				secret: string }>(`${this.apiURL}/2fa/enable`, { headers: headers }).toPromise();
+			const response = await this.authHttp.get<{ success: boolean, /*qrCodeUrl: string,*/
+				secret: string }>(`${this.apiURL}/2fa/enable`/*, { headers: headers }*/).toPromise();
 			if (!response)
 				return ; // handle err
 			console.log(response.secret);
@@ -41,8 +45,8 @@ export class AuthenticationService {
 			return response;
 		}
 		else
-			return await this.http.get<{ success: boolean, /*qrCodeUrl: string,*/
-				secret: string }>(`${this.apiURL}/2fa/disable`, { headers: headers }).toPromise();
+			return await this.authHttp.get<{ success: boolean, /*qrCodeUrl: string,*/
+				secret: string }>(`${this.apiURL}/2fa/disable`/*, { headers: headers }*/).toPromise();
 	}
 
 	handle2fa(userId: number, code: string) : Observable<{ success: boolean, url: string }> {
