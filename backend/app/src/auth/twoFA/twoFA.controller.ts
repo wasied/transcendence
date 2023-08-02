@@ -8,17 +8,18 @@ export class TwoFAController {
 	constructor(private twoFAService: TwoFAService) {}
 
 	@Post()
-	@UseGuards(AuthGuard('jwt'))
-	async handle2fa(@Request() request: RequestWithUser, @Body('code') code: string): Promise<Object> {
-		return await this.twoFAService.handle2fa(request.user.id, code);
+	async handle2fa(@Body() body: { id: number, code: any }): Promise<Object> {
+		return await this.twoFAService.handle2fa(body.id, body.code);
 	}
 
 	@Get('enable')
+	@UseGuards(AuthGuard('jwt'))
 	async enable(@Request() request: RequestWithUser): Promise<Object> {
 		return this.twoFAService.enable(request.user.id);
 	}
 
 	@Get('disable')
+	@UseGuards(AuthGuard('jwt'))
 	async disable(@Request() request: RequestWithUser): Promise<Object> {
 		return this.twoFAService.disable(request.user.id);
 	}

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -25,26 +25,37 @@ export class AuthenticationService {
 		sessionStorage.removeItem('authToken');
 	}
 	
-	change2faStatus() : Observable<{ success: boolean, qrCodeUrl: string, secret: string }> {
+	async change2faStatus() : Promise<any> {
 		this.doubleAuthActivated = !this.doubleAuthActivated;
 
-		if (this.doubleAuthActivated) // should be post no ?
-			return this.http.get<{ success: boolean, qrCodeUrl: string, 
-				secret: string }>(`${this.apiURL}/2fa/enable`);
+		var headers = new HttpHeaders();
+		headers = headers.append('Authorization', `Bearer ${this.getTokenOnLocalSession()}`);
+
+		if (this.doubleAuthActivated) {
+			const response = await this.http.get<{ success: boolean, /*qrCodeUrl: string,*/
+				secret: string }>(`${this.apiURL}/2fa/enable`, { headers: headers }).toPromise();
+			if (!response)
+				return ; // handle err
+			console.log(response.secret);
+
+			return response;
+		}
 		else
-			return this.http.get<{ success: boolean, qrCodeUrl: string, 
-				secret: string }>(`${this.apiURL}/2fa/disable`);
+			return await this.http.get<{ success: boolean, /*qrCodeUrl: string,*/
+				secret: string }>(`${this.apiURL}/2fa/disable`, { headers: headers }).toPromise();
 	}
 
-	handle2fa(code: string) : Observable<{ success: boolean, url: string }> {
-		return this.http.post<{ success: boolean, url: string }>(`${this.apiURL}/2fa`, code);
+	handle2fa(userId: number, code: string) : Observable<{ success: boolean, url: string }> {
+		return this.http.post<{ success: boolean, url: string }>(`${this.apiURL}/2fa`, {
+			id: userId,
+			code: code
+		});
 	}
 
 	retrieveURL() : Observable<{ url: string }> {
 		return this.http.get<{ url: string }>(`${this.apiURL}/url`);
 	}
 
-	// not good
 	async triggerAuth() : Promise<void> {
 		this.authObs$ = this.retrieveURL();
 		const authURL = (await this.authObs$.toPromise()).url;
