@@ -32,7 +32,7 @@
       	</ul>
     </div>
 
-	<app-modal [showModal]="showModalPassword" (close)="closeModalPassword()">
+	<app-modal [showModal]="showModalPassword" (onClose)="closeModalPassword()">
   		<div class="flex flex-col justify-center items-center bg-white text-black">
     		<form [formGroup]="PasswordForm" (ngSubmit)="onSubmitNewPassword()">
       		<div class="mb-4">
@@ -52,13 +52,12 @@
   		</div>
 	</app-modal>
 
-
-
-	  <app-modal [showModal]="showModalPic" (close)="closeModalPic()">
-		<!-- Pic Form Goes Here -->
-	  </app-modal>
-	  <app-modal [showModal]="showModalTel" (close)="closeModalTel()">
-		<!-- Tel Form Goes Here -->
-	  </app-modal>
+	<app-modal [showModal]="showModalPic" (onClose)="closeModalPic()">
+	<!-- Pic Form Goes Here -->
+	</app-modal>
+	
+	<app-modal [showModal]="showModalTel" (onClose)="closeModalTel()">
+	<!-- Tel Form Goes Here -->
+	</app-modal>
 </div>
 

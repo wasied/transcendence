@@ -1,28 +1,30 @@
 <div class="bg-white w-full m-2 overflow-hidden rounded-3xl flex text-black">
-  <div class="bg-yellow-500 flex items-center justify-center h-full w-20">
-    <p class="text-5xl">🗣️</p>
-  </div>
-  <div class="flex justify-between w-full py-2">
-    <div class="flex flex-col justify-center w-5/12 pl-4">
-      <p class="text-xl">{{ this.directMessage.otherPlayerPseudo }}</p>
-      <div class="flex items-center">
-        <span
-          class="pr-2"
-          [ngClass]="{
-            'text-green-500': this.directMessage.otherPlayerStatus === 'online'
-          }"
-          >●</span
-        >
-        {{ this.directMessage.otherPlayerStatus }}
-      </div>
-    </div>
-    <div class="flex flex-row space-x-4 pr-4">
-      <div class="flex items-center justify-center">
-        <button class="text-3xl" type="button">🚫</button>
-      </div>
-      <div class="flex items-center justify-center">
-        <button class="text-3xl" type="button">❌</button>
-      </div>
-    </div>
-  </div>
+	<div class="bg-yellow-500 flex items-center justify-center h-full w-20">
+    	<p class="text-5xl">🗣️</p>
+  	</div>
+  	<div class="flex justify-between w-full py-2">
+    	<div class="flex flex-col justify-center w-5/12 pl-4">
+      		<p class="text-xl">{{ this.directMessage.otherPlayerPseudo }}</p>
+      		<div class="flex items-center">
+        		<span
+          			class="pr-2"
+          			[ngClass]="{
+            			'text-green-500': this.directMessage.otherPlayerStatus === 'online'
+          			}"
+          		>●</span>
+        		{{ this.directMessage.otherPlayerStatus }}
+      		</div>
+    	</div>
+    	<div class="flex flex-row space-x-4 pr-4">
+      		<div class="flex items-center justify-center">
+				<button class="text-xl" type="button">Go To DM session</button>
+			</div>
+			<div class="flex items-center justify-center">
+       			<button class="text-3xl" type="button">🚫</button>
+      		</div>
+      		<div class="flex items-center justify-center">
+        		<button class="text-3xl" type="button">❌</button>
+      		</div>
+    	</div>
+  	</div>
 </div>

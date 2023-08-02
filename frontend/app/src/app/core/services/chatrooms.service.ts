@@ -25,7 +25,10 @@ export class ChatroomsService {
 	getHardcodedChatrooms() : Observable<Chatroom[]> {
 		return of(this.hardcodedChatrooms);
 	}
-	
+
+	getHarcodedChatroomById(id: number) : Observable<Chatroom> {
+		return of(this.hardcodedChatrooms[id - 1]);
+	}
 
 	// with DB
 

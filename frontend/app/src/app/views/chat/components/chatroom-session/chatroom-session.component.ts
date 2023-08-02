@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Chatroom } from 'src/app/core/models/chatroom.model';
 
 @Component({
 	selector: 'app-chatroom-session',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
 	styleUrls: ['./chatroom-session.component.css']
 })
 export class ChatroomSessionComponent {
-	
+
 }

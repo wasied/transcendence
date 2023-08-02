@@ -9,4 +9,16 @@ import { DirectMessage } from 'src/app/core/models/direct-message.model';
 export class DirectMessageComponent {
 
 	@Input() directMessage!: DirectMessage;
+
+	goToDMSession() : void {
+		
+	}
+
+	rmDMSession() : void {
+		console.log('feature not implemented yet !');
+	}
+
+	blockDMSession() : void {
+		console.log('feature not implemented yet !');
+	}
 }

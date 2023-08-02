@@ -5,7 +5,7 @@ import { WhitePageComponent } from "./views/white-page/white-page.component";
 
 const routes: Routes = [
 	{path: 'auth/redirect', component: WhitePageComponent},
-    
+    // lazy loading
 	{path: '', loadChildren:
 	() => import('./views/landing-page/landing-page.module').then(m => m.LandingPageModule)},
 	{path: 'main', loadChildren:

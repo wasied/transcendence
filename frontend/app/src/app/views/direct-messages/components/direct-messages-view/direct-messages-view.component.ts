@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-direct-messages-view',
-  templateUrl: './direct-messages-view.component.html',
-  styleUrls: ['./direct-messages-view.component.css']
+	selector: 'app-direct-messages-view',
+	templateUrl: './direct-messages-view.component.html',
+	styleUrls: ['./direct-messages-view.component.css']
 })
 export class DirectMessagesViewComponent {
 
+	onClickOnCreateDMSession() : void {
+		console.log('create DM session : feature not implemented yet');
+	}
 }
