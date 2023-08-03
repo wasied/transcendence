@@ -1,6 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { authenticator } from 'otplib';
-import QRCode from 'qrcode';
 import { dbClient } from '../../db';
 import { JwtService } from '@nestjs/jwt';
 
@@ -32,14 +31,10 @@ export class TwoFAService {
 		const secret = authenticator.generateSecret();
 		const otpAuthUrl = authenticator.keyuri(String(user_id), process.env.APP_NAME, secret);
 		this.updateSecret(user_id, secret);
-//		var qrCodeUrl;
-//		QRCode.toDataURL(otpAuthUrl)
-//		.then(imageUrl => { qrCodeUrl = imageUrl })
-//		.catch(err => { qrCodeUrl = undefined });
 
 		return {
 			success: true,
-//			qrCodeUrl: qrCodeUrl,
+			otpAuthUrl: otpAuthUrl,
 			secret: secret
 		};
 	}
@@ -54,7 +49,7 @@ export class TwoFAService {
 
 		return {
 			success: true,
-//			qrCodeUrl: undefined,
+			otpAuthUrl: undefined,
 			secret: undefined
 		};
 	}
