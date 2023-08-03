@@ -1,10 +1,29 @@
-<div class="flex h-20 w-64 rounded-r-3xl overflow-hidden bg-white">
-	<div class="flex bg-yellow-500">
-		<img class="rounded-full" src="../../../assets/imgs/picture-profile-empty.jpg" alt="profile picture">
-	</div>
-	<div class="flex flex-col items-center pl-4">
-		<h1 class="text-2xl">{{ this.friend.friendName }}</h1>
-		<p class="text-sm">Status : 🟢 Online</p>
-		<p class="text-sm underline">see stats</p>
-	</div>
+<div class="bg-yellow-400 p-2 rounded flex">
+  <!-- Il y a pas de lien vers la photo. Il faudra se baser sur l'ID et mettre un condition pour
+renvoyer noProfile le cas échéant -->
+  <div *ngIf="!this.friend.id; else noProfile">
+    <img
+      alt="Profile Picture"
+      class="w-12 h-12 object-fill shadow-md rounded-full hover:shadow-inner"
+    />
+  </div>
+  <ng-template #noProfile>
+    <i
+      class="fa-solid fa-user w-auto h-auto shadow-md text-zinc-800 bg-gray-200 p-4 rounded-full hover:shadow-inner"
+    ></i>
+  </ng-template>
+</div>
+<div class="flex flex-col">
+  <span class="font-semibold">{{ this.friend.friendName }}</span>
+  <div class="flex items-center text-sm space-x-1">
+    <span
+      class="-mt-0.5"
+      [ngClass]="{
+        'text-green-600': this.friend.friendStatus === 'online',
+        'text-red-600': this.friend.friendStatus === 'offline'
+      }"
+      >●</span
+    >
+    <span class="text-gray-800">{{ this.friend.friendStatus }} </span>
+  </div>
 </div>
