@@ -1,4 +1,4 @@
-<div class="bg-white w-full m-2 rounded-md flex text-zinc-800">
+<div (click)="goToDMSession(directMessage.id)" class="bg-white w-full m-2 rounded-md flex text-zinc-800">
   <button class="bg-[#ffc93b] p-2 rounded-l h-full flex items-center">
     <i
       class="fa-solid fa-user w-16 h-16 flex items-center justify-center text-2xl shadow-md text-zinc-800 bg-gray-200 p-4 rounded-full hover:shadow-inner"
@@ -21,8 +21,8 @@
       </div>
     </div>
     <div class="flex justify-end space-x-4 px-4">
-      <button class="p-2" id="block"><i class="fa fa-ban"></i></button>
-      <button class="p-2" id="delete">
+      <button (click)="blockDMSession()" class="p-2" id="block"><i class="fa fa-ban"></i></button>
+      <button (click)="rmDMSession()" class="p-2" id="delete">
         <i class="fa-solid fa-x"></i>
       </button>
     </div>

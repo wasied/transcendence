@@ -5,7 +5,7 @@ import { WhitePageComponent } from "./views/white-page/white-page.component";
 
 const routes: Routes = [
 	{path: 'auth/redirect', component: WhitePageComponent},
-    
+    // lazy loading
 	{path: '', loadChildren:
 	() => import('./views/landing-page/landing-page.module').then(m => m.LandingPageModule)},
 	{path: 'auth/2fa', loadChildren:
@@ -16,8 +16,6 @@ const routes: Routes = [
 	() => import('./views/friends-view/friends-view.module').then(m => m.FriendsViewModule)},
 	{ path: 'main/games', loadChildren:
 	() => import('./views/games-view/games-view.module').then(m => m.GamesViewModule)},
-	{ path: 'main/match_history', loadChildren:
-	() => import('./views/match-history-view/match-history-view.module').then(m => m.MatchHistoryViewModule)},
 	{ path: 'main/profile', loadChildren:
 	() => import('./views/profile/profile.module').then(m => m.ProfileModule)},
 	// game menus

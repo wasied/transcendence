@@ -1,4 +1,4 @@
-export class GameHistory {
+export class MatchHistory {
 	constructor (public userId: number,
 				 public opponentId: number,
 				 public opponentPseudo: string,

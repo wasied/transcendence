@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, Input, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DirectMessage } from 'src/app/core/models/direct-message.model'; 
 import tippy from 'tippy.js';
@@ -9,15 +9,27 @@ import tippy from 'tippy.js';
 	styleUrls: ['./direct-message.component.css'],
 	encapsulation: ViewEncapsulation.None,  // Needed to apply tooltip CSS
 })
-export class DirectMessageComponent {
+export class DirectMessageComponent implements AfterViewInit {
 
 	@Input() directMessage!: DirectMessage;
-
+	
 	constructor(private router: Router, private elementRef: ElementRef) {}
 
-	ngAfterViewInit() {
+	ngAfterViewInit() : void {
 		// Button Tooltip
 		this.initializeTooltips()
+	}
+
+  goToDMSession(dmId: number) : void {
+		this.router.navigate(['main/direct_messages', dmId]);
+	}
+
+	rmDMSession() : void {
+		console.log('feature not implemented yet !');
+	}
+
+	blockDMSession() : void {
+		console.log('feature not implemented yet !');
 	}
 
 	initializeTooltips() {
@@ -36,5 +48,4 @@ export class DirectMessageComponent {
 			placement: 'bottom',
 		});
 	}
-
 }

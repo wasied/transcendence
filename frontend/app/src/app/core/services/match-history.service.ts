@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable, forkJoin, map, catchError, of } from "rxjs";
-import { GameHistory } from "../models/game-history.model";
+import { MatchHistory } from "../models/match-history.model";
 import { SessionsService } from "./sessions.service";
 import { Session } from "../models/session.model"; 
 import { User } from "../models/user.model"; 
@@ -17,7 +17,7 @@ export class MatchHistoryService {
 				 private sessionsService: SessionsService,
 				 private sessionsUsersService: SessionsUsersService) {};
 
-	private hardcodedGameHistory: GameHistory[] = [{
+	private hardcodedGameHistory: MatchHistory[] = [{
 		userId: 1,
 		opponentId: 2,
 		opponentPseudo: 'player 2',
@@ -26,13 +26,13 @@ export class MatchHistoryService {
 		opponentScore: 3
 	}];
 
-	getHardcodedGameHistory(): Observable<GameHistory[]> {
+	getHardcodedGameHistory(): Observable<MatchHistory[]> {
 		return of(this.hardcodedGameHistory);
 	}
 	
 	// with observables
 	
-	getGameHistory(playerId: number): Observable<GameHistory[]> {
+	getGameHistory(playerId: number): Observable<MatchHistory[]> {
 		
 		return forkJoin({
 			users: this.usersService.getUsersHavingPlayedWithGivenUser(playerId),
@@ -46,10 +46,10 @@ export class MatchHistoryService {
 				console.error(error);
 				return of([]);
 			})
-		) as Observable<GameHistory[]>;
+		) as Observable<MatchHistory[]>;
 	}
 
-	private createGameHistory(session: Session, sessionsUsers: SessionsUser[] , users: User[]): GameHistory
+	private createGameHistory(session: Session, sessionsUsers: SessionsUser[] , users: User[]): MatchHistory
 	{	
 		const relevantSessionsUsers = sessionsUsers.filter(sessionUser => sessionUser.session_id === session.id);
 
@@ -69,7 +69,7 @@ export class MatchHistoryService {
 		if (!usersInSession || usersInSession.length != 2)
 			throw new Error('user not found !'); // change the message
 		
-		return new GameHistory(
+		return new MatchHistory(
 			usersInSession[0].id,
 			usersInSession[1].id,
 			usersInSession[0].username,

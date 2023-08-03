@@ -1,36 +1,13 @@
 <div
   class="flex flex-col justify-center items-center text-center text-gray-200 bg-black mx-auto max-w-5xl"
 >
-  <div class="mt-4 flex flex-col items-center space-y-4">
-    <div class="max-w-3xl inline-flex items-center w-full">
-      <hr class="w-screen m-8" />
-      <span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
-        >PROFILE</span
-      >
-    </div>
-    <button
-      class="w-32 h-32 border-4 border-yellow-400 flex justify-center items-center rounded-full"
-    >
-      <i
-        class="fa-solid fa-user w-24 h-24 flex justify-center items-center text-5xl shadow-md text-zinc-800 bg-gray-200 p-4 rounded-full hover:shadow-inner scale-105 hover:scale-[103%] transform duration-200"
-      ></i>
-    </button>
-    <div class="space-y-1">
-      <h3 class="text-3xl font-medium">Player_username</h3>
-      <h4 class="text-yellow-400 text-xl font-medium">Newbie</h4>
-      <p class="w-2/3 mx-auto">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius ipsum,
-        reprehenderit.
-      </p>
-    </div>
-    <button
-      class="bg-[#ffc93b] py-1 px-8 rounded-full text-black hover:bg-white"
-    >
-      Game History
-    </button>
-    <app-stats class="max-w-4xl w-4/5"></app-stats>
-  </div>
-  <app-info-security class=""></app-info-security>
-  <app-friends class="mt-4"></app-friends>
-  <app-achievements class="mt-4"></app-achievements>
+	<app-profile-badge 
+		[userId]="idOfUserProfile" 
+		[buttonText]="'Match History'" 
+		(buttonAction)="goToGameHistory()">
+	</app-profile-badge>
+	<app-info-security></app-info-security>
+	<app-stats [userId]="idOfUserProfile"></app-stats>
+	<app-friends [userId]="idOfUserProfile"></app-friends>
+  	<app-achievements [userId]="idOfUserProfile"></app-achievements>
 </div>

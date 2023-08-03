@@ -8,6 +8,8 @@ import { ChatroomsComponent } from './components/chatrooms/chatrooms.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ChatroomDropdownComponent } from './components/chatroom-dropdown/chatroom-dropdown.component';
 import { ChatroomSessionComponent } from './components/chatroom-session/chatroom-session.component';
+import { ChatroomHeaderComponent } from './components/chatroom-header/chatroom-header.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
 	declarations: [
@@ -15,12 +17,14 @@ import { ChatroomSessionComponent } from './components/chatroom-session/chatroom
 		ChatroomComponent,
 		ChatroomsComponent,
   		ChatroomDropdownComponent,
-    	ChatroomSessionComponent
+    	ChatroomSessionComponent,
+     	ChatroomHeaderComponent
 	],
 	imports: [
 		CommonModule,
 		ChatRoutingModule,
-		SharedModule
+		SharedModule,
+		ReactiveFormsModule
 	]
 })
 export class ChatModule { }

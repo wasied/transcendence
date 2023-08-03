@@ -63,47 +63,53 @@
     </ul>
   </div>
 
-  <app-modal [showModal]="showModalPassword" (close)="closeModalPassword()">
-    <div class="flex flex-col justify-center items-center bg-white text-black">
-      <form [formGroup]="PasswordForm" (ngSubmit)="onSubmitNewPassword()">
-        <div class="mb-4">
-          <label class="block">Old Password</label>
-          <input
-            type="password"
-            formControlName="oldPassword"
-            class="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div class="mb-4">
-          <label class="block">New Password</label>
-          <input
-            type="password"
-            formControlName="newPassword"
-            class="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div class="mb-4">
-          <label class="block">Confirm New Password</label>
-          <input
-            type="password"
-            formControlName="newPassword2"
-            class="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <button
-          type="submit"
-          class="w-full py-2 bg-blue-500 text-white rounded"
-        >
-          Change Password
-        </button>
-      </form>
-    </div>
-  </app-modal>
+  <app-modal [showModal]="showModalPassword" (onClose)="closeModalPassword()">
+  		<div class="flex flex-col justify-center items-center bg-white text-black">
+    		<form [formGroup]="passwordForm" (ngSubmit)="onClickEditPassword()">
+      		<div class="mb-4">
+        		<label class="block">Old Password</label>
+        		<input type="password" formControlName="oldPassword" class="w-full px-3 py-2 border rounded">
+      		</div>
+      		<div class="mb-4">
+        		<label class="block">New Password</label>
+        		<input type="password" formControlName="newPassword" class="w-full px-3 py-2 border rounded">
+	  		</div>
+      		<div class="mb-4">
+        		<label class="block">Confirm New Password</label>
+        		<input type="password" formControlName="newPassword2" class="w-full px-3 py-2 border rounded">
+      		</div>
+      		<button type="submit" class="w-full py-2 bg-blue-500 text-white rounded">Change Password</button>
+    		</form>
+  		</div>
+	</app-modal>
 
-  <app-modal [showModal]="showModalPic" (close)="closeModalPic()">
-    <!-- Pic Form Goes Here -->
-  </app-modal>
-  <app-modal [showModal]="showModalTel" (close)="closeModalTel()">
-    <!-- Tel Form Goes Here -->
-  </app-modal>
+	<app-modal [showModal]="showModalPic" (onClose)="closeModalPic()">
+		<div class="flex flex-col justify-center items-center bg-white text-black">
+    		<form [formGroup]="picForm" (ngSubmit)="onClickEditPic()">
+      		<div class="mb-4">
+        		<label class="block">New Profile Picture URL</label>
+        		<input type="url" formControlName="newPicURL" class="w-full px-3 py-2 border rounded">
+      		</div>
+      		<button type="submit" class="w-full py-2 bg-blue-500 text-white rounded">Change Profile Picture</button>
+    		</form>
+  		</div>
+	</app-modal>
+	
+	<app-modal [showModal]="showModalTel" (onClose)="closeModalTel()">
+		<div class="flex flex-col justify-center items-center bg-white text-black">
+    		<form [formGroup]="telForm" (ngSubmit)="onClickEditNumber()">
+      		<div class="mb-4">
+        		<label class="block">New Phone Number</label>
+        		<input type="tel" formControlName="newPhone" class="w-full px-3 py-2 border rounded">
+      		</div>
+      		<button type="submit" class="w-full py-2 bg-blue-500 text-white rounded">Change Phone Number</button>
+    		</form>
+  		</div>
+	</app-modal>
+
+	<app-modal [showModal]="showModal2FA" (onClose)="closeModal2FA()">
+		<div class="flex flex-col justify-center items-center bg-white text-black">
+			<img [src]="twoFactorAuthQR">
+		</div>
+	</app-modal>
 </div>

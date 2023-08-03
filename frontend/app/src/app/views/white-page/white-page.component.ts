@@ -5,11 +5,11 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
 
 @Component({
   selector: 'app-white-page',
-  templateUrl: './white-page.component.html',
-  styleUrls: ['./white-page.component.css']
+  templateUrl: './white-page.component.html'
 })
 export class WhitePageComponent implements OnInit {
-	constructor(
+
+  constructor(
 		private route: ActivatedRoute,
 		private router: Router,
 		private authService: AuthenticationService

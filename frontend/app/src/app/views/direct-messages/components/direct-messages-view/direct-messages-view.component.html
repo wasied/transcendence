@@ -1,17 +1,14 @@
 <!-- <app-header></app-header> -->
 <div class="bg-black w-full text-white">
-  <div class="flex items-center flex-col justify-center text-white p-8">
-    <div>
-      <h1 class="text-5xl">DIRECT MESSAGES</h1>
-    </div>
-    <div>
-      <p>add create direct message button</p>
-    </div>
-  </div>
-  <div class="grid lg:grid-cols-2">
-    <app-direct-messages class=""></app-direct-messages>
-    <app-direct-messages class=""></app-direct-messages>
-    <app-direct-messages class=""></app-direct-messages>
-    <app-direct-messages class=""></app-direct-messages>
-  </div>
+	<div class="flex items-center flex-col justify-center text-white p-8">
+    	<div>
+      		<h1 class="text-5xl">DIRECT MESSAGES</h1>
+    	</div>
+    	<div>
+      		<button (click)="onClickOnCreateDMSession()">New Conversation</button>
+    	</div>
+  	</div>
+  	<div class="grid lg:grid-cols-2">
+    	<app-direct-messages></app-direct-messages>
+  	</div>
 </div>

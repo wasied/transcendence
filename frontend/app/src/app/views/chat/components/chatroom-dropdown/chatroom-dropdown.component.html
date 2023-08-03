@@ -1,5 +1,22 @@
-<button (click)="toggleDropdown()">Participants</button>
+<div>
+	<button (click)="toggleDropdown()">Participants</button>
 
-<div *ngIf="isOpen">
-  <p *ngFor="let participant of participants">{{ participant }}</p>
+  	<div *ngIf="isOpen">
+		<div *ngFor="let participant of participants">
+			<p>{{ participant }}</p>
+			<button (click)="seeUserProfile(participant)">See Profile</button>
+			<button (click)="playWithUser(participant)">Invite to Play Pong</button>
+			<div *ngIf="isAllowedToElevateToAdmin(participant)">
+				<button (click)="makeAdmin(participant)">Make Administrator</button>
+			</div>
+			<div *ngIf="isAllowedToCoerce(participant)">
+				<button (click)="kickUser(participant)">Kick</button>
+				<button (click)="banUser(participant)">Ban</button>
+				<button (click)="muteUser(participant)">Mute</button>
+			</div>
+			<div>
+				<button (click)="blockUser(participant)"></button>
+			</div>
+		</div>
+	</div>
 </div>

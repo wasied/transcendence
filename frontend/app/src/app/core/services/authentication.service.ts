@@ -9,6 +9,7 @@ import QRCode from 'qrcode';
 })
 export class AuthenticationService {
 
+	private authToken42: string | null = null;
 	private doubleAuthActivated: boolean = false;
 	private apiURL: string = 'http://localhost:8080/auth';
 	authObs$!: Observable<any>;
@@ -62,7 +63,6 @@ export class AuthenticationService {
 		else {
 			const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
 				secret: string }>(`${this.apiURL}/2fa/disable`).toPromise();
-
 			if (response && response.success)
 				return { success: true };
 			else

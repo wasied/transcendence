@@ -1,60 +1,61 @@
 <header
   *ngIf="user$ | async as user"
   [ngClass]="{}"
-  class="flex justify-between items-center bg-yellow-500 stiky top-0 left-0 right-0 z-50 py-4 p-8"
+  class="flex justify-between items-center bg-yellow-500 fixed top-0 left-0 right-0 z-50 py-4 p-8"
 >
-  <div>
-    <img
-      [ngClass]="{ 'fixed top-4 left-8': isMenuOpen }"
-      class="h-16"
-      src="../../../assets/imgs/42_Logo.png"
-      alt="42 logo"
-    />
-  </div>
-  <nav
-    [ngClass]="{
-      hidden: !isMenuOpen,
-      'flex justify-center items-center h-screen': isMenuOpen
-    }"
-    class="lg:block flex flex-col lg:flex-row lg:space-x-12 lg:space-y-0 space-y-12 text-lg transition-all duration-500 ease-in-out"
-  >
-    <app-custom-button
-      (onClick)="onClickPlay()"
-      [title]="'PLAY'"
-    ></app-custom-button>
+	<div>
+    	<img
+      		[ngClass]="{ 'fixed top-4 left-8': isMenuOpen }"
+      		class="h-16"
+      		src="../../../assets/imgs/42_Logo.png"
+      		alt="42 logo"
+    	/>
+  	</div>
+	<nav
+    	[ngClass]="{
+      	hidden: !isMenuOpen,
+      	'flex justify-center items-center h-screen': isMenuOpen
+    	}"
+    	class="lg:block flex flex-col lg:flex-row lg:space-x-12 lg:space-y-0 space-y-12 text-lg transition-all duration-500 ease-in-out"
+  	>
     <button
-      (click)="onClickOnChatrooms()"
-      class="hover:underline hover:cursor-pointer"
+		(click)="onClickPlay()"
+		class=""
+	> PLAY
+	</button>
+    <button
+    	(click)="onClickOnChatrooms()"
+    	class="hover:underline hover:cursor-pointer"
     >
-      Chatrooms
+    	Chatrooms
     </button>
     <button
-      (click)="onClickOnMessages()"
-      class="hover:underline hover:cursor-pointer"
+    	(click)="onClickOnMessages()"
+    	class="hover:underline hover:cursor-pointer"
     >
-      Messages
+    	Messages
     </button>
     <button
-      (click)="onClickOnFriends()"
-      class="hover:underline hover:cursor-pointer"
+    	(click)="onClickOnFriends()"
+    	class="hover:underline hover:cursor-pointer"
     >
-      Friends
+    	Friends
     </button>
     <button class="self-end">
-      <img
-        (click)="onClickOnProfilePicture()"
-        class="object-cover rounded-full hover:cursor-pointer"
-        [src]="user.profileImageURL"
-        alt="profile picture"
-      />
+    	<img
+        	(click)="onClickOnProfilePicture()"
+        	class="object-cover rounded-full hover:cursor-pointer"
+        	[src]="user.profileImageURL"
+        	alt="profile picture"
+      	/>
     </button>
-  </nav>
-  <div>
-    <button
-      class="lg:hidden block text-white focus:outline-none fixed top-7 right-8 text-3xl z-50"
-      (click)="toggleMenu()"
-    >
-      <i class="fas fa-bars"></i>
-    </button>
-  </div>
+  	</nav>
+  	<div>
+    	<button
+      		class="lg:hidden block text-white focus:outline-none fixed top-7 right-8 text-3xl z-50"
+      		(click)="toggleMenu()"
+    	>
+      	<i class="fas fa-bars"></i>
+    	</button>
+  	</div>
 </header>
