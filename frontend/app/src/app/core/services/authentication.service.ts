@@ -32,13 +32,9 @@ export class AuthenticationService {
 		console.log('stored token is : ', this.authToken42);
 	}
 
-	// should activate/deactivate 2fa, returning a status : success on success
 	change2faStatus() : Observable<{qrAvailable: boolean, url: string}> {
 		this.doubleAuthActivated = !this.doubleAuthActivated;
-		const body = { myBoolean: this.doubleAuthActivated };
 
-		// Mikhail : should return a boolean (true if QR code avalaible, false if only written secret,
-		// then a string with the url of the qr code, or a string with the secret)
 		return this.http.post<{qrAvailable: boolean, url: string}>('http://localhost:3000/my-endpoint', body);
 	}
 
