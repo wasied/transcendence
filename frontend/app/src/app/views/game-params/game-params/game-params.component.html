@@ -1,17 +1,43 @@
 <div class="text-white">
-	<h1>MAIN MENU</h1>
-	<!-- put separator line there, like in Figma -->
-	<p>Apply Chaos Mode</p>
-	<p>Very fun mode that add randomness when the ball collides with the borders or the paddles</p>
-	<app-checkbox (checkboxChange)="onApplyChaosPhysics($event)"></app-checkbox>
-	<p>Apply Mort Subite Mode</p>
-	<p>The first player that score wins. As simple as that</p>
-	<app-checkbox (checkboxChange)="onApplyMortSubite($event)"></app-checkbox>
-	<p>Apply Two Points Appart Mode</p>
-	<p>You need to 1) reach the score of 12 and 2) have a difference of 2 points between you and your opponent</p>
-	<app-checkbox (checkboxChange)="onApplyTwoPoints($event)"></app-checkbox>
+  <div class="max-w-3xl inline-flex items-center w-full">
+    <hr class="w-screen m-8" />
+    <span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+      >GAME MENU</span
+    >
+  </div>
+  <div class="max-w-4xl flex flex-col items-center w-full">
+    <ul class="flex flex-col items-center space-y-4 w-full">
+      <ng-container *ngFor="let mode of gameModes; let i = index">
+        <li
+          class="flex flex-row justify-between items-center w-3/4 mx-auto bg-zinc-900 hover:bg-zinc-800 transform duration-200 p-5 rounded"
+          [class.bg-zinc-800]="selectedMode === i"
+          (click)="onLiClick(i)"
+        >
+          <div>
+            <p class="space-x-3 flex items-baseline">
+              <i [class]="mode.iconClass"></i>
+              <span>{{ mode.name }}</span>
+            </p>
+            <p class="w-3/4 text-sm text-zinc-400 mt-2">
+              {{ mode.description }}
+            </p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              [checked]="selectedMode === i"
+              (change)="onApplyMode(i)"
+            />
+          </label>
+        </li>
+      </ng-container>
+    </ul>
 
-	<app-custom-button (onClick)="onClickStart()" [title]="'PLAY'"></app-custom-button>
+    <app-custom-button
+      (onClick)="onClickStart()"
+      [title]="'PLAY'"
+    ></app-custom-button>
 
-	<button (click)="onClickSpectator()">Spectator Mode</button>
+    <button (click)="onClickSpectator()">Spectator Mode</button>
+  </div>
 </div>
