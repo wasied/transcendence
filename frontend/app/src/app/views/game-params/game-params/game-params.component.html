@@ -11,7 +11,7 @@
 	<p>You need to 1) reach the score of 12 and 2) have a difference of 2 points between you and your opponent</p>
 	<app-checkbox (checkboxChange)="onApplyTwoPoints($event)"></app-checkbox>
 
-	<app-custom-button (onClick)="onClickStart()" [title]="'PLAY'"></app-custom-button>
+	<button (click)="onClickStart()" class="">PLAY</button>
 
 	<button (click)="onClickSpectator()">Spectator Mode</button>
 </div>

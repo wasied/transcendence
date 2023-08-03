@@ -8,27 +8,30 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
 })
 export class InfoSecurityComponent {
 
-	PasswordForm!: FormGroup;
-	PicForm!: FormGroup;
-	TelForm!: FormGroup;
+	passwordForm!: FormGroup;
+	picForm!: FormGroup;
+	telForm!: FormGroup;
 	
 	showModalPassword: boolean = false;
 	showModalPic: boolean = false;
 	showModalTel: boolean = false;
+	showModal2FA: boolean = false;
+
+	twoFactorAuthQR!: string;
 
 	constructor (private formBuilder: FormBuilder, private auth: AuthenticationService) {
-		this.PasswordForm = this.formBuilder.group({
-			oldPassword: ['', Validators.required],
-			newPassword: ['', Validators.required],
-			newPassword2: ['', Validators.required]
+		this.passwordForm = this.formBuilder.group({
+			oldPassword: [''],
+			newPassword: [''],
+			newPassword2: ['']
 		});
 
-		this.PicForm = this.formBuilder.group({
-			newPicURL: ['', Validators.required]
+		this.picForm = this.formBuilder.group({
+			newPicURL: ['']
 		});
 
-		this.TelForm = this.formBuilder.group({
-			newPhone : ['', Validators.required]
+		this.telForm = this.formBuilder.group({
+			newPhone : ['']
 		});
 	};
 	
@@ -37,36 +40,30 @@ export class InfoSecurityComponent {
   		const isChecked = target.checked;
 
 		if (isChecked) {
+			this.twoFactorAuthQR = 'https://i.stack.imgur.com/kbOO8.png'; // placeholder, retrieve it from backend
 			this.auth.change2faStatus();
+			this.showModal2FA = true;
   		} else {
     		this.auth.change2faStatus();
+			this.showModal2FA = false;
   		}
 	}
 	
+	// on send forms
 	onClickEditPassword() : void {
     	console.log('edit password : need to be implemented');
+		this.closeModalPassword();
   	}
 
   	onClickEditPic() : void {
 		console.log('edit profile pic : need to be implemented');
+		this.closeModalPic();
   	}
 
   	onClickEditNumber() : void {
 		console.log('edit number : need to be implemented');
+		this.closeModalTel();
   	}
-
-	// forms functions
-	onSubmitNewPassword() : void {
-		console.log('new password submitted : not implemented yet');
-	}
-
-	onSubmitNewPic() : void {
-		console.log('new profile picture submitted : not implemented yet');
-	}
-
-	onSubmitNewPhone() : void {
-		console.log('new phone submitted : not implemented yet');
-	}
 
 	// modal functions
 	openModalPassword() : void {
@@ -91,5 +88,9 @@ export class InfoSecurityComponent {
 
 	closeModalTel() : void {
 		this.showModalTel = false;
+	}
+
+	closeModal2FA(): void {
+		this.showModal2FA = false;
 	}
 }

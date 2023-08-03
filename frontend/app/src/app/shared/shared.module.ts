@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
 import { CheckboxComponent } from './components/utils/checkbox/checkbox.component';
-import { CustomButtonComponent } from './components/utils/custom-button/custom-button.component';
 import { HeaderComponent } from './components/utils/header/header.component';
 import { ModalComponent } from './components/utils/modal/modal.component';
 
@@ -23,7 +22,6 @@ import { DisplayMsgTimestampPipe } from './display-msg-timestamp.pipe';
 @NgModule({
 	declarations: [
 		CheckboxComponent,
-		CustomButtonComponent,
 		HeaderComponent,
     	StatsComponent,
     	AchievementComponent,
@@ -44,7 +42,6 @@ import { DisplayMsgTimestampPipe } from './display-msg-timestamp.pipe';
 	],
 	exports: [
 		CheckboxComponent,
-		CustomButtonComponent,
 		HeaderComponent,
 		StatsComponent,
 		AchievementComponent,
