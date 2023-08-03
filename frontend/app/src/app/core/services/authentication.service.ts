@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable } from "rxjs";
 import QRCode from 'qrcode';
@@ -9,7 +9,6 @@ import QRCode from 'qrcode';
 })
 export class AuthenticationService {
 
-	private authToken42: string | null = null;
 	private doubleAuthActivated: boolean = false;
 	private apiURL: string = 'http://localhost:8080/auth';
 	authObs$!: Observable<any>;
@@ -19,17 +18,7 @@ export class AuthenticationService {
 		private authHttp: AuthHttpClient
 	) {}
 
-	storeTokenOnLocalSession(token: string) : void {
-		localStorage.setItem('authToken', token);
-	}
-
-	getTokenOnLocalSession() : string | null {
-		return localStorage.getItem('authToken');
-	}
-
-	delTokenFromLocalSession() : void {
-		localStorage.removeItem('authToken');
-	}
+	/* AUTH USING 42 API */
 
 	async isAuthenticated(): Promise<boolean> {
 		if (!this.getTokenOnLocalSession())
@@ -39,7 +28,21 @@ export class AuthenticationService {
 
 		return true;
 	}
-	
+
+	retrieveURL() : Observable<{ url: string }> {
+		const endpoint: string = `${this.apiURL}/url`;
+		
+		return this.http.get<{ url: string }>(endpoint);
+	}
+
+	async triggerAuth() : Promise<void> {
+		this.authObs$ = this.retrieveURL();
+		const authURL = (await this.authObs$.toPromise()).url;
+		window.location.href = authURL;
+	}
+
+	/* 2FA */
+
 	async change2faStatus() : Promise<{ success: boolean, qrCodeUrl?: string, secret?: string }> {
 		this.doubleAuthActivated = !this.doubleAuthActivated;
 
@@ -77,13 +80,17 @@ export class AuthenticationService {
 		});
 	}
 
-	retrieveURL() : Observable<{ url: string }> {
-		return this.http.get<{ url: string }>(`${this.apiURL}/url`);
+	/* ACCESS USER ID IN LOCAL STORAGE */
+
+	storeTokenOnLocalSession(token: string) : void {
+		localStorage.setItem('authToken', token);
 	}
 
-	async triggerAuth() : Promise<void> {
-		this.authObs$ = this.retrieveURL();
-		const authURL = (await this.authObs$.toPromise()).url;
-		window.location.href = authURL;
+	getTokenOnLocalSession() : string | null {
+		return localStorage.getItem('authToken');
+	}
+
+	delTokenFromLocalSession() : void {
+		localStorage.removeItem('authToken');
 	}
 }

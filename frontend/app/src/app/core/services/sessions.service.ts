@@ -31,21 +31,29 @@ export class SessionsService {
 
 	// return all the game sessions
 	getAllSessions() : Observable<Session[]> {
-		return this.http.get<Session[]>(`${this.apiURL}`);
+		const endpoint: string = `${this.apiURL}`; // modify that
+		
+		return this.http.get<Session[]>(endpoint);
 	}
 
 	// return one session based on it's id
 	getSessionById(id: number) : Observable<Session> {
-		return this.http.get<Session>(`${this.apiURL}/${id}`);
+		const endpoint: string = `${this.apiURL}/${id}`; // modify that
+
+		return this.http.get<Session>(endpoint);
 	}
 
 	// Can be use to display all sessions that are currently active, to display in spectator mode menu
 	getActiveSessions() : Observable<Session[]> {
-		return this.http.get<Session[]>(`${this.apiURL}`, { params: { isEnded: false } });
+		const endpoint: string = `${this.apiURL}`; // modify that
+		
+		return this.http.get<Session[]>(endpoint, { params: { isEnded: false } });
 	}
 
-	// Returns the history of every session where a given player has participated. Used in game history.
+	// Returns the history of every session where a given player has participated. Used in match history.
 	getSessionsHistoryByUserId(userId: number) : Observable<Session[]> {		
-		return this.http.get<Session[]>(`${this.apiURL}`);
+		const endpoint: string = `${this.apiURL}`; // modify that
+		
+		return this.http.get<Session[]>(endpoint);
 	}
 }

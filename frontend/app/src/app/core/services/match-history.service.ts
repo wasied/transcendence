@@ -32,6 +32,7 @@ export class MatchHistoryService {
 	
 	// with observables
 	
+	
 	getGameHistory(playerId: number): Observable<MatchHistory[]> {
 		
 		return forkJoin({

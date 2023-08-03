@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { FormGroup } from "@angular/forms";
-import { Observable, map, switchMap, of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { DirectMessage } from "../models/direct-message.model"; 
 
 @Injectable({
@@ -30,34 +29,40 @@ export class DirectMessagesService {
 
 	private apiURL : string = 'http://localhost:3000/chatrooms_messages'; // add that
 
-	// addNewDirectMsg(form : FormGroup) : Observable<DirectMessage> {
-		
-	// 	const otherPlayerId: string = form.get('otherPlayerId')?.value;
-	// 	const otherPlayerPseudo: string = form.get('otherPlayerPseudo')?.value;
-	// 	const otherPlayerStatus: string = form.get('otherPlayerStatus')?.value;
 
-	// 	return this.returnNewId().pipe(
-	// 		switchMap(newId => {
-	// 			const newDirectMsg: DirectMessage = {
-	// 				id: ,
-	// 				otherPlayerId: ,
-	// 				otherPlayerPseudo: ,
-	// 				otherPlayerStatus: 
-	// 			};
-	// 			return this.http.post<DirectMessage>();
-	// 		})
-	// 	);
-	// }
-	
+	/* CREATE */
+
+
+
+	/* READ */
+
 	getDirectMsgById(id : number) : Observable<DirectMessage> {
-		return this.http.get<DirectMessage>(`${this.apiURL}/${id}`);
+		const endpoint: string = `${this.apiURL}/${id}`; // modify this
+		
+		return this.http.get<DirectMessage>(endpoint);
 	}
 
 	getAllDirectMsgs() : Observable<DirectMessage[]> {
-		return this.http.get<DirectMessage[]>(`${this.apiURL}`);
+		const endpoint: string = `${this.apiURL}`; // modify this
+		
+		return this.http.get<DirectMessage[]>(endpoint);
 	}
 
+	/* UPDATE */
+
+	blockDirectMsgUser(id: number) : Observable<void> { // finish this
+		const endpoint: string = `${this.apiURL}/${id}`; // modify this
+		const body = {
+			action: ''
+		};
+		return this.http.put<void>(endpoint, body);
+	}
+
+	/* DELETE */
+
 	delDirectMsg(id: number) : Observable<void> {
-		return this.http.delete<void>(`${this.apiURL}/${id}`);
+		const endpoint: string = `${this.apiURL}/${id}`; // modify this
+		
+		return this.http.delete<void>(endpoint);
 	}
 }

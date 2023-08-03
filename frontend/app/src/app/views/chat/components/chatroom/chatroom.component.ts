@@ -69,7 +69,7 @@ export class ChatroomComponent {
 		this.router.navigate(['main/chatrooms', chatroomId]); // check if functional
 	}
 	
-	// Ce serait sûrement mieux de delete en se basant sur l'ID
+	// Ce serait sûrement mieux de delete en se basant sur l'ID => handled by chatrooms component :)
 	deleteChatroom() : void {
 		this.deleteRequest.emit(this.chatroom);
 	}
