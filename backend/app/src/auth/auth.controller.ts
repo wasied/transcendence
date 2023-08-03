@@ -24,4 +24,8 @@ export class AuthController {
 	async redirect(@Query() query: any): Promise<Object> {
 		return await this.authService.redirect(query.code);
 	}
+
+	@UseGuards(AuthGuard('jwt'))
+	@Get('isAuthenticated')
+	async isAuthenticated() {}
 }

@@ -29,6 +29,15 @@ export class AuthenticationService {
 	delTokenFromLocalSession() : void {
 		localStorage.removeItem('authToken');
 	}
+
+	async isAuthenticated(): Promise<boolean> {
+		if (!this.getTokenOnLocalSession())
+			return false;
+		try { await this.authHttp.get<void>(`${this.apiURL}/isAuthenticated`).toPromise(); }
+		catch { return false; }
+
+		return true;
+	}
 	
 	async change2faStatus() : Promise<{ success: boolean, qrCodeUrl?: string, secret?: string }> {
 		this.doubleAuthActivated = !this.doubleAuthActivated;
