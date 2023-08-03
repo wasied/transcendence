@@ -33,11 +33,13 @@ export class AuthenticationService {
 	}
 
 	// should activate/deactivate 2fa, returning a status : success on success
-	change2faStatus() : Observable<{status: string}> {
+	change2faStatus() : Observable<{qrAvailable: boolean, url: string}> {
 		this.doubleAuthActivated = !this.doubleAuthActivated;
 		const body = { myBoolean: this.doubleAuthActivated };
 
-		return this.http.post<{ status: string }>('http://localhost:3000/my-endpoint', body);
+		// Mikhail : should return a boolean (true if QR code avalaible, false if only written secret,
+		// then a string with the url of the qr code, or a string with the secret)
+		return this.http.post<{qrAvailable: boolean, url: string}>('http://localhost:3000/my-endpoint', body);
 	}
 
 	// send code to the back to 2fa
