@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable } from "rxjs";
+import QRCode from 'qrcode';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,50 +12,78 @@ export class AuthenticationService {
 	private authToken42: string | null = null;
 	private doubleAuthActivated: boolean = false;
 	private apiURL: string = 'http://localhost:8080/auth';
-	authURL!: string;
 	authObs$!: Observable<any>;
 
-	constructor (private http: HttpClient) {}
+	constructor (
+		private http: HttpClient,
+		private authHttp: AuthHttpClient
+	) {}
 
-	getAuthToken42() : string | null {
-		return this.authToken42;
+	storeTokenOnLocalSession(token: string) : void {
+		localStorage.setItem('authToken', token);
 	}
 
-	rmAuthToken42() : void {
-		this.authToken42 = null;
+	getTokenOnLocalSession() : string | null {
+		return localStorage.getItem('authToken');
+	}
+
+	delTokenFromLocalSession() : void {
+		localStorage.removeItem('authToken');
+	}
+
+	async isAuthenticated(): Promise<boolean> {
+		if (!this.getTokenOnLocalSession())
+			return false;
+		try { await this.authHttp.get<void>(`${this.apiURL}/isAuthenticated`).toPromise(); }
+		catch { return false; }
+
+		return true;
 	}
 	
-	storeAuthToken42(token: string) : void {
-		if (!this.authToken42) {
-			this.authToken42 = token;
-		} else {
-			// raise error here
-		}
-		console.log('stored token is : ', this.authToken42);
-	}
-
-	change2faStatus() : Observable<{qrAvailable: boolean, url: string}> {
+	async change2faStatus() : Promise<{ success: boolean, qrCodeUrl?: string, secret?: string }> {
 		this.doubleAuthActivated = !this.doubleAuthActivated;
 
-		return this.http.post<{qrAvailable: boolean, url: string}>('http://localhost:3000/my-endpoint', body);
+		if (this.doubleAuthActivated) {
+			const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
+				secret: string }>(`${this.apiURL}/2fa/enable`).toPromise();
+			if (!response)
+				return { success: false }; // handle err
+			const qrCodeUrl = await QRCode.toDataURL(response.otpAuthUrl)
+			.then((imageUrl: string) => { return imageUrl; })
+			.catch((err: any) => { return undefined; });
+			console.log(response.secret);
+			console.log(qrCodeUrl);
+
+			return {
+				success: response.success,
+				qrCodeUrl: qrCodeUrl,
+				secret: response.secret
+			};
+		}
+		else {
+			const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
+				secret: string }>(`${this.apiURL}/2fa/disable`).toPromise();
+			if (response && response.success)
+				return { success: true };
+			else
+				return { success: false };
+		}
 	}
 
-	// send code to the back to 2fa
-	sendAuthData(authData: string) : Observable<{status: string}> {
-		return this.http.post<{status: string}>('replace-by-endpoint', authData);
+	handle2fa(userId: number, code: string) : Observable<{ success: boolean, url: string }> {
+		return this.http.post<{ success: boolean, url: string }>(`${this.apiURL}/2fa`, {
+			id: userId,
+			code: code
+		});
 	}
 
-	retrieveURL() : Observable<any> {
-		return this.http.get<any>(`${this.apiURL}/url`);
+	retrieveURL() : Observable<{ url: string }> {
+		return this.http.get<{ url: string }>(`${this.apiURL}/url`);
 	}
 
-	async subscribeObservable(): Promise<void> {
-		this.authURL = (await this.authObs$.toPromise()).url;
-		window.location.href = this.authURL;
-	}
-
-	triggerAuth() : void {
+	async triggerAuth() : Promise<void> {
 		this.authObs$ = this.retrieveURL();
-		this.subscribeObservable();
+		const authURL = (await this.authObs$.toPromise()).url;
+		window.location.href = authURL;
 	}
 }

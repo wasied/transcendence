@@ -1,30 +1,30 @@
-<div class="bg-white w-full m-2 overflow-hidden rounded-3xl flex text-black">
-	<div class="bg-yellow-500 flex items-center justify-center h-full w-20">
-    	<p class="text-5xl">🗣️</p>
-  	</div>
-  	<div class="flex justify-between w-full py-2">
-    	<div class="flex flex-col justify-center w-5/12 pl-4">
-      		<p class="text-xl">{{ this.directMessage.otherPlayerPseudo }}</p>
-      		<div class="flex items-center">
-        		<span
-          			class="pr-2"
-          			[ngClass]="{
-            			'text-green-500': this.directMessage.otherPlayerStatus === 'online'
-          			}"
-          		>●</span>
-        		{{ this.directMessage.otherPlayerStatus }}
-      		</div>
-    	</div>
-    	<div class="flex flex-row space-x-4 pr-4">
-      		<div class="flex items-center justify-center">
-				<button (click)="goToDMSession(directMessage.id)" class="text-xl" type="button">Go To DM session</button>
-			</div>
-			<div class="flex items-center justify-center">
-       			<button (click)="blockDMSession()" class="text-3xl" type="button">🚫</button>
-      		</div>
-      		<div class="flex items-center justify-center">
-        		<button (click)="rmDMSession()" class="text-3xl" type="button">❌</button>
-      		</div>
-    	</div>
-  	</div>
+<div (click)="goToDMSession(directMessage.id)" class="bg-white w-full m-2 rounded-md flex text-zinc-800">
+  <button class="bg-[#ffc93b] p-2 rounded-l h-full flex items-center">
+    <i
+      class="fa-solid fa-user w-16 h-16 flex items-center justify-center text-2xl shadow-md text-zinc-800 bg-gray-200 p-4 rounded-full hover:shadow-inner"
+    ></i>
+  </button>
+  <div class="flex justify-between w-full py-2">
+    <div class="flex flex-col justify-center w-5/12 pl-4">
+      <p class="font-semibold">
+        {{ this.directMessage.otherPlayerPseudo }}
+      </p>
+      <div class="flex items-center">
+        <span
+          class="pr-1"
+          [ngClass]="{
+            'text-green-500': this.directMessage.otherPlayerStatus === 'online'
+          }"
+          >●</span
+        >
+        {{ this.directMessage.otherPlayerStatus }}
+      </div>
+    </div>
+    <div class="flex justify-end space-x-4 px-4">
+      <button (click)="blockDMSession()" class="p-2" id="block"><i class="fa fa-ban"></i></button>
+      <button (click)="rmDMSession()" class="p-2" id="delete">
+        <i class="fa-solid fa-x"></i>
+      </button>
+    </div>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Controller, Body, Query, Get, Post, Redirect, Req, UseGuards } from '@nestjs/common';
+import { Controller, Body, Query, Get, Post, Redirect, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { TwoFAService } from './twoFA/twoFA.service';
@@ -24,4 +24,8 @@ export class AuthController {
 	async redirect(@Query() query: any): Promise<Object> {
 		return await this.authService.redirect(query.code);
 	}
+
+	@UseGuards(AuthGuard('jwt'))
+	@Get('isAuthenticated')
+	async isAuthenticated() {}
 }

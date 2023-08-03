@@ -1,6 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { authenticator } from 'otplib';
-import qrcode from 'qrcode';
 import { dbClient } from '../../db';
 import { JwtService } from '@nestjs/jwt';
 
@@ -9,16 +8,22 @@ export class TwoFAService {
 	constructor(private readonly jwtService: JwtService) {}
 
 	async handle2fa(user_id: number, code: string): Promise<Object> {
-		if (this.verify(user_id, code)) {
+		if (await this.verify(user_id, code)) {
 			const payload = { id: user_id };
-			const accessToken = this.jwtService.sign(payload);
+			const accessToken = this.jwtService.sign(payload, { secret: process.env.JWT_SECRET });
 
-			return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}` };
+			return {
+				success: true,
+				url: `auth/redirect?access_token=${accessToken}`
+			};
 		}
 		else {
 			throw new HttpException("Bad code.", HttpStatus.UNAUTHORIZED);
 
-			return { url: `${process.env.APP_URL}/auth/2fa` };
+			return {
+				success: false,
+				url: undefined
+			};
 		}
 	}
 
@@ -26,27 +31,27 @@ export class TwoFAService {
 		const secret = authenticator.generateSecret();
 		const otpAuthUrl = authenticator.keyuri(String(user_id), process.env.APP_NAME, secret);
 		this.updateSecret(user_id, secret);
-		var qrCodeImageUrl;
-		qrcode.toDataURL(otpAuthUrl, (err, imageUrl) => {
-			if (err)
-				qrCodeImageUrl = "";
-			else
-				qrCodeImageUrl = imageUrl;
-		});
 
 		return {
-			qrCodeImageUrl: qrCodeImageUrl,
+			success: true,
+			otpAuthUrl: otpAuthUrl,
 			secret: secret
-		}
+		};
 	}
 
-	disable(user_id: number): void {
+	disable(user_id: number): Object {
 		const queryResult = dbClient.query(
 			`UPDATE	users
 					SET a2f_key = NULL
 					WHERE id = $1`,
 			[user_id]
 		);
+
+		return {
+			success: true,
+			otpAuthUrl: undefined,
+			secret: undefined
+		};
 	}
 
 	async isEnabled(user_id: number): Promise<boolean> {
@@ -76,8 +81,8 @@ export class TwoFAService {
 	private updateSecret(user_id: number, secret: string): void {
 		const queryResult = dbClient.query(
 			`UPDATE	users
-					SET		a2f_key = $1,
-					WHERE	id = $2`,
+					SET		a2f_key = $1
+					WHERE	id = $2;`,
 			[secret, user_id]
 		);
 	}

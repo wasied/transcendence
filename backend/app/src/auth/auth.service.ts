@@ -48,8 +48,8 @@ export class AuthService {
 
 /***/
 		const payload = { id: userData.id };
-		const accessToken = this.jwtService.sign(payload);
-		return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}` };
+//		const accessToken = this.jwtService.sign(payload);
+//		return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}` };
 /***/
 		if ((await this.usersService.findOneById(userData.id)).length === 0) {
 			await this.usersService.create({
@@ -66,14 +66,14 @@ export class AuthService {
 			return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}` };
 		}
 
-		if (await this.usersService.isOnline(userData.id)) {
-			console.log('logged in!');
-			throw new HttpException("User already logged in.", HttpStatus.BAD_REQUEST);
-		}
+//		if (await this.usersService.isOnline(userData.id)) {
+//			console.log('logged in!');
+//			throw new HttpException("User already logged in.", HttpStatus.BAD_REQUEST);
+//		}
 		if (await this.twoFAService.isEnabled(userData.id)) {
 			console.log('2fa!');
 
-			return { url: `${process.env.APP_URL}/auth/2fa` };
+			return { url: `${process.env.APP_URL}/auth/2fa?user_id=${userData.id}` };
 		}
 		else {
 			console.log('no 2fa;');

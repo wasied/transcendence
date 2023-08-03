@@ -15,8 +15,15 @@ export class AchievementsService {
 		userId: 1,
 		date: new Date(),
 		achievementName: 'test',
-		description: 'description test'
-	}];
+		description: 'description test0'
+	},
+	{
+		id: 2,
+		userId: 1,
+		date: new Date(),
+		achievementName: 'test',
+		description: 'description test1'
+	},];
 
 	getHarcodedAchievements() : Observable<Achievement[]> { // for testing only
 		return of(this.hardcodedAchievements);

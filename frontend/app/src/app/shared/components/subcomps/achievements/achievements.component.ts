@@ -22,4 +22,14 @@ export class AchievementsComponent implements OnInit {
 	loadAchievements() : Observable<Achievement[]> {
 		return this.achievementsService.getHarcodedAchievements(); // change this
 	}
+
+	// Fonctions pour le design responsif
+	getEmptyAchievementCount(achievements: any[]): number {
+		const maxAchievements = 10;
+		return Math.max(maxAchievements - achievements.length, 0);
+	  }
+	
+	  createEmptyArray(count: number): any[] {
+		return new Array(count);
+	  }
 }

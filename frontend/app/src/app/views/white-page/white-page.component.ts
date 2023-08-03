@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
@@ -7,21 +7,19 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
   selector: 'app-white-page',
   templateUrl: './white-page.component.html'
 })
-export class WhitePageComponent {
-	
-	private access_token!: string | null;
-	
-	constructor(
+export class WhitePageComponent implements OnInit {
+
+  constructor(
 		private route: ActivatedRoute,
 		private router: Router,
 		private authService: AuthenticationService
 	) {};
 
 	ngOnInit(): void {
-		this.access_token = this.route.snapshot.queryParamMap.get('access_token');
-		if (!this.access_token|| this.access_token === '')
-			return ; // handle error there
-		this.authService.storeAuthToken42(this.access_token);
+		const accessToken = this.route.snapshot.queryParamMap.get('access_token');
+		if (!accessToken || accessToken === "")
+			return ; // handling err there
+		this.authService.storeTokenOnLocalSession(accessToken);
 		this.router.navigateByUrl('/main');
 	}
 }

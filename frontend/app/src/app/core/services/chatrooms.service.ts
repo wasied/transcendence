@@ -15,7 +15,25 @@ export class ChatroomsService {
 			id: 1,
 			chatroomName: 'testChatroom',
 			ownerId: 1,
-			owner: 'test player',
+			owner: 'test3',
+			accessStatus: 'public',
+			participants: ['test', 'player'],
+			participantsId: [1]
+		},
+		{
+			id: 2,
+			chatroomName: 'testChatroom',
+			ownerId: 1,
+			owner: 'test2',
+			accessStatus: 'public',
+			participants: ['test', 'player'],
+			participantsId: [1]
+		},
+		{
+			id: 2,
+			chatroomName: 'testChatroom',
+			ownerId: 1,
+			owner: 'test3',
 			accessStatus: 'public',
 			participants: ['test', 'player'],
 			participantsId: [1]

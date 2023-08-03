@@ -12,6 +12,9 @@ import { UsersService } from 'src/app/core/services/users.service';
 export class ChatroomsComponent implements OnInit {
   
 	chatrooms$!: Observable<Chatroom[]>;
+
+	chatrooms: any[] = [{name: "test"}, {name: "test2", online:true}]; // Store the friends' data
+
   
 	constructor (private chatroomService: ChatroomsService,
 				 private usersService: UsersService) {}

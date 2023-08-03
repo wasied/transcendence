@@ -1,13 +1,35 @@
-<form [formGroup]="authForm" (ngSubmit)="onSubmit()">
-	<div>
-		<label for="password">Password</label>
-		<input id="code" type="password" formControlName="code">
-	</div>
-	<button type="submit">Submit</button>
-</form>
-
+<div class="text-white max-w-3xl flex flex-col w-4/5 mx-auto">
+  <div>
+    <h2 class="text-2xl font-medium">Double authentification</h2>
+    <p class="text-zinc-400">
+      La double authentification (2FA) renforce la sécurité en ligne : elle
+      nécessite à la fois un mot de passe et un élément unique (comme une
+      application ou un SMS) pour accéder aux comptes, réduisant ainsi les
+      risques d'accès non autorisé.
+    </p>
+  </div>
+  <form
+    class="flex flex-col mt-4"
+    [formGroup]="authForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <label class="font-semibold text-yellow-500" for="password">Password</label>
+    <input
+      class="rounded bg-zinc-800 outline-0 p-1 mt-1"
+      id="code"
+      type="password"
+      formControlName="code"
+    />
+    <button
+      class="mt-4 bg-gradient-to-t from-yellow-500 to-yellow-600 rounded text-black hover:from-yellow-500 hover:to-yellow-500 transition-all duration-200 ease-in-out p-2"
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+</div>
 
 <!-- Display response here -->
-<div *ngIf="response$ | async as response">
-	{{ response | json }}
+<div *ngIf="serverResponse$ | async as response">
+  {{ response | json }}
 </div>
