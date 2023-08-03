@@ -1,6 +1,32 @@
-<div *ngIf="achievements$ | async as achievements" class="flex justify-center w-screen">
-	<div class="w-screen w-3/5">
-		<app-achievement class="p-1" *ngFor="let achievementElem of achievements" 
-		[achievement]="achievementElem"></app-achievement>
-	</div>
+<div class="max-w-3xl inline-flex items-center w-full">
+  <hr class="w-screen m-8" />
+  <span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+    >ACHIEVEMENTS</span
+  >
+</div>
+
+<div class="flex justify-center">
+  <div class="grid lg:grid-cols-5 grid-cols-3 gap-x-16 gap-y-8">
+    <ng-container *ngIf="achievements$ | async as achievements">
+      <!-- Loop through achievements -->
+      <ng-container *ngFor="let achievementElem of achievements; let i = index">
+        <app-achievement
+          class=""
+          [achievement]="achievementElem"
+        ></app-achievement>
+      </ng-container>
+      <!-- Fill remaining spots with empty gray circles -->
+      <ng-container
+        *ngFor="
+          let _ of createEmptyArray(getEmptyAchievementCount(achievements))
+        "
+      >
+        <div
+          class="bg-gradient-to-t from-zinc-900 to-zinc-900 hover:to-zinc-800 rounded-full h-20 w-20 flex justify-center items-center text-4xl"
+        >
+          <i class="fa-regular fa-circle-question"></i>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
 </div>

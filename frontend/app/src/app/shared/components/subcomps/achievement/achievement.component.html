@@ -1,18 +1,13 @@
-<div class="h-20 border border-2 border-black rounded-2xl flex justify-between overflow-hidden bg-white">
-	<div class="flex">
-		<div class="flex">
-			<div class="bg-yellow-500 w-4">		
-			</div>
-			<div class="flex items-center">
-				<img class="h-20 w-20" src="../../../assets/imgs/ping_pong_raquettes.jpeg" alt="achievement image">
-			</div>
-		</div>
-		<div class="flex flex-col justify-center m-8">
-			<h1 class="text-2xl">{{ this.achievement.achievementName }}</h1>
-			<p class="text-s">{{ this.achievement.description }}</p>
-		</div>
-	</div>
-	<div class="flex items-center m-8">
-		<p>Unlocked the {{ this.achievement.date | date: 'dd/mm/yy at hh:mm:ss' }}</p>
-	</div>
+<div
+  id="achievementIcon"
+  class="bg-gradient-to-t from-yellow-600 to-yellow-400 hover:from-yellow-600 hover:to-yellow-500 transition-all duration-200 rounded-full h-20 w-20 flex justify-center items-center text-xl cursor-pointer"
+>
+  <i class="fa-solid fa-trophy"></i>
 </div>
+
+<!-- Tooltip content template -->
+<div
+  id="tooltipContent"
+  style="display: none"
+  [innerHTML]="createTooltipContent()"
+></div>
