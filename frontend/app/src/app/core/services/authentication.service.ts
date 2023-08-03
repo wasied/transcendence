@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable } from "rxjs";
+import QRCode from 'qrcode';
 
 @Injectable({
 	providedIn: 'root'
@@ -29,24 +30,35 @@ export class AuthenticationService {
 		localStorage.removeItem('authToken');
 	}
 	
-	async change2faStatus() : Promise<any> {
+	async change2faStatus() : Promise<{ success: boolean, qrCodeUrl?: string, secret?: string }> {
 		this.doubleAuthActivated = !this.doubleAuthActivated;
 
-		var headers = new HttpHeaders();
-		headers = headers.append('Authorization', `Bearer ${this.getTokenOnLocalSession()}`);
-
 		if (this.doubleAuthActivated) {
-			const response = await this.authHttp.get<{ success: boolean, /*qrCodeUrl: string,*/
-				secret: string }>(`${this.apiURL}/2fa/enable`/*, { headers: headers }*/).toPromise();
+			const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
+				secret: string }>(`${this.apiURL}/2fa/enable`).toPromise();
 			if (!response)
-				return ; // handle err
+				return { success: false }; // handle err
+			const qrCodeUrl = await QRCode.toDataURL(response.otpAuthUrl)
+			.then((imageUrl: string) => { return imageUrl; })
+			.catch((err: any) => { return undefined; });
 			console.log(response.secret);
+			console.log(qrCodeUrl);
 
-			return response;
+			return {
+				success: response.success,
+				qrCodeUrl: qrCodeUrl,
+				secret: response.secret
+			};
 		}
-		else
-			return await this.authHttp.get<{ success: boolean, /*qrCodeUrl: string,*/
-				secret: string }>(`${this.apiURL}/2fa/disable`/*, { headers: headers }*/).toPromise();
+		else {
+			const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
+				secret: string }>(`${this.apiURL}/2fa/disable`).toPromise();
+
+			if (response && response.success)
+				return { success: true };
+			else
+				return { success: false };
+		}
 	}
 
 	handle2fa(userId: number, code: string) : Observable<{ success: boolean, url: string }> {
