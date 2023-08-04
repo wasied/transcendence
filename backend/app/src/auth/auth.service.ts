@@ -49,7 +49,7 @@ export class AuthService {
 /***/
 		const payload = { id: userData.id };
 //		const accessToken = this.jwtService.sign(payload);
-//		return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}` };
+//		return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}&new_user=false` };
 /***/
 		if ((await this.usersService.findOneById(userData.id)).length === 0) {
 			await this.usersService.create({
@@ -63,7 +63,7 @@ export class AuthService {
 			});
 			const accessToken = this.jwtService.sign(payload);
 
-			return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}` };
+			return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}&new_user=true` };
 		}
 
 //		if (await this.usersService.isOnline(userData.id)) {
@@ -79,7 +79,7 @@ export class AuthService {
 			console.log('no 2fa;');
 			const accessToken = this.jwtService.sign(payload);
 
-			return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}` };
+			return { url: `${process.env.APP_URL}/auth/redirect?access_token=${accessToken}&new_user=false` };
 		}
 
 		return { url: process.env.APP_URL };

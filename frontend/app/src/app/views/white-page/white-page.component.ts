@@ -17,9 +17,21 @@ export class WhitePageComponent implements OnInit {
 
 	ngOnInit(): void {
 		const accessToken = this.route.snapshot.queryParamMap.get('access_token');
-		if (!accessToken || accessToken === "")
-			return ; // handling err there
+		if (!accessToken || accessToken === "") {
+			this.router.navigateByUrl('/');
+			return ;
+		}
 		this.authService.storeTokenOnLocalSession(accessToken);
-		this.router.navigateByUrl('/main');
+		const isNewUserStr = this.route.snapshot.queryParamMap.get('new_user');
+		var isNewUser;
+		if (!isNewUserStr || isNewUserStr === "")
+			isNewUser = false;
+		else
+			isNewUser = JSON.parse(isNewUserStr);
+
+		if (isNewUser)
+			this.router.navigateByUrl('main/profile');
+		else
+			this.router.navigateByUrl('/main');
 	}
 }
