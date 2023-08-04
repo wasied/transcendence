@@ -15,7 +15,7 @@ export class GameCardsComponent implements OnInit{
 	constructor (private gamecardService: GamecardService) {}
   
 	ngOnInit(): void {
-		this.gameCards$ = this.loadGameCards();
+		this.gameCards$ = this.loadGameCards(); // use a WebSocket in final version
 	}
 
 	loadGameCards() : Observable<Gamecard[]> {

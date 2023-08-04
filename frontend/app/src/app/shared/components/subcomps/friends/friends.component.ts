@@ -20,6 +20,10 @@ export class FriendsComponent implements OnInit {
 	}
 
 	loadFriends() : Observable<Friend[]> {
-		return (this.friendsService.getHardcodedFriends()); // change the logic after
+		return this.friendsService.getHardcodedFriends(); // change the logic after
+	}
+
+	loadFriendsOfUser(userId: number) : Observable<Friend[]> { // use that instead
+		return this.friendsService.getFriendsByUserId(userId);
 	}
 }

@@ -27,7 +27,8 @@ export class ChatroomDropdownComponent {
 	}
 
 	kickUser(participant: string) : void {
-		console.log('kick user : not yet implemented');
+		console.log('kick user : not linked');
+		
 	}
 
 	banUser(participant: string) : void {

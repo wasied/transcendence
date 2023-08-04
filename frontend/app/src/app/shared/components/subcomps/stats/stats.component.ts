@@ -18,4 +18,8 @@ export class StatsComponent implements OnInit {
   	ngOnInit(): void {
     	this.stats = this.statsService.getHardcodedStat(); // change this
   	}
+
+	loadStatofCurrentUser(userId: number) : void { // use that instead
+		this.stats = this.statsService.getStatsFromUserById(userId);
+	}
 }

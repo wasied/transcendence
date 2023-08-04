@@ -32,18 +32,23 @@ export class StatsService {
 	
 	private apiUrl : string = 'http://localhost:3000/stats'; // change that
 
-	// to have all stats from every player
-	getAllStats() : Observable<Stat[]> {
-		return this.http.get<Stat[]>(`${this.apiUrl}`);
-	}
-
-	// to get the stats based on it's id
-	getStatById(id: number) : Observable<Stat> {
-		return this.http.get<Stat>(`${this.apiUrl}/${id}`);
-	}
-
-	// to get the stats pertaining to a given player, based on the player's id
+	/* READ */
+	
 	getStatsFromUserById(userId: number) : Observable<Stat> {
-		return this.http.get<Stat>(`${this.apiUrl}/${userId}`);
+		const endpoint: string = `${this.apiUrl}/${userId}`; // change that
+		
+		return this.http.get<Stat>(endpoint);
+	}
+
+	/* UPDATE */
+
+	updateStatsOfUserAfterGame(userId: number) : Observable<void> { // update with relevant data
+		const endpoint: string = `${this.apiUrl}/${userId}`; // modify that
+		const body = {
+			action: 'updateStats',
+			userId: userId
+		};
+
+		return this.http.put<void>(endpoint, body);
 	}
 }

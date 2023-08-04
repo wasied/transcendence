@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { FormGroup } from "@angular/forms";
 import { User } from "../models/user.model"; 
 import { Observable, of, map, switchMap } from "rxjs";
 
@@ -34,60 +33,73 @@ export class UsersService {
 	}
 	
 	// with observables
-	
+
+	/* CREATE */
+
+	giveUsernameToRegisteredUser(username: string) : Observable<void> {
+		const endpoint: string =  `${this.apiURL}`; // modify this
+		const body = {
+			action: 'giveUsernameToUser',
+			username: username
+			// add  user id stored in localStorage
+		};
+
+		return this.http.post<void>(endpoint, body);
+	}
+
+	/* READ */
+
 	getAllUsers() : Observable<User[]> {
-		return this.http.get<User[]>(`${this.apiURL}`);
+		const endpoint: string = `${this.apiURL}`; // modify this
+		
+		return this.http.get<User[]>(endpoint);
 	}
 
 	getUserById(id: number) : Observable<User> {
-		return this.http.get<User>(`${this.apiURL}/${id}`);
+		const endpoint: string = `${this.apiURL}/${id}`;
+		
+		return this.http.get<User>(endpoint);
 	}
 
-	// should be used for displaying 
+	// should be used for displaying users actually playing pong !
 	getUsersInActiveSession() : Observable<User[]> {
-		return this.http.get<User[]>(`${this.apiURL}/active`);
+		const endpoint: string = `${this.apiURL}/active`;
+		
+		return this.http.get<User[]>(endpoint);
 	}
 
-	// should be used to display game history
+	// should be used to display game history (all players that have played against a given user)
 	getUsersHavingPlayedWithGivenUser(userId: number) : Observable<User[]> {
-		return this.http.get<User[]>(`${this.apiURL}`); // change url of course
+		const endpoint: string = `${this.apiURL}`; // modify this
+		
+		return this.http.get<User[]>(endpoint);
 	}
 
-	getUserByUsername(username: string) : Observable<User> {
-		return this.http.get<User>(`${this.apiURL}?username=${username}`);
-	}
-	
-	// addNewUser(form: FormGroup) : Observable<User> {
-	// 	// add variables from the form
-	// 	const username: string = form.get('username')?.value;
-	// 	const password: string = form.get('password')?.value;
-	// 	const profileImageURL: string = form.get('profileImageURL')?.value;
-	// 	const phoneNumber: string = form.get('phoneNumber')?.value;
+	/* UPDATE */
 
-	// 	return this.returnNewId().pipe(
-	// 		switchMap(newId => {
-	// 			const newUser: User = {
-	// 				id : newId,
-	// 				username: username,
-	// 				password: password,
-	// 				profileImageURL: profileImageURL,
-	// 				phoneNumber: phoneNumber,
-	// 				createdAt: new Date(),
-	// 				updatedAt: new Date()
-	// 			};
-	// 			return this.http.post<User>(this.apiURL, newUser);
-	// 		})
-	// 	);	
-	// } 
- 
-	deleteUser(id: number) : Observable<void> {
-		return this.http.delete<void>(`${this.apiURL}/${id}`);
+	modifyUsernameToRegisteredUser(username: string) : Observable<void> {
+		const endpoint: string =  `${this.apiURL}`; // modify this
+		const body = {
+			action: 'giveUsernameToUser',
+			username: username
+			// add  user id stored in localStorage
+		};
+
+		return this.http.put<void>(endpoint, body);
 	}
 
-	// use a partial user to be more DRY (can updated every fields or just some)
-	modifyUser(id: number, partialUser: Partial<User>) : Observable<User> {
-		return this.http.put<User>(`${this.apiURL}/${id}`, partialUser);
+	modifyProfilePictureToRegisteredUser(imageURL: string) : Observable<void> {
+		const endpoint: string = `${this.apiURL}`; // modify this
+		const body = {
+			action: 'changeProfilePic',
+			imageURL: imageURL
+			// add  user id stored in localStorage
+		};
+
+		return this.http.put<void>(endpoint, body);
 	}
+
+	// suppress that and replace it with localStorage
 	
 	storeUserId(id: number) : void {		
 		this.currentUserId = id;

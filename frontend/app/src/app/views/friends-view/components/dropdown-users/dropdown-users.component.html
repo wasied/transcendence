@@ -1,0 +1,8 @@
+<mat-form-field>
+	<mat-label>Users</mat-label>
+	<mat-select (selectionChange)="addUserAsFriend($event.value)">
+		<mat-option *ngFor="let user of users$ | async" [value]="user.id">
+			<img [src]="user.profileImageURL" alt="Profile Image" class="w-8 h-8 rounded-full mr-2"> {{ user.username }}
+	  	</mat-option>
+	</mat-select>
+</mat-form-field>

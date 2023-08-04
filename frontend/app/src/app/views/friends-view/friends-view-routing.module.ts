@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-import { FriendsViewComponent } from "./friends-view/friends-view.component"; 
+import { FriendsViewComponent } from "./components/friends-view/friends-view.component"; 
 
 const routes: Routes = [
 	{path: '', component: FriendsViewComponent }

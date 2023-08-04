@@ -1,7 +1,7 @@
 <div
   class="flex items-center space-x-4 rounded text-black bg-gray-200 transition duration-75 cursor-pointer"
 >
-  <div
+  <div (click)="goToSeeGameAsSpectator(gameCard)"
     class="bg-[#ffc93b] p-2 rounded-l flex items-center justify-center"
     id="joinChatRoom"
   >
@@ -12,13 +12,12 @@
   <div class="w-full flex justify-between items-center px-8">
     <div class="flex flex-col">
       <span class="text-lg font-semibold">{{ gameCard.playerOne }}</span>
-      <button class="text-sm underline">See Stats</button>
-      <!-- Go to profile -->
+      <button (click)="goToProfile(gameCard.playerOneId)" class="text-sm underline">See Profile</button>
     </div>
     <span>VS</span>
     <div class="flex flex-col">
       <span class="text-lg font-semibold">{{ gameCard.playerTwo }}</span>
-      <button class="text-sm underline">See Stats</button>
+      <button (click)="goToProfile(gameCard.playerTwoId)" class="text-sm underline">See Profile</button>
     </div>
   </div>
 </div>

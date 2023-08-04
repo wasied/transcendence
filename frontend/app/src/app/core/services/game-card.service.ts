@@ -28,7 +28,6 @@ export class GamecardService {
 		return of(this.hardcodedGameCards);
 	}
 
-
 	// with observables
 
 	getAllGameCards(): Observable<Gamecard[]> {

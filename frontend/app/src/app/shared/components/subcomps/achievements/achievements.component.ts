@@ -23,13 +23,17 @@ export class AchievementsComponent implements OnInit {
 		return this.achievementsService.getHarcodedAchievements(); // change this
 	}
 
-	// Fonctions pour le design responsif
+	loadUserAchievements(userId: number) : Observable<Achievement[]> { // use this instead, with current user id
+		return this.achievementsService.getUserAchievements(userId);
+	}
+
+	// Fonctions pour le design responsive
 	getEmptyAchievementCount(achievements: any[]): number {
 		const maxAchievements = 10;
 		return Math.max(maxAchievements - achievements.length, 0);
-	  }
+	}
 	
-	  createEmptyArray(count: number): any[] {
+	createEmptyArray(count: number): any[] {
 		return new Array(count);
-	  }
+	}
 }

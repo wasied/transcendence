@@ -10,18 +10,21 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./friends-view.component.css']
 })
 export class FriendsViewComponent {
-  friends: any[] = [{name: "test"}, {name: "test2", online:true}]; // Store the friends' data
+  	friends: any[] = [{name: "test"}, {name: "test2", online:true}]; // Store the friends' data
 
-  constructor (private http: HttpClient) {}
+  	constructor (private http: HttpClient) {}
 
-  private apiURL : string = 'http://localhost:3000/friends';
+  	
+	
+	private apiURL : string = 'http://localhost:3000/friends';
   
-  ngOnInit(): void {
-        this.getFriends();
-      }
-  getFriends(): void {
-    this.http.get<any>(this.apiURL).subscribe(friends => {
-      this.friends = friends;
-    });
-  }
+  	ngOnInit(): void {
+    	this.getFriends();
+    }
+  
+	getFriends(): void {
+    	this.http.get<any>(this.apiURL).subscribe(friends => {
+      		this.friends = friends;
+    	});
+  	}
 }

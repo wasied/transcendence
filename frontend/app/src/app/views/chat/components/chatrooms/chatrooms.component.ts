@@ -16,7 +16,7 @@ export class ChatroomsComponent implements OnInit {
 	chatrooms: any[] = [{name: "test"}, {name: "test2", online:true}]; // Store the friends' data
 
   
-	constructor (private chatroomService: ChatroomsService,
+	constructor (private chatroomsService: ChatroomsService,
 				 private usersService: UsersService) {}
   
 	ngOnInit(): void {
@@ -24,10 +24,11 @@ export class ChatroomsComponent implements OnInit {
 	}
 
 	loadChatrooms() : Observable<Chatroom[]> {
-		return this.chatroomService.getHardcodedChatrooms(); // change that
+		return this.chatroomsService.getHardcodedChatrooms(); // change that
 	}
 
 	deleteChatroom(chatroom: Chatroom) {
-		console.log('delete the chatroom : logic not implemented yet');
+		console.log('delete the chatroom : not linked yet');
+		// this.chatroomsService.delChatroom(chatroom.id);
 	}
 }
