@@ -14,6 +14,10 @@ export class GameCardComponent {
 	constructor (private router: Router) {};
 
 	goToProfile(userId: number) : void {
-		this.router.navigate([]); // update that
+		this.router.navigate(['main', 'profile', userId]); // update that case if player is current user
+	}
+
+	goToSeeGameAsSpectator(gamecard: Gamecard) : void { // redirect to the game session as spectator, should use WS
+		console.log('spectator mode : not yet implemented !');
 	}
 }

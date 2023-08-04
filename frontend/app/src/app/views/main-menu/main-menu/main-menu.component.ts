@@ -4,7 +4,7 @@ import { Component, ElementRef, HostListener, ViewChild, ViewEncapsulation } fro
   selector: 'app-main-menu',
   templateUrl: './main-menu.component.html',
   styleUrls: ['./main-menu.component.css'],
-  encapsulation: ViewEncapsulation.None, ///Needed for CCS animation
+  encapsulation: ViewEncapsulation.None, ///Needed for CSS animation
   template: `
     <canvas #canvas></canvas>
   `,

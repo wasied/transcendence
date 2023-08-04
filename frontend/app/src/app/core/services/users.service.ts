@@ -88,6 +88,17 @@ export class UsersService {
 		return this.http.put<void>(endpoint, body);
 	}
 
+	modifyProfilePictureToRegisteredUser(imageURL: string) : Observable<void> {
+		const endpoint: string = `${this.apiURL}`; // modify this
+		const body = {
+			action: 'changeProfilePic',
+			imageURL: imageURL
+			// add  user id stored in localStorage
+		};
+
+		return this.http.put<void>(endpoint, body);
+	}
+
 	// suppress that and replace it with localStorage
 	
 	storeUserId(id: number) : void {		
