@@ -14,7 +14,7 @@ export class TwoFAService {
 
 			return {
 				success: true,
-				url: `auth/redirect?access_token=${accessToken}`
+				url: `auth/redirect?access_token=${accessToken}&new_user=false`
 			};
 		}
 		else {
