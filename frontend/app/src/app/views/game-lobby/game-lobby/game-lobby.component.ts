@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { GameDataService } from 'src/app/core/services/game-data.service';
 
 @Component({
 	selector: 'app-game-lobby',
@@ -10,14 +11,22 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
 	isMatched: boolean = false;
 	loadingMessage: string = 'Please stand by';
 	dotCount: number = 0;
-  	timeoutId!: any;
+  	timeoutId!: any; // not good
+
+	constructor (private gameDataService: GameDataService) {}
 
 	ngOnInit(): void {
+		this.uploadGameDataStatus();
+		/* TIMEOUT TO DISPLAY STANDBY MSG */
 		this.updateLoadingMessage();
 		setTimeout(() => { // change this
 			this.isMatched = true;
 			clearTimeout(this.timeoutId);
 		}, 3000);
+	}
+
+	private uploadGameDataStatus() : void {
+		this.gameDataService.updateIsActive(true);
 	}
 
 	updateLoadingMessage() : void {

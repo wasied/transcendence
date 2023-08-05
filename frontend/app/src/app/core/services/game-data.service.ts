@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 
 export interface GameData {
 	variant: 'standard' | 'mortSubite' | 'twoPoints' | 'chaos',
-	leftPlayerId: number,
-	rightPlayerId: number,
+	leftPlayerId: number | null,
+	rightPlayerId: number | null,
 	scoreLeftPlayer: number,
 	scoreRightPlayer: number,
-	durationInSec: number
+	durationInSec: number,
+	isActive: boolean;
 }
 
 @Injectable({
@@ -19,6 +20,18 @@ export class GameDataService {
 
 	updateGameData(newGameData: GameData) : void {
 		this.gameData.next(newGameData);
+	}
+
+	updateIsActive(isActive: boolean) : void {
+		const currentGameData = this.gameData.getValue();
+
+		if (!currentGameData) {
+			return;
+		}
+
+		const updatedGameData = { ...currentGameData, isActive: isActive };
+
+		this.updateGameData(updatedGameData)
 	}
 
 	getGameData() : Observable<GameData | null> {

@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { User } from "../models/user.model"; 
-import { Observable, of, map, switchMap } from "rxjs";
+import { Observable, of, map, switchMap, forkJoin } from 'rxjs';
 
 @Injectable ({
 	providedIn: 'root'
@@ -59,6 +59,13 @@ export class UsersService {
 		const endpoint: string = `${this.apiURL}/${id}`;
 		
 		return this.http.get<User>(endpoint);
+	}
+
+	getUsersAfterPlayingGame(idLeftPlayer: number, idRightPlayer: number) : Observable<User[]> {
+		const user1$ = this.getUserById(idLeftPlayer);
+  		const user2$ = this.getUserById(idRightPlayer);
+		
+		return forkJoin([user1$, user2$]);
 	}
 
 	// should be used for displaying users actually playing pong !
