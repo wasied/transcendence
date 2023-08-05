@@ -1,30 +1,39 @@
-import { Controller, Body, Param, Get, Post, Put } from '@nestjs/common';
+import { HttpException, HttpStatus, Controller, Body, Param, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { Session } from './session';
 import { SessionsService } from './sessions.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('sessions')
+@UseGuards(AuthGuard('jwt'))
 export class SessionsController {
 	constructor(private readonly sessionsService: SessionsService) {}
 
 	@Get()
-	async findAllJoinable(): Promise<Session[]> {
-		return this.sessionsService.findAllJoinable();
+	async findAll(): Promise<Session[]> {
+		return this.sessionsService.findAll();
 	}
 
-	@Get(':id')
-	async findOne(@Param('id') id: number): Promise<Session[]> {
-		return this.sessionsService.findOne(id);
+	@Get('active')
+	async findAllActive(): Promise<Session[]> {
+		return this.sessionsService.findAllActive();
+	}
+
+	@Get(':sessionId')
+	async findOne(@Param('sessionId') sessionId: number): Promise<Session> {
+		const result = await this.sessionsService.findOne(sessionId);
+		if (!result.length)
+			throw new HttpException("User not found.", HttpStatus.NOT_FOUND);
+
+		return result[0];
+	}
+
+	@Get('history/user/:userId')
+	async findUserHistoryByUserId(userId: number): Promise<Session[]> {
+		return this.sessionsService.findUserHistoryByUserId(userId);
 	}
 
 	@Post()
 	async create(@Body('automatching') automatching: boolean, @Body('customization') customization: boolean): Promise<void> {
 		this.sessionsService.create(automatching, customization);
 	}
-
-/*
-	@Put()
-	async update(@Body('id') id: number, @Body('ended') ended: boolean, @Body('winner_uid') winner_uid: number): Promise<void> {
-		//this.sessionsService.update(id, ended, winner_uid);
-	}
-*/
 }
