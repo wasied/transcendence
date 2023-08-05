@@ -1,5 +1,5 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable, of } from "rxjs";
 import { Chatroom } from '../models/chatroom.model'; 
 
@@ -8,7 +8,7 @@ import { Chatroom } from '../models/chatroom.model';
 })
 export class ChatroomsService {
 
-	constructor (private http: HttpClient) {};
+	constructor (private authHttp: AuthHttpClient) {};
 
 	private hardcodedChatrooms: Chatroom[] = [
 		{
@@ -70,7 +70,7 @@ export class ChatroomsService {
 			hidden:	hidden,
 			password: newPassword
 		};
-		return this.http.post<void>(endpoint, body);
+		return this.authHttp.post<void>(endpoint, body);
 	}
 
 	/* READ */
@@ -78,13 +78,13 @@ export class ChatroomsService {
 	getAllChatrooms() : Observable<Chatroom[]> {
 		const endpoint: string = `${this.apiURL}`;
 		
-		return this.http.get<Chatroom[]>(endpoint);
+		return this.authHttp.get<Chatroom[]>(endpoint);
 	}
 
 	getChatroomByID(id: number) : Observable<Chatroom> { // probably not that useful
 		const endpoint: string = `${this.apiURL}/${id}`;
 		
-		return this.http.get<Chatroom>(endpoint);
+		return this.authHttp.get<Chatroom>(endpoint);
 	}
 
 	/* UPDATE */
@@ -98,7 +98,7 @@ export class ChatroomsService {
 		};
 		const endpoint: string = `${this.apiURL}/${chatroomId}`; // modify that
 		
-		return this.http.put<Chatroom>(endpoint, body);
+		return this.authHttp.put<Chatroom>(endpoint, body);
 	}
 */
 
@@ -109,7 +109,7 @@ export class ChatroomsService {
 		}
 		const endpoint: string = `${this.apiURL}/hidden`;
 		
-		return this.http.put<Chatroom>(endpoint, body);
+		return this.authHttp.put<Chatroom>(endpoint, body);
 	}
 
 	/* DELETE */
@@ -117,7 +117,7 @@ export class ChatroomsService {
 	delChatroom(id: number) : Observable<void> {
 		const endpoint: string = `${this.apiURL}/${id}`;
 		
-		return this.http.delete<void>(endpoint);
+		return this.authHttp.delete<void>(endpoint);
 	}
 
 	/**
@@ -132,7 +132,7 @@ export class ChatroomsService {
 		};
 		const endpoint: string = `${this.apiURL}/join`;
 
-		return this.http.post<Chatroom>(endpoint, body);
+		return this.authHttp.post<Chatroom>(endpoint, body);
 	}
 
 	/* UPDATE */
@@ -144,7 +144,7 @@ export class ChatroomsService {
 			id: chatroomId,
 			user_id: userId
 		};
-		return this.http.put<void>(endpoint, body);
+		return this.authHttp.put<void>(endpoint, body);
 	}
 
 	makeUserANonAdmin(chatroomId: number, userId: number) : Observable<void> {
@@ -154,7 +154,7 @@ export class ChatroomsService {
 			id: chatroomId,
 			user_id: userId
 		};
-		return this.http.put<void>(endpoint, body);
+		return this.authHttp.put<void>(endpoint, body);
 	}
 
 	/* DELETE */
@@ -162,13 +162,13 @@ export class ChatroomsService {
 	delParticipantFromChatroom(chatroomId: number) : Observable<void> {
 		const endpoint: string = `${this.apiURL}/leave/${chatroomId}`;
 		
-		return this.http.delete<void>(endpoint);
+		return this.authHttp.delete<void>(endpoint);
 	}
 
 	kickUserFromChatroom(chatroomId: number, userId: number) : Observable<void> {
 		const endpoint: string = `${this.apiURL}/kick/${chatroomId}/${userId}`;
 
-		return this.http.delete<void>(endpoint);
+		return this.authHttp.delete<void>(endpoint);
 	}
 
 	/**
@@ -184,7 +184,7 @@ export class ChatroomsService {
 			chatroom_id: chatroomId,
 			target_id: userId
 		};
-		return this.http.post<void>(endpoint, body);
+		return this.authHttp.post<void>(endpoint, body);
 	}
 
 	muteUserFromChatroom(chatroomId: number, userId: number) : Observable<void> {
@@ -194,6 +194,6 @@ export class ChatroomsService {
 			chatroom_id: chatroomId,
 			target_id: userId
 		};
-		return this.http.post<void>(endpoint, body);
+		return this.authHttp.post<void>(endpoint, body);
 	}
 }
