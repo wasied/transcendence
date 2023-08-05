@@ -1,9 +1,9 @@
 export class User {
-	constructor (public id: number,
-				 public username: string,
-				 public password: string,
-				 public profileImageURL: string,
-				 public phoneNumber: string,
-				 public updatedAt: Date,
-				 public createdAt: Date) {}
+	readonly id: number;
+	readonly username: string;
+	status: string;
+	a2f_key: string;
+	profile_picture_url: string;
+	readonly updated_at: string;
+	readonly created_at: string;
 }

@@ -1,5 +1,5 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { AuthHttpClient } from 'src/app/auth-http-client';
 import { User } from "../models/user.model"; 
 import { Observable, of, map, switchMap } from "rxjs";
 
@@ -8,19 +8,19 @@ import { Observable, of, map, switchMap } from "rxjs";
 })
 export class UsersService {
 
-	constructor(private http: HttpClient) {};
+	constructor(private authHttp: AuthHttpClient) {};
 
 	private harcodedUsers: User[]  = [{
 		id: 1,
 		username: 'testUser',
-		password: '123456',
-		profileImageURL: '/Users/corentin/code/19/transcendence/front/src/assets/imgs/picture-profile-empty.jpg',
-		phoneNumber: '0987654321',
-		updatedAt: new Date(),
-		createdAt: new Date()
+		status: "offline",
+		a2f_key: "",
+		profile_picture_url: '/Users/corentin/code/19/transcendence/front/src/assets/imgs/picture-profile-empty.jpg',
+		updated_at: "",
+		created_at: ""
 	}];
 
-	private apiURL: string = 'http://localhost:3000/users'; // change that in final product
+	private apiURL: string = 'http://localhost:8080/users'; // change that in final product
 	private currentUserId: number = -1; // change this
 
 	getHardcodedUsers() : Observable<User[]> {
@@ -34,69 +34,51 @@ export class UsersService {
 	
 	// with observables
 
-	/* CREATE */
-
-	giveUsernameToRegisteredUser(username: string) : Observable<void> {
-		const endpoint: string =  `${this.apiURL}`; // modify this
-		const body = {
-			action: 'giveUsernameToUser',
-			username: username
-			// add  user id stored in localStorage
-		};
-
-		return this.http.post<void>(endpoint, body);
-	}
-
 	/* READ */
 
 	getAllUsers() : Observable<User[]> {
-		const endpoint: string = `${this.apiURL}`; // modify this
+		const endpoint: string = `${this.apiURL}`;
 		
-		return this.http.get<User[]>(endpoint);
+		return this.authHttp.get<User[]>(endpoint);
 	}
 
 	getUserById(id: number) : Observable<User> {
 		const endpoint: string = `${this.apiURL}/${id}`;
 		
-		return this.http.get<User>(endpoint);
+		return this.authHttp.get<User>(endpoint);
 	}
 
-	// should be used for displaying users actually playing pong !
 	getUsersInActiveSession() : Observable<User[]> {
-		const endpoint: string = `${this.apiURL}/active`;
+		const endpoint: string = `${this.apiURL}/playing`;
 		
-		return this.http.get<User[]>(endpoint);
+		return this.authHttp.get<User[]>(endpoint);
 	}
 
 	// should be used to display game history (all players that have played against a given user)
 	getUsersHavingPlayedWithGivenUser(userId: number) : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}`; // modify this
 		
-		return this.http.get<User[]>(endpoint);
+		return this.authHttp.get<User[]>(endpoint);
 	}
 
 	/* UPDATE */
 
 	modifyUsernameToRegisteredUser(username: string) : Observable<void> {
-		const endpoint: string =  `${this.apiURL}`; // modify this
+		const endpoint: string =  `${this.apiURL}/username`;
 		const body = {
-			action: 'giveUsernameToUser',
 			username: username
-			// add  user id stored in localStorage
 		};
 
-		return this.http.put<void>(endpoint, body);
+		return this.authHttp.put<void>(endpoint, body);
 	}
 
 	modifyProfilePictureToRegisteredUser(imageURL: string) : Observable<void> {
-		const endpoint: string = `${this.apiURL}`; // modify this
+		const endpoint: string = `${this.apiURL}/profile-picture`;
 		const body = {
-			action: 'changeProfilePic',
-			imageURL: imageURL
-			// add  user id stored in localStorage
+			url: imageURL
 		};
 
-		return this.http.put<void>(endpoint, body);
+		return this.authHttp.put<void>(endpoint, body);
 	}
 
 	// suppress that and replace it with localStorage

@@ -1,5 +1,5 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable, of } from "rxjs";
 import { Friend } from "../models/friend.model";
 
@@ -9,7 +9,7 @@ import { Friend } from "../models/friend.model";
 })
 export class FriendService
 {
-	constructor (private http : HttpClient) {};
+	constructor (private authHttp : AuthHttpClient) {};
 
 	private hardcodedFriends: Friend[] = [{
 		id: 1,
@@ -26,50 +26,44 @@ export class FriendService
 
 	// with DB
 	
-	private apiURL : string = 'http://localhost:3000/friends';
+	private apiURL : string = 'http://localhost:8080/users/friends';
 
 	/* CREATE */
 
-	addAsFriend(userId: number, friendId: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}`; // modify that
+	addAsFriend(userId: number) : Observable<void> {
+		const endpoint: string = `${this.apiURL}`;
 		const body = {
-			action: 'asfriend',
-			userId: userId,
-			friendId: friendId
+			user_id: userId,
 		};
 
-		return this.http.post<void>(endpoint, body);
+		return this.authHttp.post<void>(endpoint, body);
 	}
 
 	/* READ */
 
-	// retrieve all friends
 	getAllFriends() : Observable<Friend[]> {
-		const endpoint: string = `${this.apiURL}`; // modify that
+		const endpoint: string = `${this.apiURL}`;
 		
-		return this.http.get<Friend[]>(endpoint);
+		return this.authHttp.get<Friend[]>(endpoint);
 	}
 
-	// returns a friend by its id
-	getFriendById(id: number) : Observable<Friend> {
-		const endpoint: string = `${this.apiURL}`; // modify that
-
-		return this.http.get<Friend>(endpoint);
-	}
-
-	// retrieve all friends of a given user, identified by it's id
 	getFriendsByUserId(userId: number) : Observable<Friend[]> {
-		const endpoint: string = `${this.apiURL}`; // modify that
+		const endpoint: string = `${this.apiURL}/${userId}`;
 
-		return this.http.get<Friend[]>(endpoint);
+		return this.authHttp.get<Friend[]>(endpoint);
+	}
+
+	getFriendshipById(id: number) : Observable<Friend> {
+		const endpoint: string = `${this.apiURL}/friendship/${id}`;
+
+		return this.authHttp.get<Friend>(endpoint);
 	}
 
 	/* DELETE */
 
-	// delete a friend, using the friends id and the user id
-	delFriend(UserId: number, FriendId: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}`; // modify that
+	delFriend(friendshipId: number) : Observable<void> {
+		const endpoint: string = `${this.apiURL}/${friendshipId}`;
 		
-		return this.http.delete<void>(endpoint);
+		return this.authHttp.delete<void>(endpoint);
 	}
 }
