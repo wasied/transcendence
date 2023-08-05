@@ -114,6 +114,7 @@ async function createTables() {
     await dbClient.query(`
         CREATE TABLE IF NOT EXISTS chatrooms_punishments (
             id SERIAL PRIMARY KEY,
+			chatroom_uid INTEGER NOT NULL,
             chatroom_user_admin_uid INTEGER NOT NULL,
             chatroom_user_target_uid INTEGER NOT NULL,
             type VARCHAR(50) NOT NULL,

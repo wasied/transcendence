@@ -177,22 +177,24 @@ export class ChatroomsService {
 	
 	/* CREATE */
 
-	banUserFromChatroom(chatroomId: number, userId: number) : Observable<void> {
+	banUserFromChatroom(chatroomId: number, userId: number, endsAt: string) : Observable<void> {
 		const endpoint: string = `${this.apiURL}/punishment`;
 		const body = {
 			type: 'ban',
 			chatroom_id: chatroomId,
-			target_id: userId
+			target_id: userId,
+			ends_at: endsAt
 		};
 		return this.authHttp.post<void>(endpoint, body);
 	}
 
-	muteUserFromChatroom(chatroomId: number, userId: number) : Observable<void> {
+	muteUserFromChatroom(chatroomId: number, userId: number, endsAt: string) : Observable<void> {
 		const endpoint: string = `${this.apiURL}/punishment`;
 		const body = {
 			type: 'mute',
 			chatroom_id: chatroomId,
-			target_id: userId
+			target_id: userId,
+			ends_at: endsAt
 		};
 		return this.authHttp.post<void>(endpoint, body);
 	}

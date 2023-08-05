@@ -33,28 +33,26 @@ export class ChatController {
 		this.chatService.create(request.user.id, body.name, body.hidden, body.password);
 	}
 
-/*
 	@Put('hidden')
 	setHidden(
 		@Request() request: RequestWithUser,
 		@Body() body: { hidden: boolean, chatroom_id: number }
 	): void {
-		if (request.user.owner.indexOf(id) === -1)
+		if (request.user.owner.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
-		this.chatService.setHidden(request.user.id, body.chatroom_id, body.hidden);
+		this.chatService.setHidden(body.chatroom_id, body.hidden);
 	}
 
 	@Delete(':id')
 	delete(@Request() request: RequestWithUser, @Param('id') id: number): void {
 		if (request.user.owner.indexOf(id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
-		this.chatService.delete(request.user.id, id);
+		this.chatService.delete(id);
 	}
-*/
 
 	/* Chat users */
 
-/*
+
 	@Post('join')
 	join(@Request() request: RequestWithUser, @Body('id') id: number): void {
 		this.chatService.join(request.user.id, id);
@@ -63,37 +61,35 @@ export class ChatController {
 	@Put('admin')
 	setAdmin(
 		@Request() request: RequestWithUser,
-		@Body() body: { admin: boolean, id: number, user_id: number }
+		@Body() body: { admin: boolean, chatroom_id: number, user_id: number }
 	): void {
-		if (request.user.owner.indexOf(id) === -1)
+		if (request.user.owner.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
-		this.chatService.setAdmin(request.user.id, body.admin, body.id, body.user_id); // check if request.user.id is chatroom owner_uid
+		this.chatService.setAdmin(body.admin, body.chatroom_id, body.user_id);
 	}
 
 	@Delete('leave/:id')
 	leave(@Request() request: RequestWithUser, @Param('id') id: number): void {
 		this.chatService.leave(request.user.id, id);
 	}
-*/
+
 
 	/* Punishments */
 
-/*
 	@Post('punishment')
 	setPunishment(
 		@Request() request: RequestWithUser,
-		@Body() body: { type: string, chatroom_id: number, target_id: number}
+		@Body() body: { type: string, chatroom_id: number, target_id: number, ends_at: string }
 	): void {
-		if (request.user.admin.indexOf(chatroom_id) === -1)
+		if (request.user.admin.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
-		this.chatService.setPunishment(request.user.id, body.chatroom_id, body.target_id, body.type); // Check if request.user.id is admin
+		this.chatService.setPunishment(request.user.id, body.target_id, body.chatroom_id, body.type, body.ends_at);
 	}
 
 	@Delete('kick/:id/:user_id')
-	kick(@Request() request: RequestWithUser, @Param('id') id: number, @Param('user_id') user_id: number): void {
+	kick(@Request() request: RequestWithUser, @Param('id') chatroom_id: number, @Param('user_id') user_id: number): void {
 		if (request.user.admin.indexOf(chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
-		this.chatService.kick(request.user.id, id, user_id); // Check if request.user.id is admin
+		this.chatService.leave(user_id, chatroom_id);
 	}
-*/
 }
