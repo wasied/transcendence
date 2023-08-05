@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { User } from "../models/user.model"; 
-import { Observable, of, map, switchMap } from "rxjs";
+import { Observable, of, map, switchMap, forkJoin } from 'rxjs';
 
 @Injectable ({
 	providedIn: 'root'
@@ -48,6 +48,14 @@ export class UsersService {
 		return this.authHttp.get<User>(endpoint);
 	}
 
+	getUsersAfterPlayingGame(idLeftPlayer: number, idRightPlayer: number) : Observable<User[]> {
+		const user1$ = this.getUserById(idLeftPlayer);
+  		const user2$ = this.getUserById(idRightPlayer);
+		
+		return forkJoin([user1$, user2$]);
+	}
+
+	// should be used for displaying users actually playing pong !
 	getUsersInActiveSession() : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}/playing`;
 		
