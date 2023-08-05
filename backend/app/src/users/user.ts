@@ -6,4 +6,6 @@ export class User {
 	profile_picture_url: string;
 	readonly updated_at: string;
 	readonly created_at: string;
+	owner?: number[];
+	admin?: number[];
 }

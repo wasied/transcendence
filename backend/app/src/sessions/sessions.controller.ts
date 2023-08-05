@@ -22,7 +22,7 @@ export class SessionsController {
 	async findOne(@Param('sessionId') sessionId: number): Promise<Session> {
 		const result = await this.sessionsService.findOne(sessionId);
 		if (!result.length)
-			throw new HttpException("User not found.", HttpStatus.NOT_FOUND);
+			throw new HttpException("Session not found.", HttpStatus.NOT_FOUND);
 
 		return result[0];
 	}
@@ -33,7 +33,7 @@ export class SessionsController {
 	}
 
 	@Post()
-	async create(@Body('automatching') automatching: boolean, @Body('customization') customization: boolean): Promise<void> {
+	create(@Body('automatching') automatching: boolean, @Body('customization') customization: boolean): void {
 		this.sessionsService.create(automatching, customization);
 	}
 }

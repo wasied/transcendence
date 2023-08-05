@@ -49,24 +49,24 @@ export class UsersController {
 	}
 
 	@Put('username')
-	async updateUsername(@Request() request: RequestWithUser, @Body('username') url: string): Promise<void> {
+	updateUsername(@Request() request: RequestWithUser, @Body('username') url: string): void {
 		this.usersService.updateUsername(request.user.id, url);
 	}
 
 	@Put('profile-picture')
-	async updateProfilePicture(@Request() request: RequestWithUser, @Body('url') url: string): Promise<void> {
+	updateProfilePicture(@Request() request: RequestWithUser, @Body('url') url: string): void {
 		this.usersService.updateProfilePicture(request.user.id, url);
 	}
 
 	/*** Block/Unblock ***/
 
 	@Post('block')
-	async block(@Body('blocker_uid') blocker_uid: number, @Body('blocked_uid') blocked_uid: number): Promise<void> {
+	block(@Body('blocker_uid') blocker_uid: number, @Body('blocked_uid') blocked_uid: number): void {
 		this.usersService.block(blocker_uid, blocked_uid);
 	}
 
 	@Delete('block')
-	async unblock(@Param('blocking_id') blocking_id: number): Promise<void> {
+	unblock(@Param('blocking_id') blocking_id: number): void {
 		this.usersService.unblock(blocking_id);
 	}
 }

@@ -1,9 +1,10 @@
 export class Chatroom {
-	constructor (public id: number,
-				 public chatroomName: string,
-				 public ownerId: number,
-				 public owner: string,
-				 public accessStatus: string,
-				 public participants: string[],
-				 public participantsId: number[]) {}
+	public id: number;
+	public name: string;
+	public owner_uid: number;
+	public owner?: string;
+	public hidden: boolean;
+	public password: string;
+	public participants: string[];
+	public participants_id?: number[];
 }
