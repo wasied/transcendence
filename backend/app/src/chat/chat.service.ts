@@ -39,16 +39,8 @@ export class ChatService {
 
 	delete(chat_user_id: number, id: number): void {
 		const result = dbClient.query( // We should manage access to calls to API and delete the IF
-			`IF $1 IN (
-				SELECT user_uid	FROM chatrooms_users
-								WHERE chatroom_uid = $2
-								AND admin = true;
-			)
-				THEN (
-					DELETE	FROM chatrooms
-							WHERE id = $2;
-				)
-			END IF;`,
+			`DELETE	FROM chatrooms
+					WHERE id = $2;`,
 			[chat_user_id, id]
 		)
 		.then(queryResult => { return queryResult; })
