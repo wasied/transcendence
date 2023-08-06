@@ -5,7 +5,7 @@ import { Friend } from './friend';
 import { FriendsService } from './friends.service';
 import { RequestWithUser } from '../../utils/RequestWithUser';
 
-@Controller('users/friends')
+@Controller('/friends')
 @UseGuards(AuthGuard('jwt'))
 export class FriendsController {
 	constructor(private readonly friendsService: FriendsService) {}
