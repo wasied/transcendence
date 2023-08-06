@@ -6,7 +6,7 @@ import { treatDbResult } from '../utils/treatDbResult';
 @Injectable()
 export class SessionsService {
 	async findAll(): Promise<Session[]> {
-		const result = await dbClient.query(
+		const result = dbClient.query(
 			`SELECT *	FROM sessions;`
 		)
 		.then(queryResult => { return treatDbResult(queryResult); })
@@ -16,7 +16,7 @@ export class SessionsService {
 	}
 
 	async findAllActive(): Promise<Session[]> {
-		const result = await dbClient.query(
+		const result = dbClient.query(
 			`SELECT *	FROM sessions
 						WHERE ended = false;`
 		)

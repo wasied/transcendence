@@ -7,7 +7,7 @@ import { treatDbResult } from '../utils/treatDbResult';
 @Injectable()
 export class UsersService {
 	async findAll(): Promise<User[]> {
-		const result = await dbClient.query(
+		const result = dbClient.query(
 			`SELECT *	FROM users;`
 		)
 		.then(queryResult => { return treatDbResult(queryResult); })
@@ -17,7 +17,7 @@ export class UsersService {
 	}
 
 	async findOneByUsername(username: string): Promise<User[]> {
-		const result = await dbClient.query(
+		const result = dbClient.query(
 			`SELECT *	FROM users
 						WHERE username = $1;`,
 			[username]
@@ -29,7 +29,7 @@ export class UsersService {
 	}
 
 	async findOneById(user_id: number): Promise<User[]> {
-		const result = await dbClient.query(
+		const result = dbClient.query(
 			`SELECT *	FROM users
 						WHERE id = $1;`,
 			[user_id]
@@ -41,7 +41,7 @@ export class UsersService {
 	}
 
 	async findPlaying(): Promise<User[]> {
-		const result = await dbClient.query(
+		const result = dbClient.query(
 			`SELECT *	FROM users
 						WHERE status = $1;`,
 			["Playing a game"]
@@ -53,7 +53,7 @@ export class UsersService {
 	}
 
 	async findUserSessions(user_id: number): Promise<Session[]> {
-		const result = await dbClient.query(
+		const result = dbClient.query(
 			`SELECT *	FROM sessions
 						WHERE id IN (
 							SELECT session_uid	FROM sessions_users

@@ -5,7 +5,7 @@ import { Friend } from './friend';
 import { FriendsService } from './friends.service';
 import { RequestWithUser } from '../../utils/RequestWithUser';
 
-@Controller('users/friends')
+@Controller('/friends')
 @UseGuards(AuthGuard('jwt'))
 export class FriendsController {
 	constructor(private readonly friendsService: FriendsService) {}
@@ -30,12 +30,12 @@ export class FriendsController {
 	}
 
 	@Post()
-	async create(@Request() request: RequestWithUser, @Body('user_id') user_id2: number): Promise<void> {
+	create(@Request() request: RequestWithUser, @Body('user_id') user_id2: number): void {
 		this.friendsService.create(request.user.id, user_id2);
 	}
 
 	@Delete(':friendship_id')
-	async delete(@Request() request: RequestWithUser, @Param('friendship_id') friendship_id: number): Promise<void> {
+	delete(@Request() request: RequestWithUser, @Param('friendship_id') friendship_id: number): void {
 		this.friendsService.delete(request.user.id, friendship_id);
 	}
 }

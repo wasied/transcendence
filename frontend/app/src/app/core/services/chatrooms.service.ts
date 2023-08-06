@@ -1,5 +1,5 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable, of } from "rxjs";
 import { Chatroom } from '../models/chatroom.model'; 
 
@@ -8,35 +8,38 @@ import { Chatroom } from '../models/chatroom.model';
 })
 export class ChatroomsService {
 
-	constructor (private http: HttpClient) {};
+	constructor (private authHttp: AuthHttpClient) {};
 
 	private hardcodedChatrooms: Chatroom[] = [
 		{
 			id: 1,
-			chatroomName: 'testChatroom',
-			ownerId: 1,
+			name: 'testChatroom',
+			owner_uid: 1,
 			owner: 'test3',
-			accessStatus: 'public',
+			hidden: false,
+			password: "",
 			participants: ['test', 'player'],
-			participantsId: [1]
+			participants_id: [1]
 		},
 		{
 			id: 2,
-			chatroomName: 'testChatroom',
-			ownerId: 1,
+			name: 'testChatroom',
+			owner_uid: 1,
 			owner: 'test2',
-			accessStatus: 'public',
+			hidden: false,
+			password: "",
 			participants: ['test', 'player'],
-			participantsId: [1]
+			participants_id: [1]
 		},
 		{
 			id: 2,
-			chatroomName: 'testChatroom',
-			ownerId: 1,
+			name: 'testChatroom',
+			owner_uid: 1,
 			owner: 'test3',
-			accessStatus: 'public',
+			hidden: false,
+			password: "",
 			participants: ['test', 'player'],
-			participantsId: [1]
+			participants_id: [1]
 		}
 	];
 
@@ -50,104 +53,43 @@ export class ChatroomsService {
 
 	// with DB
 
-	private apiURL: string = 'http://localhost:3000/chatrooms'; // change that
+	private apiURL: string = 'http://localhost:8080/chat';
+
+	/**
+	*** Chatrooms
+	**/
 
 	/* CREATE */
 	
-	// back end should be able to retrieve id of owner and participants, and attribute a new id 
-	createChatroom(newName: string, newOwnerId: number, 
-		newAccesStatus: string, newPassword: string) : Observable<Chatroom> {
+	createChatroom(newName: string, 
+		hidden: boolean, newPassword: string) : Observable<void> {
 		
-		const endpoint: string = `${this.apiURL}`; // modify this
+		const endpoint: string = `${this.apiURL}`;
 		const body = {
-			action: 'createChatroom',
-			chatroonName: newName,
-			owner: newOwnerId,
-			accessStatus: newAccesStatus,
+			name: newName,
+			hidden:	hidden,
 			password: newPassword
 		};
-		return this.http.post<Chatroom>(endpoint, body);
+		return this.authHttp.post<void>(endpoint, body);
 	}
 
 	/* READ */
 
-	// get all chatrooms from the DB
 	getAllChatrooms() : Observable<Chatroom[]> {
-		const endpoint: string = `${this.apiURL}`; // modify this
+		const endpoint: string = `${this.apiURL}`;
 		
-		return this.http.get<Chatroom[]>(endpoint);
+		return this.authHttp.get<Chatroom[]>(endpoint);
 	}
 
-	// get a chatroom based on the chatroom's id
 	getChatroomByID(id: number) : Observable<Chatroom> { // probably not that useful
-		const endpoint: string = `${this.apiURL}/${id}`; // modify this
+		const endpoint: string = `${this.apiURL}/${id}`;
 		
-		return this.http.get<Chatroom>(endpoint);
+		return this.authHttp.get<Chatroom>(endpoint);
 	}
 
 	/* UPDATE */
 
-	addParticipantToChatroom(chatroomiId: number, participantId: number) : Observable<Chatroom> {
-		const body = {
-			action: 'addParticipantToChatroom',
-			chatroomiId: chatroomiId,
-			participantId: participantId
-		}
-		const endpoint: string = `${this.apiURL}/${chatroomiId}`; // modify that
-
-		return this.http.put<Chatroom>(endpoint, body);
-	}
-
-	kickUserFromChatroom(chatroomId: number, userId: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}`; // modify this
-		const body = {
-			action: 'kick',
-			chatroomId: chatroomId,
-			userId: userId
-		};
-		return this.http.put<void>(endpoint, body);
-	}
-
-	banUserFromChatroom(chatroomId: number, userId: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}`; // modify this
-		const body = {
-			action: 'ban',
-			chatroomId: chatroomId,
-			userId: userId
-		};
-		return this.http.put<void>(endpoint, body);
-	}
-
-	muteUserFromChatroom(chatroomId: number, userId: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}`; // modify this
-		const body = {
-			action: 'mute',
-			chatroomId: chatroomId,
-			userId: userId
-		};
-		return this.http.put<void>(endpoint, body);
-	}
-
-	makeUserAnAdmin(chatroomId: number, userId: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}`; // modify this
-		const body = {
-			action: 'makeAdmin',
-			chatroomId: chatroomId,
-			userId: userId
-		};
-		return this.http.put<void>(endpoint, body);
-	}
-
-	makeUserANonAdmin(chatroomId: number, userId: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}`; // modify this
-		const body = {
-			action: 'makeNonAdmin',
-			chatroomId: chatroomId,
-			userId: userId
-		};
-		return this.http.put<void>(endpoint, body);
-	}
-
+/*
 	modifyChatroomName(chatroomId: number, newName: string) : Observable<Chatroom> {
 		const body = {
 			action: 'modifyChatroomName',
@@ -156,31 +98,104 @@ export class ChatroomsService {
 		};
 		const endpoint: string = `${this.apiURL}/${chatroomId}`; // modify that
 		
-		return this.http.put<Chatroom>(endpoint, body);
+		return this.authHttp.put<Chatroom>(endpoint, body);
 	}
+*/
 
-	modifyChatroomAccessRights(chatroomId: number, newAccessRights: string) : Observable<Chatroom> {
+	modifyChatroomAccessRights(chatroomId: number, hidden: boolean) : Observable<Chatroom> {
 		const body = {
-			action: 'modifyAccessRights',
-			newAccessRights: newAccessRights,
-			chatroomId: chatroomId
+			hidden: hidden,
+			chatroom_id: chatroomId
 		}
-		const endpoint: string = `${this.apiURL}/${chatroomId}`; // modify that
+		const endpoint: string = `${this.apiURL}/hidden`;
 		
-		return this.http.put<Chatroom>(endpoint, body);
+		return this.authHttp.put<Chatroom>(endpoint, body);
 	}
 
 	/* DELETE */
 
 	delChatroom(id: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}/${id}`; // modify this
+		const endpoint: string = `${this.apiURL}/${id}`;
 		
-		return this.http.delete<void>(endpoint);
+		return this.authHttp.delete<void>(endpoint);
 	}
 
-	delParticipantFromChatroom(chatroomId: number, participantId: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}/${participantId}`; // modify that
+	/**
+	*** Chatroom_users
+	**/
+
+	/* CREATE */
+
+	addParticipantToChatroom(chatroomId: number, participantId: number) : Observable<Chatroom> {
+		const body = {
+			id: chatroomId
+		};
+		const endpoint: string = `${this.apiURL}/join`;
+
+		return this.authHttp.post<Chatroom>(endpoint, body);
+	}
+
+	/* UPDATE */
+
+	makeUserAnAdmin(chatroomId: number, userId: number) : Observable<void> {
+		const endpoint: string = `${this.apiURL}/admin`;
+		const body = {
+			admin: true,
+			id: chatroomId,
+			user_id: userId
+		};
+		return this.authHttp.put<void>(endpoint, body);
+	}
+
+	makeUserANonAdmin(chatroomId: number, userId: number) : Observable<void> {
+		const endpoint: string = `${this.apiURL}/admin`;
+		const body = {
+			admin: false,
+			id: chatroomId,
+			user_id: userId
+		};
+		return this.authHttp.put<void>(endpoint, body);
+	}
+
+	/* DELETE */
+
+	delParticipantFromChatroom(chatroomId: number) : Observable<void> {
+		const endpoint: string = `${this.apiURL}/leave/${chatroomId}`;
 		
-		return this.http.delete<void>(endpoint);
+		return this.authHttp.delete<void>(endpoint);
+	}
+
+	kickUserFromChatroom(chatroomId: number, userId: number) : Observable<void> {
+		const endpoint: string = `${this.apiURL}/kick/${chatroomId}/${userId}`;
+
+		return this.authHttp.delete<void>(endpoint);
+	}
+
+	/**
+	*** Punishments
+	**/
+	
+	/* CREATE */
+
+	banUserFromChatroom(chatroomId: number, userId: number, endsAt: string) : Observable<void> {
+		const endpoint: string = `${this.apiURL}/punishment`;
+		const body = {
+			type: 'ban',
+			chatroom_id: chatroomId,
+			target_id: userId,
+			ends_at: endsAt
+		};
+		return this.authHttp.post<void>(endpoint, body);
+	}
+
+	muteUserFromChatroom(chatroomId: number, userId: number, endsAt: string) : Observable<void> {
+		const endpoint: string = `${this.apiURL}/punishment`;
+		const body = {
+			type: 'mute',
+			chatroom_id: chatroomId,
+			target_id: userId,
+			ends_at: endsAt
+		};
+		return this.authHttp.post<void>(endpoint, body);
 	}
 }
