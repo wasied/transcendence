@@ -95,19 +95,6 @@ export class ChatroomsService {
 
 	/* UPDATE */
 
-/*
-	modifyChatroomName(chatroomId: number, newName: string) : Observable<Chatroom> {
-		const body = {
-			action: 'modifyChatroomName',
-			chatroomId: chatroomId,
-			newName: newName
-		};
-		const endpoint: string = `${this.apiURL}/${chatroomId}`; // modify that
-		
-		return this.authHttp.put<Chatroom>(endpoint, body);
-	}
-*/
-
 	modifyChatroomAccessRights(chatroomId: number, hidden: boolean) : Observable<Chatroom> {
 		const body = {
 			hidden: hidden,
@@ -117,18 +104,6 @@ export class ChatroomsService {
 		
 		return this.authHttp.put<Chatroom>(endpoint, body);
 	}
-
-	// modifyChatroomAccessRights(chatroomId: number, newAccessRights: string, newPassord: string | null) : Observable<void> {
-	// 	const body = {
-	// 		action: 'modifyAccessRights',
-	// 		newAccessRights: newAccessRights,
-	// 		chatroomId: chatroomId,
-	// 		newPassord: newPassord
-	// 	}
-	// 	const endpoint: string = `${this.apiURL}/${chatroomId}`; // modify that
-		
-	// 	return this.authHttp.put<void>(endpoint, body);
-	// }
 
 	/* DELETE */
 
@@ -183,14 +158,24 @@ export class ChatroomsService {
 		return this.authHttp.delete<void>(endpoint);
 	}
 
-	modifyChatroomPassword(chatroomId: number, oldPassword: string, newPassword: string) : Observable<void> {
+/*
+	modifyChatroomName(chatroomId: number, newName: string) : Observable<void> {
 		const body = {
-			action: 'modifyChatroomPassword',
-			chatroomId: chatroomId,
-			oldPassword: oldPassword,
-			newPassword: newPassword
+			id: chatroomId,
+			name: newName
+		};
+		const endpoint: string = `${this.apiURL}/name`;
+		
+		return this.authHttp.put<void>(endpoint, body);
+	}
+*/
+
+	modifyChatroomPassword(chatroomId: number, newPassword: string) : Observable<void> {
+		const body = {
+			id: chatroomId,
+			password: newPassword
 		}
-		const endpoint: string = `${this.apiURL}/${chatroomId}`; // modify that
+		const endpoint: string = `${this.apiURL}/password`;
 
 		return this.authHttp.put<void>(endpoint, body);
 	}

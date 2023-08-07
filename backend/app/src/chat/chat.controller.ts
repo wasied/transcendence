@@ -3,7 +3,7 @@ import { Chat } from './chat';
 import { ChatService } from './chat.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RequestWithUser } from '../utils/RequestWithUser';
-import { CreateDto, SetHiddenDto, JoinDto, SetAdminDto, SetPunishmentDto } from './dto';
+import { CreateDto, SetHiddenDto, UpdateNameDto, UpdatePasswordDto, JoinDto, SetAdminDto, SetPunishmentDto } from './dto';
 
 @Controller('chat')
 @UseGuards(AuthGuard('jwt-chat'))
@@ -42,6 +42,20 @@ export class ChatController {
 		if (request.user.owner.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
 		this.chatService.setHidden(body.chatroom_id, body.hidden);
+	}
+
+	@Put('name')
+	updateName(@Request() request: RequestWithUser, @Body() body: UpdateNameDto) {
+		if (request.user.owner.indexOf(body.id) === -1)
+			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
+		this.chatService.updateName(body.id, body.name);
+	}
+
+	@Put('password')
+	updatePassword(@Request() request: RequestWithUser, @Body() body: UpdatePasswordDto) {
+		if (request.user.owner.indexOf(body.id) === -1)
+			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
+		this.chatService.updatePassword(body.id, body.password);
 	}
 
 	@Delete(':id')

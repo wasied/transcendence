@@ -51,6 +51,28 @@ export class ChatService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
+	updateName(chatroom_id: number, name: string): void {
+		const result = dbClient.query(
+			`UPDATE	chatrooms
+					SET name = $1
+					WHERE id = $2;`,
+			[name, chatroom_id]
+		)
+		.then(queryResult => { return queryResult; })
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+	}
+
+	updatePassword(chatroom_id: number, password: string): void {
+		const result = dbClient.query(
+			`UPDATE	chatrooms
+					SET password = $1
+					WHERE id = $2;`,
+			[password, chatroom_id]
+		)
+		.then(queryResult => { return queryResult; })
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+	}
+
 	delete(id: number): void {
 		const result = dbClient.query(
 			`DELETE	FROM chatrooms

@@ -30,6 +30,26 @@ export class SetHiddenDto {
 	chatroom_id: number;
 }
 
+export class UpdateNameDto {
+	@IsNotEmpty()
+	@IsNumber()
+	id: number;
+
+	@IsNotEmpty()
+	@IsString()
+	name: string;
+}
+
+export class UpdatePasswordDto {
+	@IsNotEmpty()
+	@IsNumber()
+	id: number;
+
+	@IsNotEmpty()
+	@IsString()
+	password: string;
+}
+
 /* Chat users */
 
 export class JoinDto {
