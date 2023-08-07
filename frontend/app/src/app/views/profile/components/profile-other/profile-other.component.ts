@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from 'src/app/core/services/users.service';
 import { Observable, Subscription } from 'rxjs';
-import { httpErrorHandler } from 'http-error-handler';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-profile-other',
