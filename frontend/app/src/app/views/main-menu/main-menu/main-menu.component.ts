@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild, ViewEncapsulation, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-main-menu',
@@ -42,7 +43,7 @@ export class MainMenuComponent implements AfterViewInit {
 	private canvasWidth = 0;
 	private canvasHeight = 0;
 
-	constructor() {}
+	constructor(private router: Router) {}
 
 	ngAfterViewInit(): void {
 		this.ctx = this.canvasRef.nativeElement.getContext('2d') as CanvasRenderingContext2D;
@@ -177,5 +178,11 @@ export class MainMenuComponent implements AfterViewInit {
 		this.isBallInSteadyZone = false;
 		this.isBallInPongZone = true;
 		}
+	}
+
+	/* LINK */
+
+	goToGameParams() : void {
+		this.router.navigate(['main', 'game_params']);
 	}
 }

@@ -8,14 +8,14 @@ import { DoubleAuthRoutingModule } from './double-auth-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-	  DoubleAuthComponent
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-	DoubleAuthRoutingModule,
-	ReactiveFormsModule
-  ]
+  	declarations: [
+		DoubleAuthComponent
+  	],
+  	imports: [
+    	CommonModule,
+    	SharedModule,
+		DoubleAuthRoutingModule,
+		ReactiveFormsModule
+  	]
 })
 export class DoubleAuthModule { }

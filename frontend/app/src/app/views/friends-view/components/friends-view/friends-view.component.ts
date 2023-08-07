@@ -1,33 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Friend } from 'src/app/core/models/friend.model'; 
 import { FriendService } from 'src/app/core/services/friends.service'; 
-import { Observable } from 'rxjs';
-import { AuthHttpClient } from 'src/app/auth-http-client';
-import { httpErrorHandler } from 'src/app/http-error-handler';
+import { FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { FriendsHandlerComponent } from '../friends-handler/friends-handler.component';
+import { User } from 'src/app/core/models/user.model';
+import { UsersService } from 'src/app/core/services/users.service';
 
 @Component({
   selector: 'app-friends-view',
   templateUrl: './friends-view.component.html',
   styleUrls: ['./friends-view.component.css']
 })
-export class FriendsViewComponent {
-  	friends: any[] = [{name: "test"}, {name: "test2", online:true}]; // Store the friends' data
-
-	constructor (private authHttp: AuthHttpClient) {}
-
-  	
+export class FriendsViewComponent implements OnInit, OnDestroy {
 	
-	private apiURL : string = 'http://localhost:8080/friends';
-  
-  	ngOnInit(): void {
-    	console.log('init');
-		this.getFriends();
-    }
-  
-	getFriends(): void {
-		this.authHttp.get<any>(this.apiURL).subscribe(
-			friends => { this.friends = friends; },
-			httpErrorHandler
-		);
-  	}
+	@ViewChild(FriendsHandlerComponent) friendHandler!: FriendsHandlerComponent;
+	
+	newFriendForm!: FormGroup;
+	modalIsOpen: boolean = false;
+	users: User[] = [];
+	private subscription!: Subscription;
+
+	constructor(private usersService: UsersService) {};
+
+	ngOnInit(): void {
+		this.subscription = this.usersService.getHardcodedUsers().subscribe(data => { // change hardoded users
+			this.users = data;
+		});
+	}
+
+	fillForm(user: User) { // triggers 
+		this.friendHandler.setUser(user);
+		this.closeModal();
+	}
+
+	onCreateNewFriendship() : void {
+		this.openModal();		
+	}
+
+	openModal() : void {
+		this.modalIsOpen = true;
+	}
+
+	closeModal() : void {
+		this.modalIsOpen = false;
+	}
+
+	ngOnDestroy(): void {
+		if (this.subscription) {
+			this.subscription.unsubscribe();
+		}
+	}
 }

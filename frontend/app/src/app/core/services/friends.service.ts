@@ -60,6 +60,12 @@ export class FriendService
 		return this.authHttp.get<Friend>(endpoint);
 	}
 
+	getFriendsOfCurrentUser() : Observable<Friend[]> {
+		const endpoint: string = `${this.apiURL}`; // modify that
+
+		return this.authHttp.get<Friend[]>(endpoint);
+	}
+
 	/* DELETE */
 
 	delFriend(friendshipId: number) : Observable<void> {
