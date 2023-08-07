@@ -33,7 +33,10 @@ export class DirectMessageComponent implements AfterViewInit {
 	}
 
 	blockUserFromDMSession() : void {
-		//this.usersService.blockUser(this.directMessage.otherPlayerId);
+		this.usersService.blockUser(this.directMessage.otherPlayerId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	initializeTooltips() {

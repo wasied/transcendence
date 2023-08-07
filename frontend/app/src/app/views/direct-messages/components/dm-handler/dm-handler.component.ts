@@ -35,6 +35,9 @@ export class DmHandlerComponent implements OnInit {
 	}
 
 	private createNewDirectMessage() : void {
-		this.dmService.createDMsession(this.newDmForm.get('userId')?.value);
+		this.dmService.createDMsession(this.newDmForm.get('userId')?.value).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 }

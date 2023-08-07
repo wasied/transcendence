@@ -41,7 +41,10 @@ export class DirectMessagesViewComponent implements OnInit, OnDestroy {
 	}
 
 	private triggerDMSessionCreation(otherUserId: number) : void {
-		// this.dmService.createDMsession(otherUserId);
+		//this.dmService.createDMsession(otherUserId).subscribe(
+		//	data => {},
+		//	httpErrorHandler
+		//);
 	}
 
 	openModal() : void {

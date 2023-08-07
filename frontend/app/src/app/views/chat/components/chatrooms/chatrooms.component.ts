@@ -26,8 +26,10 @@ export class ChatroomsComponent implements OnInit, OnDestroy {
 	}
 
 	deleteChatroom(chatroom: Chatroom) {
-		// this.chatroomsService.delChatroom(chatroom.id);
-		this.chatroomsService.delChatroom(chatroom.id);
+		this.chatroomsService.delChatroom(chatroom.id).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	ngOnDestroy(): void {
