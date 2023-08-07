@@ -1,23 +1,20 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { Stat } from "../models/stat.model"; 
-import { HttpClient } from "@angular/common/http";
+import { AuthHttpClient } from 'src/app/auth-http-client';
 
 @Injectable ({
 	providedIn: 'root'
 })
 export class StatsService {
 
-	constructor (private http: HttpClient) {}
+	constructor (private authHttp: AuthHttpClient) {}
 
 	private hardcodedStats: Stat[] = [{
-		id: 1,
-		userId: 1,
-		victories: 13,
-		defeats: 7,
-		gamesPlayed: 20,
-		ratio: 0.78,
-		totalTimePlaying: new Date()
+		wins: 13,
+		losses: 7,
+		games_played: 20,
+		win_ratio: '0.78'
 	}];
 	
 	getHardcodedStats() : Observable<Stat[]> {
@@ -30,25 +27,19 @@ export class StatsService {
 
 	// with DB
 	
-	private apiUrl : string = 'http://localhost:3000/stats'; // change that
+	private apiUrl : string = 'http://localhost:8080/stats';
 
 	/* READ */
+
+	getStats(): Observable<Stat> {
+		const endpoint: string = `${this.apiUrl}`;
+
+		return this.authHttp.get<Stat>(endpoint);
+	}
 	
 	getStatsFromUserById(userId: number) : Observable<Stat> {
-		const endpoint: string = `${this.apiUrl}/${userId}`; // change that
+		const endpoint: string = `${this.apiUrl}/${userId}`;
 		
-		return this.http.get<Stat>(endpoint);
-	}
-
-	/* UPDATE */
-
-	updateStatsOfUserAfterGame(userId: number) : Observable<void> { // update with relevant data
-		const endpoint: string = `${this.apiUrl}/${userId}`; // modify that
-		const body = {
-			action: 'updateStats',
-			userId: userId
-		};
-
-		return this.http.put<void>(endpoint, body);
+		return this.authHttp.get<Stat>(endpoint);
 	}
 }
