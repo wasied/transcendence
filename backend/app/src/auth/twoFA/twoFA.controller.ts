@@ -2,13 +2,14 @@ import { Controller, Redirect, Request, Body, Get, Post, UseGuards } from '@nest
 import { TwoFAService } from './twoFA.service';
 import { RequestWithUser } from '../../utils/RequestWithUser';
 import { AuthGuard } from '@nestjs/passport';
+import { Handle2faDto } from './dto';
 
 @Controller('auth/2fa')
 export class TwoFAController {
 	constructor(private twoFAService: TwoFAService) {}
 
 	@Post()
-	async handle2fa(@Body() body: { id: number, code: any }): Promise<Object> {
+	async handle2fa(@Body() body: Handle2faDto): Promise<Object> {
 		return await this.twoFAService.handle2fa(body.id, body.code);
 	}
 
