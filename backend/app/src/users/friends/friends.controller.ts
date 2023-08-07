@@ -4,6 +4,7 @@ import { User } from '../user';
 import { Friend } from './friend';
 import { FriendsService } from './friends.service';
 import { RequestWithUser } from '../../utils/RequestWithUser';
+import { CreateDto } from './dto';
 
 @Controller('/friends')
 @UseGuards(AuthGuard('jwt'))
@@ -30,8 +31,8 @@ export class FriendsController {
 	}
 
 	@Post()
-	create(@Request() request: RequestWithUser, @Body('user_id') user_id2: number): void {
-		this.friendsService.create(request.user.id, user_id2);
+	create(@Request() request: RequestWithUser, @Body() body: CreateDto): void {
+		this.friendsService.create(request.user.id, body.user_uid2);
 	}
 
 	@Delete(':friendship_id')

@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Controller, Body, Param, Get, Post, Put, Use
 import { Session } from './session';
 import { SessionsService } from './sessions.service';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateDto } from './dto';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 @Controller('sessions')
 @UseGuards(AuthGuard('jwt'))
@@ -28,12 +30,12 @@ export class SessionsController {
 	}
 
 	@Get('history/user/:userId')
-	async findUserHistoryByUserId(userId: number): Promise<Session[]> {
+	async findUserHistoryByUserId(@Param('userId') userId: number): Promise<Session[]> {
 		return this.sessionsService.findUserHistoryByUserId(userId);
 	}
 
 	@Post()
-	create(@Body('automatching') automatching: boolean, @Body('customization') customization: boolean): void {
-		this.sessionsService.create(automatching, customization);
+	create(@Body() body: CreateDto): void {
+		this.sessionsService.create(body.automatching, body.customization);
 	}
 }

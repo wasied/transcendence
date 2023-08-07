@@ -3,6 +3,7 @@ import { Chat } from './chat';
 import { ChatService } from './chat.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RequestWithUser } from '../utils/RequestWithUser';
+import { CreateDto, SetHiddenDto, JoinDto, SetAdminDto, SetPunishmentDto } from './dto';
 
 @Controller('chat')
 @UseGuards(AuthGuard('jwt-chat'))
@@ -28,7 +29,7 @@ export class ChatController {
 	@Post()
 	create(
 		@Request() request: RequestWithUser,
-		@Body() body: { name: string, hidden: boolean, password: string }
+		@Body() body: CreateDto
 	): void {
 		this.chatService.create(request.user.id, body.name, body.hidden, body.password);
 	}
@@ -36,7 +37,7 @@ export class ChatController {
 	@Put('hidden')
 	setHidden(
 		@Request() request: RequestWithUser,
-		@Body() body: { hidden: boolean, chatroom_id: number }
+		@Body() body: SetHiddenDto
 	): void {
 		if (request.user.owner.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
@@ -54,14 +55,14 @@ export class ChatController {
 
 
 	@Post('join')
-	join(@Request() request: RequestWithUser, @Body('id') id: number): void {
-		this.chatService.join(request.user.id, id);
+	join(@Request() request: RequestWithUser, @Body() body: JoinDto): void {
+		this.chatService.join(request.user.id, body.id);
 	}
 
 	@Put('admin')
 	setAdmin(
 		@Request() request: RequestWithUser,
-		@Body() body: { admin: boolean, chatroom_id: number, user_id: number }
+		@Body() body: SetAdminDto
 	): void {
 		if (request.user.owner.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
@@ -79,7 +80,7 @@ export class ChatController {
 	@Post('punishment')
 	setPunishment(
 		@Request() request: RequestWithUser,
-		@Body() body: { type: string, chatroom_id: number, target_id: number, ends_at: string }
+		@Body() body: SetPunishmentDto
 	): void {
 		if (request.user.admin.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
