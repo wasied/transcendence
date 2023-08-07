@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Chatroom } from 'src/app/core/models/chatroom.model'; 
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service'; 
 import { Observable } from 'rxjs';
@@ -9,12 +9,9 @@ import { UsersService } from 'src/app/core/services/users.service';
 	templateUrl: './chatrooms.component.html',
 	styleUrls: ['./chatrooms.component.css']
 })
-export class ChatroomsComponent implements OnInit {
+export class ChatroomsComponent implements OnInit, OnDestroy {
   
 	chatrooms$!: Observable<Chatroom[]>;
-
-	chatrooms: any[] = [{name: "test"}, {name: "test2", online:true}]; // Store the friends' data
-
   
 	constructor (private chatroomsService: ChatroomsService,
 				 private usersService: UsersService) {}
@@ -28,7 +25,10 @@ export class ChatroomsComponent implements OnInit {
 	}
 
 	deleteChatroom(chatroom: Chatroom) {
-		console.log('delete the chatroom : not linked yet');
 		// this.chatroomsService.delChatroom(chatroom.id);
+	}
+
+	ngOnDestroy(): void {
+		
 	}
 }

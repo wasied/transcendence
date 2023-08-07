@@ -1,6 +1,10 @@
 <div class="text-white" *ngIf="chatroom$ | async as chatroom">
 	<div>
-		<app-chatroom-dropdown [participants]="this.chatroom.participants"></app-chatroom-dropdown>
+		<app-chatroom-dropdown 
+			[participants]="this.chatroom.participants"
+			[participantsId]="this.chatroom.participantsId"
+			[chatroomId]="chatroom.id"
+		></app-chatroom-dropdown>
 		<h1>{{chatroom.chatroomName}}</h1>
 		<button (click)="openModalMenu()">Modal_Menu</button>
 		<button (click)="onExitingChatroomSession()">X</button>

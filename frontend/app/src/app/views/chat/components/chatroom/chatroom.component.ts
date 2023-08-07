@@ -1,7 +1,9 @@
-import { Component, Input, Output, ViewEncapsulation, EventEmitter, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, Input, Output, ViewEncapsulation, EventEmitter, AfterViewInit, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { Chatroom } from 'src/app/core/models/chatroom.model'; 
 import tippy from 'tippy.js';
+import { UsersService } from '../../../../core/services/users.service';
 
 @Component({
 	selector: 'app-chatroom',
@@ -9,19 +11,32 @@ import tippy from 'tippy.js';
 	styleUrls: ['./chatroom.component.css'],
 	encapsulation: ViewEncapsulation.None,  // Needed to apply tooltip CSS
 })
-export class ChatroomComponent {
+export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
   
 	@Input () chatroom!: Chatroom;
 	@Output() deleteRequest = new EventEmitter<Chatroom>();
 
-	constructor(private router: Router, private elementRef: ElementRef) {}
+	isOwner$!: Observable<boolean>;
+	isOwner: boolean = false; // change that to use with Observable<boolean>
+	private subscription!: Subscription;
 
-	ngAfterViewInit() {
+	constructor(private router: Router, 
+				private elementRef: ElementRef,
+				private usersService: UsersService) {}
+
+	ngOnInit() : void {
+		// this.isOwner$ = this.usersService.isUserOwnChatroom(this.chatroom.id);
+		// this.subscription = this.isOwner$.subscribe(isOwner => {
+		// 	this.isOwner = isOwner;
+		// });
+	}
+	
+	ngAfterViewInit() : void {
 		// Button Tooltip
 		this.initializeTooltips()
 	}
 
-	initializeTooltips() {
+	initializeTooltips() : void {
 		tippy(this.elementRef.nativeElement.querySelector('#joinChatRoom'), {
 			content: 'Join the ChatRoom',
 			arrow: true,
@@ -69,8 +84,13 @@ export class ChatroomComponent {
 		this.router.navigate(['main/chatrooms', chatroomId]);
 	}
 	
-	// Ce serait sûrement mieux de delete en se basant sur l'ID => handled by chatrooms component :)
 	deleteChatroom() : void {
 		this.deleteRequest.emit(this.chatroom);
+	}
+
+	ngOnDestroy(): void {
+		// if (this.subscription) {
+		// 	this.subscription.unsubscribe();
+		// }
 	}
 }

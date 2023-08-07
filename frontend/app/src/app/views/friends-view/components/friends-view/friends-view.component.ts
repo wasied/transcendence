@@ -19,7 +19,8 @@ export class FriendsViewComponent {
 	private apiURL : string = 'http://localhost:3000/friends';
   
   	ngOnInit(): void {
-    	this.getFriends();
+    	console.log('init');
+		this.getFriends();
     }
   
 	getFriends(): void {

@@ -40,7 +40,7 @@
   </button>
   <div class="flex justify-end space-x-4 px-4">
     <button class="p-2" id="lock"><i class="fa fa-lock"></i></button>
-    <button class="p-2" id="delete" (click)="deleteChatroom()">
+    <button *ngIf="isOwner" class="p-2" id="delete" (click)="deleteChatroom()">
       <i class="fa-solid fa-x"></i>
     </button>
   </div>
