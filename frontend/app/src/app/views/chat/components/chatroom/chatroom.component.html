@@ -8,11 +8,11 @@
   ></i>
 </button>
 <div class="flex flex-col py-1">
-  <span class="font-semibold">{{ chatroom.chatroomName }}</span>
+  <span class="font-semibold">{{ chatroom.name }}</span>
   <div class="flex flex-col">
     <div class="flex items-center text-sm space-x-1">
       <span class="">Owner:</span>
-      <a class="text-gray-600" href=""> {{ chatroom.owner }}</a>
+      <a class="text-gray-600" href=""> {{ chatroom.owner_uid }}</a>
     </div>
     <div
       id="participants"

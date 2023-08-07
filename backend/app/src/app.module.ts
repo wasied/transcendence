@@ -7,9 +7,10 @@ import { UsersModule } from './users/users.module';
 import { ChatModule } from './chat/chat.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { WebsocketsModule } from './websockets/websockets.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot(), UsersModule, ChatModule, SessionsModule, WebsocketsModule],
+  imports: [AuthModule, ConfigModule.forRoot(), UsersModule, ChatModule, SessionsModule, WebsocketsModule, StatsModule],
   controllers: [AppController],
   providers: [AppService],
 })

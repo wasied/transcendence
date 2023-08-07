@@ -38,7 +38,7 @@ export class SessionsService {
 
 	// return one session based on it's id
 	getSessionById(id: number) : Observable<Session> {
-		const endpoint: string = `${this.apiURL}/${id}`; // modify that
+		const endpoint: string = `${this.apiURL}/${id}`;
 
 		return this.authHttp.get<Session>(endpoint);
 	}

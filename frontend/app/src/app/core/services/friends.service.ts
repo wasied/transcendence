@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable, of } from "rxjs";
 import { Friend } from "../models/friend.model";
+import { User } from '../models/user.model';
 
 
 @Injectable({
@@ -41,16 +42,16 @@ export class FriendService
 
 	/* READ */
 
-	getAllFriends() : Observable<Friend[]> {
+	getAllFriends() : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}`;
 		
-		return this.authHttp.get<Friend[]>(endpoint);
+		return this.authHttp.get<User[]>(endpoint);
 	}
 
-	getFriendsByUserId(userId: number) : Observable<Friend[]> {
+	getFriendsByUserId(userId: number) : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}/${userId}`;
 
-		return this.authHttp.get<Friend[]>(endpoint);
+		return this.authHttp.get<User[]>(endpoint);
 	}
 
 	getFriendshipById(id: number) : Observable<Friend> {

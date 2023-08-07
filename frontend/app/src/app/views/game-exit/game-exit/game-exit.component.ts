@@ -5,6 +5,7 @@ import { Subscription, Observable } from 'rxjs';
 import { UsersService } from '../../../core/services/users.service';
 import { User } from 'src/app/core/models/user.model';
 import { Router } from '@angular/router';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-game-exit',
@@ -40,9 +41,10 @@ export class GameExitComponent implements OnInit, OnDestroy {
 	}
 
 	private retrieveGameData() : void {
-		this.subscription = this.gameDataService.getGameData().subscribe(data => {
-			this.gameData = data;
-		});
+		this.subscription = this.gameDataService.getGameData().subscribe(
+			data => { this.gameData = data; },
+			httpErrorHandler
+		);
 		console.log(this.gameData?.variant); // debug
 		console.log(this.gameData?.isActive); // debug
 	}
