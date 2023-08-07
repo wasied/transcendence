@@ -4,6 +4,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { WhitePageComponent } from "./views/white-page/white-page.component";
 
 import { isAuthenticatedGuard } from './is-authenticated.guard'
+import { GameLobbyGuard } from "./game-lobby-guard.guard";
 
 const routes: Routes = [
 	{path: 'auth/redirect', component: WhitePageComponent},
@@ -23,7 +24,7 @@ const routes: Routes = [
 	// game menus
 	{ path: 'main/game_params', canActivate: [isAuthenticatedGuard], loadChildren:
 	() => import('./views/game-params/game-params.module').then(m => m.GameParamsModule)},
-	{ path: 'main/game_lobby', canActivate: [isAuthenticatedGuard], loadChildren:
+	{ path: 'main/game_lobby', canActivate: [isAuthenticatedGuard, GameLobbyGuard], loadChildren:
 	() => import('./views/game-lobby/game-lobby.module').then(m => m.GameLobbyModule)},
 	{ path: 'main/exit_game', canActivate: [isAuthenticatedGuard], loadChildren:
 	() => import('./views/game-exit/game-exit.module').then(m => m.GameExitModule)},
