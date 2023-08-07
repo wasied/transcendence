@@ -11,4 +11,11 @@
   	<div class="grid lg:grid-cols-2">
     	<app-direct-messages></app-direct-messages>
   	</div>
+
+	<app-modal class="text-black" [showModal]="isModalOpen" (onClose)="closeModal()">
+		<h2 class="mb-4 text-xl font-semibold">Select a Player</h2>
+		<app-direct-message-dropdown [users]="users"(userClicked)="fillForm($event)" ></app-direct-message-dropdown>
+	</app-modal>
+	
+	<app-dm-handler></app-dm-handler>
 </div>

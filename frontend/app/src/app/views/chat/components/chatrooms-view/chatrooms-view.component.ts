@@ -31,13 +31,9 @@ export class ChatroomsViewComponent {
 		const chatroomName: string = this.newChatroomForm.get('chatroomName')?.value;
 		const owner: number = 1; // placeholder, change that
 		const accessStatus: string = this.newChatroomForm.get('accessStatus')?.value;
-		const password: string = this.newChatroomForm.get('chatroomName')?.value;
-
-		console.log('chatroom name = ', chatroomName, ', ownerid = ', owner, ' access status = ', accessStatus,
-		', and password = ', password); // debug
+		const password: string = this.newChatroomForm.get('accessPassword')?.value;
 		
 		this.closeModal();
-		console.log('will trigger the chatroom creation');
 		// this.chatroomsService.createChatroom(chatroomName, owner, accessStatus, password);
 	}
 

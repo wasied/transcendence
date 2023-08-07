@@ -6,6 +6,12 @@
 		[buttonText]="'Match History'" 
 		(buttonAction)="goToGameHistory()">
 	</app-profile-badge>
+	<div *ngIf="userBlocked">
+		<button (click)="unblockUser()">Unblock</button>
+	</div>
+	<div *ngIf="!userBlocked">
+		<button (click)="blockUser()">Block</button>
+	</div>
 	<app-stats [userId]="idOfUserProfile"></app-stats>
 	<app-friends [userId]="idOfUserProfile"></app-friends>
   	<app-achievements [userId]="idOfUserProfile"></app-achievements>

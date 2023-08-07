@@ -2,20 +2,20 @@
 	<button (click)="toggleDropdown()">Participants</button>
 
   	<div *ngIf="isOpen">
-		<div *ngFor="let participant of participants">
+		<div *ngFor="let participant of participants; let i = index">
 			<p>{{ participant }}</p>
-			<button (click)="seeUserProfile(participant)">See Profile</button>
-			<button (click)="playWithUser(participant)">Invite to Play Pong</button>
-			<div *ngIf="isAllowedToElevateToAdmin(participant)">
-				<button (click)="makeAdmin(participant)">Make Administrator</button>
+			<button (click)="seeUserProfile(participantsId[i])">See Profile</button>
+			<button (click)="playWithUser(participantsId[i])">Invite to Play Pong</button>
+			<div *ngIf="isAllowedToElevateToAdmin(participantsId[i])">
+				<button (click)="makeAdmin(participantsId[i])">Make Administrator</button>
 			</div>
-			<div *ngIf="isAllowedToCoerce(participant)">
-				<button (click)="kickUser(participant)">Kick</button>
-				<button (click)="banUser(participant)">Ban</button>
-				<button (click)="muteUser(participant)">Mute</button>
+			<div *ngIf="isAllowedToCoerce(participantsId[i])">
+				<button (click)="kickUser(participantsId[i])">Kick</button>
+				<button (click)="banUser(participantsId[i])">Ban</button>
+				<button (click)="muteUser(participantsId[i])">Mute</button>
 			</div>
 			<div>
-				<button (click)="blockUser(participant)"></button>
+				<button (click)="blockUser(participantsId[i])"></button>
 			</div>
 		</div>
 	</div>

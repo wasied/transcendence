@@ -4,22 +4,23 @@ import { Observable } from 'rxjs';
 import { AuthenticationService } from '../app/core/services/authentication.service';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 
 export class isAuthenticatedGuard implements CanActivate {
-  constructor(private authService: AuthenticationService, private router: Router) {}
+	
+	constructor(private authService: AuthenticationService, private router: Router) {}
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+  	canActivate(
+		next: ActivatedRouteSnapshot,
+    	state: RouterStateSnapshot
+  	): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return this.authService.isAuthenticated().then((isAuthenticated) => {
-    if (isAuthenticated) {
-      return true;
-    } else {
-      return this.router.parseUrl('/');
-    }
-  });
-}
+    	if (isAuthenticated) {
+      			return true;
+    		} else {
+    			return this.router.parseUrl('/');
+    		}
+  		});
+	}
 }
