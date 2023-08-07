@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Friend } from 'src/app/core/models/friend.model'; 
+import { User } from 'src/app/core/models/user.model';
 import { FriendService } from 'src/app/core/services/friends.service'; 
 import { Observable } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class FriendsComponent implements OnInit {
 
 	@Input() userId!: number;
-	friends$!: Observable<Friend[]>;
+	friends$!: Observable<User[]>;
 
 	constructor (private friendsService: FriendService) {};
   
@@ -19,7 +19,7 @@ export class FriendsComponent implements OnInit {
 		this.friends$ = this.loadFriendsOfUser();
 	}
 
-	loadFriendsOfUser() : Observable<Friend[]> {
-		return this.friendsService.getFriendsOfCurrentUser();
+	loadFriendsOfUser() : Observable<User[]> {
+		return this.friendsService.getMyFriends();
 	}
 }

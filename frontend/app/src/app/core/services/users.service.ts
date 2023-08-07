@@ -36,8 +36,14 @@ export class UsersService {
 
 	getAllUsers() : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}`;
-		
+
 		return this.authHttp.get<User[]>(endpoint);
+	}
+
+	getMe() : Observable<User> {
+		const endpoint: string = `${this.apiURL}/me`;
+
+		return this.authHttp.get<User>(endpoint);
 	}
 
 	getUserById(id: number) : Observable<User> {

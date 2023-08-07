@@ -21,11 +21,13 @@ export class ChatroomsComponent implements OnInit, OnDestroy {
 	}
 
 	loadChatrooms() : Observable<Chatroom[]> {
-		return this.chatroomsService.getHardcodedChatrooms(); // change that
+		//return this.chatroomsService.getHardcodedChatrooms(); // change that
+		return this.chatroomsService.getAllChatrooms();
 	}
 
 	deleteChatroom(chatroom: Chatroom) {
 		// this.chatroomsService.delChatroom(chatroom.id);
+		this.chatroomsService.delChatroom(chatroom.id);
 	}
 
 	ngOnDestroy(): void {

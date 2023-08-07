@@ -49,8 +49,8 @@ export class UsersController {
 	}
 
 	@Put('username')
-	updateUsername(@Request() request: RequestWithUser, @Body('username') url: string): void {
-		this.usersService.updateUsername(request.user.id, url);
+	updateUsername(@Request() request: RequestWithUser, @Body('username') username: string): void {
+		this.usersService.updateUsername(request.user.id, username);
 	}
 
 	@Put('profile-picture')

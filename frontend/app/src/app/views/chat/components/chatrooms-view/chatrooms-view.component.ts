@@ -29,12 +29,12 @@ export class ChatroomsViewComponent {
 
 	triggerChatroomCreation() : void {
 		const chatroomName: string = this.newChatroomForm.get('chatroomName')?.value;
-		const owner: number = 1; // placeholder, change that
 		const accessStatus: string = this.newChatroomForm.get('accessStatus')?.value;
 		const password: string = this.newChatroomForm.get('accessPassword')?.value;
 		
 		this.closeModal();
 		// this.chatroomsService.createChatroom(chatroomName, owner, accessStatus, password);
+		this.chatroomsService.createChatroom(chatroomName, false, password);
 	}
 
 	openModal() : void {

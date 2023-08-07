@@ -17,7 +17,8 @@ export class DropdownUsersComponent implements OnInit {
 	constructor(private usersService: UsersService) {}
 
 	ngOnInit(): void { 
-		this.users$ = this.usersService.getHardcodedUsers().pipe( // replace getHardcodedUsers()
+		//this.users$ = this.usersService.getHardcodedUsers().pipe( // replace getHardcodedUsers()
+		this.users$ = this.usersService.getAllUsers().pipe(
 			map(users => users.filter(user => user.id !== this.currentUserId)),
 			catchError(error => {
 				httpErrorHandler(error);

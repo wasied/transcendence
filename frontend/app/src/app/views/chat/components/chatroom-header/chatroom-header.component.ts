@@ -38,7 +38,8 @@ export class ChatroomHeaderComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.chatroom$ = this.chatroomsService.getHarcodedChatroomById(this.chatroomId);
+		//this.chatroom$ = this.chatroomsService.getHarcodedChatroomById(this.chatroomId);
+		this.chatroom$ = this.chatroomsService.getChatroomByID(this.chatroomId);
 		this.passwordProtected = false; // add some logic there
 	}
 

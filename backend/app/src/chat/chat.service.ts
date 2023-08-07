@@ -9,7 +9,8 @@ export class ChatService {
 
 	async findAll(): Promise<Chat[]> {
 		const result = dbClient.query(
-			`SELECT *	FROM chatrooms;`
+			`SELECT *	FROM chatrooms
+						WHERE hidden = false;`
 		)
 		.then(queryResult => { return treatDbResult(queryResult); })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });

@@ -14,16 +14,16 @@ renvoyer noProfile le cas échéant -->
   </ng-template>
 </div>
 <div class="flex flex-col">
-  <span class="font-semibold">{{ this.friend.friendName }}</span>
+  <span class="font-semibold">{{ this.friend.username }}</span>
   <div class="flex items-center text-sm space-x-1">
     <span
       class="-mt-0.5"
       [ngClass]="{
-        'text-green-600': this.friend.friendStatus === 'online',
-        'text-red-600': this.friend.friendStatus === 'offline'
+        'text-green-600': this.friend.status === 'online',
+        'text-red-600': this.friend.status === 'offline'
       }"
       >●</span
     >
-    <span class="text-gray-800">{{ this.friend.friendStatus }} </span>
+    <span class="text-gray-800">{{ this.friend.status }} </span>
   </div>
 </div>

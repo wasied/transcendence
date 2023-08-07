@@ -55,6 +55,7 @@ export class InfoSecurityComponent {
 		this.closeModalUsername();
 
 		//this.usersService.modifyUsernameToRegisteredUser(newUsername);
+		this.usersService.modifyUsernameToRegisteredUser(newUsername);
   	}
 
 	onClickEditPic() : void {
@@ -64,6 +65,7 @@ export class InfoSecurityComponent {
 		this.closeModalPic();
 
 		//this.usersService.modifyProfilePictureToRegisteredUser(newProfilePicURL);
+		this.usersService.modifyProfilePictureToRegisteredUser(newProfilePicURL);
   	}
 
 	// modal functions
