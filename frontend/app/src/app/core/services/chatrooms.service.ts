@@ -16,8 +16,7 @@ export class ChatroomsService {
 			name: 'test_1',
 			owner_uid: 1,
 			owner: 'random_guy',
-			hidden: false,
-			password: "",
+			password: null,
 			participants: ['test', 'player'],
 			participants_id: [1]
 		},
@@ -26,8 +25,7 @@ export class ChatroomsService {
 			name: 'testChatroom',
 			owner_uid: 1,
 			owner: 'test2',
-			hidden: false,
-			password: "",
+			password: null,
 			participants: ['test', 'player'],
 			participants_id: [1]
 		},
@@ -36,8 +34,7 @@ export class ChatroomsService {
 			name: 'testChatroom',
 			owner_uid: 1,
 			owner: 'test3',
-			hidden: false,
-			password: "",
+			password: null,
 			participants: ['test', 'player'],
 			participants_id: [1]
 		}
@@ -61,13 +58,11 @@ export class ChatroomsService {
 
 	/* CREATE */
 	
-	createChatroom(newName: string, 
-		hidden: boolean, newPassword: string) : Observable<void> {
+	createChatroom(newName: string, newPassword: string | null) : Observable<void> {
 		
 		const endpoint: string = `${this.apiURL}`;
 		const body = {
 			name: newName,
-			hidden:	hidden,
 			password: newPassword
 		};
 		return this.authHttp.post<void>(endpoint, body);
@@ -170,7 +165,7 @@ export class ChatroomsService {
 	}
 */
 
-	modifyChatroomPassword(chatroomId: number, newPassword: string) : Observable<void> {
+	modifyChatroomPassword(chatroomId: number, newPassword: string | null) : Observable<void> {
 		const body = {
 			id: chatroomId,
 			password: newPassword

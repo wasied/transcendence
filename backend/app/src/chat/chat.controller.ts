@@ -31,7 +31,7 @@ export class ChatController {
 		@Request() request: RequestWithUser,
 		@Body() body: CreateDto
 	): void {
-		this.chatService.create(request.user.id, body.name, body.hidden, body.password);
+		this.chatService.create(request.user.id, body.name, body.password);
 	}
 
 	@Put('hidden')

@@ -10,14 +10,7 @@ export class CreateDto {
 	@Transform(({ value }) => sanitizeHtml(value))
 	name: string;
 
-	@IsNotEmpty()
-	@IsBoolean()
-	hidden: boolean;
-
-	@IsDefined()
-	@IsString()
-	@Transform(({ value }) => sanitizeHtml(value))
-	password: string;
+	password: string | null;
 }
 
 export class SetHiddenDto {
@@ -47,7 +40,7 @@ export class UpdatePasswordDto {
 
 	@IsNotEmpty()
 	@IsString()
-	password: string;
+	password: string | null;
 }
 
 /* Chat users */
