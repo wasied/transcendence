@@ -3,6 +3,7 @@ import { Chatroom } from 'src/app/core/models/chatroom.model';
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service'; 
 import { Observable } from 'rxjs';
 import { UsersService } from 'src/app/core/services/users.service'; 
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-chatrooms',
