@@ -33,6 +33,9 @@ export class FriendsHandlerComponent implements OnInit {
 	}
 
 	private createNewFriendship() : void {
-		this.friendsService.addAsFriend(this.newFriendForm.get('userId')?.value);
+		this.friendsService.addAsFriend(this.newFriendForm.get('userId')?.value).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 }
