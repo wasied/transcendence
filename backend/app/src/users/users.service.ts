@@ -81,8 +81,8 @@ export class UsersService {
 	updateUsername(user_id: number, username: string): void {
 		const result = dbClient.query(
 			`UPDATE	users
-					SET		username = $1,
-					WHERE	id = $2`,
+					SET		username = $1
+					WHERE	id = $2;`,
 			[username, user_id]
 		)
 		.then(queryResult => { return queryResult; })
@@ -92,8 +92,8 @@ export class UsersService {
 	updateProfilePicture(user_id: number, url: string): void {
 		const result = dbClient.query(
 			`UPDATE	users
-					SET		profile_picture_url = $1,
-					WHERE	id = $2`,
+					SET		profile_picture_url = $1
+					WHERE	id = $2;`,
 			[url, user_id]
 		)
 		.then(queryResult => { return queryResult; })
