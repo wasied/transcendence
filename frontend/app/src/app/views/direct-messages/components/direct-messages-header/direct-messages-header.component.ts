@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { DirectMessagesService } from 'src/app/core/services/direct-messages.service';
-import { DirectMessage } from 'src/app/core/models/direct-message.model';
+import { Chatroom } from 'src/app/core/models/chatroom.model';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class DirectMessagesHeaderComponent implements OnInit {
 	
-	participants$!: Observable<DirectMessage>;
+	participants$!: Observable<Chatroom>;
 	@Input() chatroomId!: number;
 	
 	constructor (private router: Router,

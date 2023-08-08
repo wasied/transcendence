@@ -7,17 +7,17 @@
   <div class="flex justify-between w-full py-2">
     <div class="flex flex-col justify-center w-5/12 pl-4">
       <p class="font-semibold">
-        {{ this.directMessage.otherPlayerPseudo }}
+        {{ this.directMessage.participants[1].username }}
       </p>
       <div class="flex items-center">
         <span
           class="pr-1"
           [ngClass]="{
-            'text-green-500': this.directMessage.otherPlayerStatus === 'online'
+            'text-green-500': this.directMessage.participants[1].status === 'online'
           }"
           >●</span
         >
-        {{ this.directMessage.otherPlayerStatus }}
+        {{ this.directMessage.participants[1].status }}
       </div>
     </div>
     <div class="flex justify-end space-x-4 px-4">

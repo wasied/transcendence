@@ -1,76 +1,105 @@
-import { HttpClient } from "@angular/common/http";
+import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
-import { DirectMessage } from "../models/direct-message.model"; 
+import { Chatroom } from "../models/chatroom.model";
+import { UsersService } from './users.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class DirectMessagesService {
 
-	constructor (private http: HttpClient) {};
+	constructor (
+		private authHttp: AuthHttpClient,
+		private usersService: UsersService
+	) {};
 
-	private hardcodedDirectMessages: DirectMessage[] = [{
-		id: 1,
-		otherPlayerId: 1,
-		otherPlayerPseudo: 'test other player',
-		otherPlayerStatus: 'online'
-	}];
+	private hardcodedDirectMessages: Chatroom[] = [
+/*
+		{
+			id: 1,
+			otherPlayerId: 1,
+			otherPlayerPseudo: 'test other player',
+			otherPlayerStatus: 'online'
+		}
+*/
+	];
 
-	gethardcodedDirectMessages() : Observable<DirectMessage[]> {
+	gethardcodedDirectMessages() : Observable<Chatroom[]> {
 		return of(this.hardcodedDirectMessages);
 	}
 
-	getHardcodedDirectMessageById(id: number) : Observable<DirectMessage> {
+	getHardcodedDirectMessageById(id: number) : Observable<Chatroom> {
 		return of(this.hardcodedDirectMessages[id - 1]);
 	}
 
 	// with observables
 
-	private apiURL : string = 'http://localhost:3000/chatrooms_messages'; // add that
+	private apiURL : string = 'http://localhost:8080/chat';
 
 
 	/* CREATE */
 
 	createDMsession(otherUserId: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}`; // modify this
+		const endpoint: string = `${this.apiURL}`;
+		const myUsername = this.usersService.getMe().toPromise()
+			.then(result => {
+				if (!result)
+					return null;
+				return result.username;
+			})
+			.catch(error => {
+				httpErrorHandler(error);
+				return null;
+			});
+		const otherUserUsername = this.usersService.getUserById(otherUserId).toPromise()
+			.then(result => {
+				if (!result)
+					return null;
+				return result.username;
+			})
+			.catch(error => {
+				httpErrorHandler(error);
+				return null;
+			});
+		if (!myUsername || !otherUserUsername)
+			return of(void 0);
 		const body = {
-			action: 'createDMSession',
-			otherUserId: otherUserId
+			name: `${myUsername} - ${otherUserUsername}`,
+			password: null,
+			direct_message: true,
+			other_user_id: otherUserId
 		};
 
-		return this.http.post<void>(endpoint, body);
+		return this.authHttp.post<void>(endpoint, body);
 	}
 
 	/* READ */
 
-	getDirectMsgById(id : number) : Observable<DirectMessage> {
-		const endpoint: string = `${this.apiURL}/${id}`; // modify this
+	getDirectMsgById(id : number) : Observable<Chatroom> {
+		const endpoint: string = `${this.apiURL}/${id}`;
 		
-		return this.http.get<DirectMessage>(endpoint);
+		return this.authHttp.get<Chatroom>(endpoint);
 	}
 
-	getAllDirectMsgs() : Observable<DirectMessage[]> {
-		const endpoint: string = `${this.apiURL}`; // modify this
+	getMyDirectMsgs() : Observable<Chatroom[]> {
+		const endpoint: string = `${this.apiURL}/my-direct-messages`;
 		
-		return this.http.get<DirectMessage[]>(endpoint);
+		return this.authHttp.get<Chatroom[]>(endpoint);
 	}
 
 	/* UPDATE */
 
-	blockDirectMsgUser(id: number) : Observable<void> { // finish this
-		const endpoint: string = `${this.apiURL}/${id}`; // modify this
-		const body = {
-			action: ''
-		};
-		return this.http.put<void>(endpoint, body);
+	blockDirectMsgUser(id: number) : Observable<void> {
+		return this.usersService.blockUser(id);
 	}
 
 	/* DELETE */
 
 	delDirectMsg(id: number) : Observable<void> {
-		const endpoint: string = `${this.apiURL}/${id}`; // modify this
+		const endpoint: string = `${this.apiURL}/${id}`;
 		
-		return this.http.delete<void>(endpoint);
+		return this.authHttp.delete<void>(endpoint);
 	}
 }
