@@ -13,7 +13,6 @@ services:
       - REACT_APP_URL=${APP_URL}
       - BACKEND_API_PORT=${BACKEND_API_PORT}
       - NGINX_FRONT_PORT=${NGINX_FRONT_PORT}
-      - WEBSOCKET_PORT=${WEBSOCKET_PORT}
 
   backend:
     depends_on:
@@ -23,12 +22,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - ${BACKEND_API_PORT}:${BACKEND_API_PORT}
-      - ${WEBSOCKET_PORT}:${WEBSOCKET_PORT}
     environment:
       - APP_NAME=${APP_NAME}
       - APP_URL=${APP_URL}
       - BACKEND_API_PORT=${BACKEND_API_PORT}
-      - WEBSOCKET_PORT=${WEBSOCKET_PORT}
       - AUTH_42_OAUTH_URL=${AUTH_42_OAUTH_URL}
       - AUTH_42_RETURN_URI=${AUTH_42_RETURN_URI}
       - AUTH_42_CLIENT_KEY=${AUTH_42_CLIENT_KEY}
