@@ -1,7 +1,6 @@
 export class Message {
-	constructor(
-		public content: string,
-		public timestamp: Date = new Date(),
-		public chatroomUserUid: number
-	) {}
+	public id: number;
+	public chatroom_user_uid: number;
+	public content: string;
+	public created_at: Date;
 }

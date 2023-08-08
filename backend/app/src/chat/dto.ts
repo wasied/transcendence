@@ -11,6 +11,14 @@ export class CreateDto {
 	name: string;
 
 	password: string | null;
+
+	@IsNotEmpty()
+	@IsBoolean()
+	direct_message: boolean;
+
+	@IsDefined()
+	@IsNumber()
+	other_user_id: number;
 }
 
 export class SetHiddenDto {

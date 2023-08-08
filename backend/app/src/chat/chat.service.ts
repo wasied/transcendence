@@ -7,9 +7,42 @@ import { treatDbResult } from '../utils/treatDbResult';
 export class ChatService {
 	/* Chat */
 
-	async findAll(): Promise<Chat[]> {
+	async findAllChatrooms(): Promise<Chat[]> {
 		const result = dbClient.query(
-			`SELECT *	FROM chatrooms;`
+			`SELECT *	FROM chatrooms
+						WHERE direct_message = false;`
+		)
+		.then(queryResult => { return treatDbResult(queryResult); })
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+
+		return result;
+	}
+
+	async findUserChatrooms(user_id: number): Promise<Chat[]> {
+		const result = dbClient.query(
+			`SELECT *	FROM chatrooms
+						WHERE direct_message = false
+						AND id IN (
+							SELECT chatroom_uid	FROM chatrooms_users
+												WHERE user_uid = $1
+						);`,
+			[user_id]
+		)
+		.then(queryResult => { return treatDbResult(queryResult); })
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+
+		return result;
+	}
+
+	async findUserDirectMessages(user_id: number): Promise<Chat[]> {
+		const result = dbClient.query(
+			`SELECT *	FROM chatrooms
+						WHERE direct_message = true
+						AND id IN (
+							SELECT chatroom_uid	FROM chatrooms_users
+												WHERE user_uid = $1
+						);`,
+			[user_id]
 		)
 		.then(queryResult => { return treatDbResult(queryResult); })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
@@ -29,14 +62,19 @@ export class ChatService {
 		return result;
 	}
 
-	create(owner_uid: number, name: string, password: string | null): void {
-		const result = dbClient.query(
-			`INSERT	INTO chatrooms(name, owner_uid, password)
-					VALUES($1, $2, $3);`,
-			[name, owner_uid, password]
+	async create(owner_uid: number, name: string, password: string | null, direct_message: boolean): Promise<number> {
+		const result = await dbClient.query(
+			`INSERT	INTO chatrooms(name, owner_uid, password, direct_message)
+					VALUES($1, $2, $3, $4)
+					RETURNING chatrooms.id;`,
+			[name, owner_uid, password, direct_message]
 		)
-		.then(queryResult => { return queryResult; })
+		.then(queryResult => { return treatDbResult(queryResult); })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		if (!result || !result.length)
+			throw new HttpException('Create chatroom: error', HttpStatus.BAD_REQUEST);
+
+		return result[0].id;
 	}
 
 	setHidden(chatroom_id: number, hidden: boolean): void {
@@ -86,15 +124,8 @@ export class ChatService {
 
 	join(user_id: number, chatroom_id: number): void {
 		const result = dbClient.query(
-			`IF $1 NOT IN (
-				SELECT user_uid	FROM chatrooms_users
-								WHERE chatroom_uid = $2
-			)
-			THEN (
-				INSERT INTO	chatrooms_users(chatroom_uid, user_uid, admin)
-							VALUES($2, $1, false)
-			)
-			END IF;`,
+			`INSERT INTO	chatrooms_users(chatroom_uid, user_uid, admin)
+							VALUES($2, $1, false);`,
 			[user_id, chatroom_id]
 		)
 		.then(queryResult => { return queryResult; })
@@ -125,6 +156,21 @@ export class ChatService {
 	}
 
 	/* Punishments */
+
+	async findUserPunishments(user_id: number) {
+		const result = dbClient.query(
+			`SELECT *	FROM chatrooms_punishments
+						WHERE chatroom_user_target_uid IN (
+							SELECT id	FROM chatrooms_users
+										WHERE user_uid = $1
+						);`,
+			[user_id]
+		)
+		.then(queryResult => { return treatDbResult(queryResult); })
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+
+		return result;
+	}
 
 	setPunishment(admin_id: number, target_id: number, chatroom_id: number, type: string, ends_at: string) {
 		const result = dbClient.query(
@@ -181,5 +227,20 @@ export class ChatService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 
 		return result;
+	}
+
+	async findChatroomUserId(user_id: number, chatroom_id: number): Promise<number> {
+		const result = await dbClient.query(
+			`SELECT id	FROM chatrooms_users
+						WHERE chatroom_uid = $1
+						AND user_uid = $2;`,
+			[chatroom_id, user_id]
+		)
+			.then(queryResult => { return treatDbResult(queryResult); })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		if (!result || !result.length)
+			throw new HttpException("Chatroom user not found", HttpStatus.NOT_FOUND);
+
+		return result[0];
 	}
 }

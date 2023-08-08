@@ -1,11 +1,11 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import { UsersService } from '../users/users.service';
-import { ChatService } from './chat.service';
+import { UsersService } from '../../users/users.service';
+import { ChatService } from '../chat.service';
 
 @Injectable()
-export class ChatStrategy extends PassportStrategy(Strategy, 'jwt-chat')  {
+export class MessagesStrategy extends PassportStrategy(Strategy, 'jwt-messages')  {
 	constructor(
 		private usersService: UsersService,
 		private chatService: ChatService
@@ -32,9 +32,7 @@ export class ChatStrategy extends PassportStrategy(Strategy, 'jwt-chat')  {
 				return result;
 			})
 			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
-		user.owner = await this.chatService.findChatroomsOwnedByUserId(payload.id)
-			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
-		user.admin = await this.chatService.findChatroomsWhereUserIdIsAdmin(payload.id)
+		user.punishments = await this.chatService.findUserPunishments(payload.id) 
 			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 
 		return user;
