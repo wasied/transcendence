@@ -83,7 +83,9 @@ export class GameParamsComponent implements OnDestroy {
 			scoreLeftPlayer: 0,
 			scoreRightPlayer: 0,
 			durationInSec: 0,
-			isActive: false
+			isActive: false,
+			user1: null,
+			user2: null
 		}
 		this.gameDataService.updateGameData(gameData);
 	}

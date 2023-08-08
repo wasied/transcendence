@@ -1,9 +1,9 @@
 <!-- <app-header></app-header> -->
 <div class="text-white">
 	<div>
-		<!-- add card player 1 -->
+		<p>{{ gameData?.user1?.username }}</p>>
 		<p>VS</p>
-		<!-- add card player 2 -->
+		<p>{{ gameData?.user2?.username }}</p>
 	</div>
 	<p>{{ gameData?.scoreLeftPlayer }} - {{ gameData?.scoreRightPlayer }}</p>
 	<button (click)="goToMainMenu()">Go Back To Main Menu</button>

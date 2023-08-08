@@ -85,6 +85,12 @@ export class UsersService {
 		return this.authHttp.get<boolean>(endpoint);
 	}
 
+	getPlayersAfterMatchmaking() : Observable<User[]> {
+		const endpoint: string = `${this.apiURL}`; // modify this
+
+		return this.authHttp.get<User[]>(endpoint);
+	}
+
 	/* UPDATE */
 
 	modifyUsernameToRegisteredUser(username: string) : Observable<void> {
