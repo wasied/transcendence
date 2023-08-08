@@ -10,6 +10,8 @@ export interface PongParams {
 	ballRadiusPercentage: number;
 	ballSpeedPercentage: number;
 	maxPaddleY: number;
+	ballAccelerationFactor: number;
+	ballMaxSpeed: number;
 }
 
 export interface GameEvolution {
@@ -38,7 +40,9 @@ export class PongData implements PongParams {
 	paddleWidth = 10;
 	ballRadiusPercentage = 1;
 	ballSpeedPercentage = 0.1;
-	maxPaddleY = 100 - this.paddleHeightPercentage; 
+	maxPaddleY = 100 - this.paddleHeightPercentage;
+	ballAccelerationFactor = 1.05;
+	ballMaxSpeed = 0.3; // change this if necessary
 }
 
 export class GameState implements GameEvolution {

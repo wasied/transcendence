@@ -1,5 +1,4 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { GameService } from 'src/app/core/services/game.service';
 import { GameData, GameDataService } from 'src/app/core/services/game-data.service';
 import { PongData, GameState, Keys } from '../game-interface';
 import { Subscription } from 'rxjs';
@@ -27,46 +26,56 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/* for communication between components */
 	gameData!: GameData | null;
-	subscription!: Subscription;
-
+	private subscription!: Subscription;
 	/* for the game itself */
 	pongData!: PongData;
 	gameState!: GameState;
 	keys!: Keys;
+	private animationFrameID!: number;
 
 	constructor(private gameDataService: GameDataService,
-				private gameService: GameService,
 				private router: Router) {};
 
+	/* DEBUG */
+	private debug() : void {
+		if (this.gameData) {
+			console.log('game variant === ', this.gameData.variant);
+		} else {
+			console.log('where the fuck is game data ???');
+		}
+	}
+
 	/* GAME DATA TRANSPORTATION */
-	
 	ngOnInit(): void {
 		/* Init Game Params */
 		this.pongData = new PongData();
 		this.gameState = new GameState();
 		this.keys = new Keys();
 		/* Observable */
-		// this.subscription = this.gameDataService.getGameData().subscribe(gameData => {
-		// 	this.gameData = gameData;
-		// });
+		this.subscription = this.gameDataService.getGameData().subscribe(gameData => {
+			this.gameData = gameData;
+		});
+		this.debug();
 	}
 
 	ngOnDestroy(): void {
+		/* stops the every-frame loop */
+		cancelAnimationFrame(this.animationFrameID);
 		/* remove subscription to avoid memory leaks */
-		// if (this.subscription) {
-		// 	this.subscription.unsubscribe();
-		// }
+		if (this.subscription) {
+			this.subscription.unsubscribe();
+		}
 		/* update the Game Data to further use in game exit component */
-		// if (this.gameData) {
-		// 	this.gameDataService.updateGameData(this.gameData);
-		// }	
+		if (this.gameData) {
+			this.gameDataService.updateGameData(this.gameData);
+		}	
 	}
 
 	/* update gameData */
 	private endgameDataProcessing() : void {
 		const gameDuration: number | undefined = this.gameDataService.endGame();
-		const scoreLeftPlayer: number = 12; // define this
-		const scoreRightPlayer: number = 8; // define this
+		const scoreLeftPlayer: number = this.gameState.player1Score;
+		const scoreRightPlayer: number = this.gameState.player2Score;
 		
 		if (this.gameData) {
 			this.gameData.durationInSec = gameDuration;
@@ -74,37 +83,12 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.gameData.scoreRightPlayer = scoreRightPlayer;
 		}
 		
+		console.log('go there motherfucker');
 		/* then go to game exit view */
-		this.routingToGameExit();
+		this.router.navigate(['main', 'exit_game']);
 	}
-
-	private routingToGameExit() : void {
-		this.router.navigate(['main', 'game_exit']);
-	}
-	
-	// private playerPaddle = false;
-	// private leftPaddleControl = false;
-	// private rightPaddleControl = false;
-
-	// private onGameState(data: any): void {
-	// 	this.gameState = data;
-	// 	this.draw();
-	// }
-	
-	// private onAssignedPaddle(data: any): void {
-	// 	if (data.paddle === 'left' && !this.playerPaddle) {
-	// 		this.playerPaddle = true;
-	// 		this.leftPaddleControl = true;
-	// 		this.rightPaddleControl = false;
-	// 	} else if (data.paddle === 'right' && !this.playerPaddle) {
-	// 		this.playerPaddle = true;
-	// 		this.leftPaddleControl = false;
-	// 		this.rightPaddleControl = true;
-	// 	}
-	// }
 	
 	/* GAME INIT AND TRIGGER EVERY_FRAME LOOP */
-
 	ngAfterViewInit(): void {
 		/* start timer */
 		this.gameDataService.startGame();
@@ -117,7 +101,22 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	private checkVictoryCondition() : void {
-
+		/* standard case add chaos mode */
+		if ((this.gameData?.variant === 'standard' || this.gameData?.variant === 'chaos')  &&
+			(this.gameState.player1Score == 12 || this.gameState.player2Score == 12)) {
+			this.endgameDataProcessing();
+		}
+		/* case mort subite */
+		else if (this.gameData?.variant=== 'mortSubite' && 
+			(this.gameState.player1Score == 1 || this.gameState.player2Score == 1)) {
+			this.endgameDataProcessing();
+		}
+		/* case 2 points */
+		else if (this.gameData?.variant === 'twoPoints' &&
+				(this.gameState.player1Score >= 12 && this.gameState.player2Score + 2 <= this.gameState.player1Score ||
+				this.gameState.player2Score >= 12 && this.gameState.player1Score + 2 <= this.gameState.player2Score)) {
+			this.endgameDataProcessing();
+		}
 	}
 
 	private animate(): void {
@@ -125,7 +124,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.draw();
 		this.handlePaddleMoves();
 		this.checkVictoryCondition();
-		requestAnimationFrame(this.animate.bind(this));
+		this.animationFrameID = requestAnimationFrame(this.animate.bind(this));
 	}
 
 	private registerEventListeners(): void {
@@ -133,9 +132,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	
 	/* HANDLE RESIZE */
-
 	private onResize(): void { // ok
-		console.log('is resizing');
 		this.resizeCanvas();
 		this.draw();
 	}
@@ -181,8 +178,10 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 	
 		/* calculate the new score, if relevant */
 		const scoreText = `${this.gameState.player1Score} - ${this.gameState.player2Score}`;
-		const scoreX = (this.pongData.canvasWidth / 2) - 50;
-		const scoreY = 30;
+		const scoreTextWidth = this.pongData.ctx.measureText(scoreText).width;
+
+		const scoreX = (this.pongData.canvasWidth / 2) - (scoreTextWidth / 2);
+		const scoreY = 30; 
 
 		/* display the new score */
 		this.pongData.ctx.font = '24px Arial';
@@ -214,6 +213,8 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.gameState.ballY = this.gameState.paddle1Y;
 					this.gameState.ballSpeedX = -this.gameState.ballSpeedX;
 					this.gameState.delayedRestart = false;
+					this.gameState.ballSpeedX = 0.1;
+					this.gameState.ballSpeedY = 0.1;
 					//this.sendGameState();
 				}, 500);
 			}
@@ -230,6 +231,8 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 					this.gameState.ballY = this.gameState.paddle2Y;
 					this.gameState.ballSpeedX = -this.gameState.ballSpeedX;
 					this.gameState.delayedRestart = false;
+					this.gameState.ballSpeedX = 0.1;
+					this.gameState.ballSpeedY = 0.1;
 					//this.sendGameState();
 				}, 500);
 			}
@@ -245,55 +248,101 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		/* Paddle collision with "physics" */
 		const segmentHeight = this.pongData.paddleHeightPercentage / 8;
 
-		const reflectionAngles = [
-    		-60, -45, -30, -15, 15, 30, 45, 60
-		];
-
 		const paddle1TopY = this.gameState.paddle1Y - (this.pongData.paddleHeightPercentage / 2);
 		const paddle2TopY = this.gameState.paddle2Y - (this.pongData.paddleHeightPercentage / 2);
 
 		const BallSpeed = Math.sqrt(this.gameState.ballSpeedX * this.gameState.ballSpeedX 
     		+ this.gameState.ballSpeedY * this.gameState.ballSpeedY);
+		
+		console.log(BallSpeed);
 
 		if (
-			this.gameState.ballX - this.pongData.ballRadiusPercentage <= 3.5 &&
+			this.gameState.ballX - this.pongData.ballRadiusPercentage <= 2 &&
 			this.gameState.ballY + this.pongData.ballRadiusPercentage > this.gameState.paddle1Y 
 				- (this.pongData.paddleHeightPercentage / 2) &&
 			this.gameState.ballY - this.pongData.ballRadiusPercentage < this.gameState.paddle1Y 
 				+ (this.pongData.paddleHeightPercentage / 2)
 		) {
-				console.log('left paddle collision triggered');
-
 				const relativeHitPosition = this.gameState.ballY - paddle1TopY;
-				const hitSegment = Math.floor(relativeHitPosition / segmentHeight);
+				const hitSegment = Math.min(7, Math.max(0, Math.floor(relativeHitPosition / segmentHeight)));
+				const newSpeeds = this.computeNewBallSpeed(hitSegment, BallSpeed);
+				
+				this.gameState.ballSpeedX = newSpeeds.ballSpeedX;
+    			this.gameState.ballSpeedY = newSpeeds.ballSpeedY;
 
-				const reflectionAngle = reflectionAngles[hitSegment] * (Math.PI / 180);  // Convert degree to radians
-
-				this.gameState.ballSpeedX = BallSpeed * Math.cos(reflectionAngle);
-				this.gameState.ballSpeedY = BallSpeed * Math.sin(reflectionAngle);
+				this.gameState.ballX = 2.5 + this.pongData.ballRadiusPercentage;
 		}
 		
 		if (
-			this.gameState.ballX + this.pongData.ballRadiusPercentage >= 97.5 &&
+			this.gameState.ballX + this.pongData.ballRadiusPercentage >= 98 &&
 			this.gameState.ballY + this.pongData.ballRadiusPercentage > this.gameState.paddle2Y 
 				- (this.pongData.paddleHeightPercentage / 2) &&
 			this.gameState.ballY - this.pongData.ballRadiusPercentage < this.gameState.paddle2Y 
 				+ (this.pongData.paddleHeightPercentage / 2)
-		) {
-				
-				console.log('right paddle collision triggered');
-
+		) {			
 				const relativeHitPosition = this.gameState.ballY - paddle2TopY;
-				const hitSegment = Math.floor(relativeHitPosition / segmentHeight);
-			
-				const reflectionAngle = reflectionAngles[hitSegment] * (Math.PI / 180);  // Convert degree to radians
-			
-				this.gameState.ballSpeedX = -BallSpeed * Math.cos(reflectionAngle);
-				this.gameState.ballSpeedY = BallSpeed * Math.sin(reflectionAngle);
-		}
+				const hitSegment = Math.min(7, Math.max(0, Math.floor(relativeHitPosition / segmentHeight)));			
+				const newSpeeds = this.computeNewBallSpeed(hitSegment, BallSpeed);
 
+				this.gameState.ballSpeedX = -newSpeeds.ballSpeedX;
+    			this.gameState.ballSpeedY = newSpeeds.ballSpeedY;
+
+				this.gameState.ballX = 97.5 - this.pongData.ballRadiusPercentage;
+		}		
 		//this.sendGameState();
   	}
+
+	private chaosPhysics() : number {
+		return Math.floor(Math.random() * 8);
+	}
+
+	private computeNewBallSpeed(hitSegment: number, currentBallSpeed: number): { ballSpeedX: number, ballSpeedY: number } {
+		/* choose a random segment on chaos mode, rendering a random angle */
+		if (this.gameData?.variant === 'chaos') {
+			hitSegment = this.chaosPhysics();
+		}
+
+		const reflectionAngles = [-50, -40, -25, -15, 15, 25, 40, 50];
+		const reflectionAngle = reflectionAngles[hitSegment] * (Math.PI / 180);  // Convert degree to radians
+
+		// Accelerate the ball's speed
+		const acceleratedBallSpeed = currentBallSpeed * this.pongData.ballAccelerationFactor;
+		const clampedBallSpeed = Math.min(acceleratedBallSpeed, this.pongData.ballMaxSpeed);
+		
+		let newSpeedX = clampedBallSpeed * Math.cos(reflectionAngle);
+		let newSpeedY = clampedBallSpeed * Math.sin(reflectionAngle);
+
+		// Normalize to maintain consistent speed
+		const magnitude = Math.sqrt(newSpeedX**2 + newSpeedY**2);
+		newSpeedX = (clampedBallSpeed / magnitude) * newSpeedX;
+		newSpeedY = (clampedBallSpeed / magnitude) * newSpeedY;
+
+		return {
+			ballSpeedX: newSpeedX,
+			ballSpeedY: newSpeedY
+		};
+	}
+
+	// adapt with websockets to send paddle position
+	handlePaddleMoves(): void {
+		const MOVE_DISTANCE = 5;
+		
+		if (this.gameState && this.gameState.paddle1Y !== undefined && this.gameState.paddle2Y !== undefined) {
+			if (this.keys.arrowUp) {
+				this.gameState.paddle1Y = Math.max(this.pongData.paddleHeightPercentage / 2, 
+					this.gameState.paddle1Y - MOVE_DISTANCE);
+				this.gameState.paddle2Y = Math.max(this.pongData.paddleHeightPercentage / 2, 
+					this.gameState.paddle2Y - MOVE_DISTANCE);
+			} else if (this.keys.arrowDown) {
+				this.gameState.paddle1Y = Math.min(100 - this.pongData.paddleHeightPercentage / 2, 
+					this.gameState.paddle1Y + MOVE_DISTANCE);
+				this.gameState.paddle2Y = Math.min(100 - this.pongData.paddleHeightPercentage / 2, 
+					this.gameState.paddle2Y + MOVE_DISTANCE);
+			}
+		}
+	}
+
+	/* CONTROLS*/
 
 	@HostListener('window:keydown', ['$event'])
 	handleKeyDown(event: KeyboardEvent): void {
@@ -321,26 +370,9 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 	}
 
-	// adapt with websockets to send paddle position
-	handlePaddleMoves(): void {
+}
 
-		const MOVE_DISTANCE = 5; // change that shit
-
-		const MIN_Y = 0;
-		const MAX_Y = 100 - this.pongData.paddleHeightPercentage;
-		
-		if (this.gameState && this.gameState.paddle1Y !== undefined && this.gameState.paddle2Y !== undefined) {
-			if (this.keys.arrowUp) {
-				this.gameState.paddle1Y = Math.max(this.pongData.paddleHeightPercentage / 2, this.gameState.paddle1Y - MOVE_DISTANCE);
-				this.gameState.paddle2Y = Math.max(this.pongData.paddleHeightPercentage / 2, this.gameState.paddle2Y - MOVE_DISTANCE);
-			} else if (this.keys.arrowDown) {
-				this.gameState.paddle1Y = Math.min(100 - this.pongData.paddleHeightPercentage / 2, this.gameState.paddle1Y + MOVE_DISTANCE);
-				this.gameState.paddle2Y = Math.min(100 - this.pongData.paddleHeightPercentage / 2, this.gameState.paddle2Y + MOVE_DISTANCE);
-			}
-		}
-	}
-	
-	// /* HostListener to handle key events */
+// /* HostListener to handle key events */
 	// @HostListener('window:keydown', ['$event'])
 	// handleKeyDown(event: KeyboardEvent) {
 	// 	if (this.playerPaddle) {
@@ -365,4 +397,24 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 	// 		}
 	//   	}
 	// }
-}
+
+// private playerPaddle = false;
+	// private leftPaddleControl = false;
+	// private rightPaddleControl = false;
+
+	// private onGameState(data: any): void {
+	// 	this.gameState = data;
+	// 	this.draw();
+	// }
+	
+	// private onAssignedPaddle(data: any): void {
+	// 	if (data.paddle === 'left' && !this.playerPaddle) {
+	// 		this.playerPaddle = true;
+	// 		this.leftPaddleControl = true;
+	// 		this.rightPaddleControl = false;
+	// 	} else if (data.paddle === 'right' && !this.playerPaddle) {
+	// 		this.playerPaddle = true;
+	// 		this.leftPaddleControl = false;
+	// 		this.rightPaddleControl = true;
+	// 	}
+	// }
