@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameDataService } from 'src/app/core/services/game-data.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-game-lobby',
@@ -13,7 +14,8 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
 	dotCount: number = 0;
   	timeoutId!: any; // not good
 
-	constructor (private gameDataService: GameDataService) {}
+	constructor (private gameDataService: GameDataService,
+				 private router: Router) {}
 
 	ngOnInit(): void {
 		this.uploadGameDataStatus();
@@ -37,8 +39,9 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	triggerGameSession() : void {
+	triggerGameSession(gameId: number) : void {
 		console.log('implement this : link to game session');
+		this.router.navigate(['main', 'game', gameId]);
 	}
 
 	ngOnDestroy(): void {

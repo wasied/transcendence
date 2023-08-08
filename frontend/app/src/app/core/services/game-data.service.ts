@@ -17,7 +17,25 @@ export interface GameData {
 export class GameDataService {
 
 	private gameData = new BehaviorSubject<GameData | null>(null);
+	gameStart!: Date;
 
+	/* TIME CALCULATION */
+
+	startGame() {
+		this.gameStart = new Date();
+	}
+
+	endGame(): number {
+		let gameEnd: Date = new Date();
+	
+		// Calculate the difference in milliseconds and convert to seconds
+		let gameDuration: number = (gameEnd.getTime() - this.gameStart.getTime()) / 1000;
+	
+		return gameDuration;
+	}
+	
+	/* DATA MANAGEMENT */
+	
 	updateGameData(newGameData: GameData) : void {
 		this.gameData.next(newGameData);
 	}

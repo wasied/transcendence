@@ -6,9 +6,6 @@ import { Router } from '@angular/router';
   	templateUrl: './main-menu.component.html',
   	styleUrls: ['./main-menu.component.css'],
   	encapsulation: ViewEncapsulation.None, ///Needed for CSS animation
-  	template: `
-    	<canvas #canvas></canvas>
-  	`,
   	styles: [
 		`
 			:host {
@@ -95,45 +92,45 @@ export class MainMenuComponent implements AfterViewInit {
 		const ballSpeedY = (this.ballSpeedY / 100) * this.canvasHeight;
 
 		if (this.keys['arrowup']) {
-		this.paddle1Y = Math.max(this.paddle1Y - paddleSpeed, 0);
+			this.paddle1Y = Math.max(this.paddle1Y - paddleSpeed, 0);
 		}
 
 		if (this.keys['arrowdown']) {
-		this.paddle1Y = Math.min(this.paddle1Y + paddleSpeed, this.maxPaddleY);
+			this.paddle1Y = Math.min(this.paddle1Y + paddleSpeed, this.maxPaddleY);
 		}
 
 		if (this.keys['w']) {
-		this.paddle2Y = Math.max(this.paddle2Y - paddleSpeed, 0);
+			this.paddle2Y = Math.max(this.paddle2Y - paddleSpeed, 0);
 		}
 
 		if (this.keys['s']) {
-		this.paddle2Y = Math.min(this.paddle2Y + paddleSpeed, this.maxPaddleY);
+			this.paddle2Y = Math.min(this.paddle2Y + paddleSpeed, this.maxPaddleY);
 		}
 
 		this.ballX = (this.ballX + ballSpeedX + 100) % 100;
 		this.ballY = (this.ballY + ballSpeedY + 100) % 100;
 
 		if (this.ballX - this.ballRadiusPercentage < 0 || this.ballX + this.ballRadiusPercentage > 100) {
-		this.ballSpeedX = -this.ballSpeedX;
+			this.ballSpeedX = -this.ballSpeedX;
 		}
 
 		if (this.ballY - this.ballRadiusPercentage < 0 || this.ballY + this.ballRadiusPercentage > 100) {
-		this.ballSpeedY = -this.ballSpeedY;
+			this.ballSpeedY = -this.ballSpeedY;
 		}
 
 		if (this.ballX + this.ballRadiusPercentage <= 2 && 
 			this.ballY > this.paddle1Y && 
 			this.ballY < (this.paddle1Y + this.paddleHeightPercentage)) {
-		this.ballSpeedY = -this.ballSpeedY;
-		this.ballSpeedX = -this.ballSpeedX;
+				this.ballSpeedY = -this.ballSpeedY;
+				this.ballSpeedX = -this.ballSpeedX;
 		}
 
 		if (this.ballX + this.ballRadiusPercentage >= 98 && 
 		this.ballY > this.paddle2Y && 
 		this.ballY < (this.paddle2Y + this.paddleHeightPercentage) ) {
-		this.ballSpeedY = -this.ballSpeedY;
-		this.ballSpeedX = -this.ballSpeedX;
-	}
+			this.ballSpeedY = -this.ballSpeedY;
+			this.ballSpeedX = -this.ballSpeedX;
+		}
 	}
 
 	private draw(): void {
@@ -164,19 +161,19 @@ export class MainMenuComponent implements AfterViewInit {
 
 	updateBallZoneFlags(): void {
 		if (this.ballX < 33) {
-		this.isBallInReadyZone = true;
-		this.isBallInSteadyZone = false;
-		this.isBallInPongZone = false;
+			this.isBallInReadyZone = true;
+			this.isBallInSteadyZone = false;
+			this.isBallInPongZone = false;
 		}
 		if (this.ballX > 33 && this.ballX < 66) {
-		this.isBallInReadyZone = false;
-		this.isBallInSteadyZone = true;
-		this.isBallInPongZone = false;
+			this.isBallInReadyZone = false;
+			this.isBallInSteadyZone = true;
+			this.isBallInPongZone = false;
 		}
 		if (this.ballX > 66) {
-		this.isBallInReadyZone = false;
-		this.isBallInSteadyZone = false;
-		this.isBallInPongZone = true;
+			this.isBallInReadyZone = false;
+			this.isBallInSteadyZone = false;
+			this.isBallInPongZone = true;
 		}
 	}
 

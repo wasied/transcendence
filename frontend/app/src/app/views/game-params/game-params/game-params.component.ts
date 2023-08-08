@@ -92,7 +92,8 @@ export class GameParamsComponent implements OnDestroy {
 
 	onClickStart() : void {
 		this.initGameData();
-		this.router.navigate(['main/game_lobby']);
+		//this.router.navigate(['main/game_lobby']); return this
+		this.router.navigate(['main', 'game']);
 	}
 
 	onClickSpectator() : void {
