@@ -4,6 +4,7 @@ import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
 import { UsersService } from 'src/app/core/services/users.service';
 import { Observable, Subscription } from 'rxjs';
 import { httpErrorHandler } from 'src/app/http-error-handler';
+import { User } from 'src/app/core/models/user.model';
 
 @Component({
 	selector: 'app-chatroom-dropdown',
@@ -13,7 +14,7 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 
 	@Input() chatroomId!: number;
-	@Input() participants!: string[];
+	@Input() participants!: User[];
 	@Input() participantsId!: number[];
 
 	isOpen: boolean = false;
