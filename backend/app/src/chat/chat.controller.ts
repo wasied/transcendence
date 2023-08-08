@@ -83,6 +83,8 @@ export class ChatController {
 
 	@Post('join')
 	join(@Request() request: RequestWithUser, @Body() body: JoinDto): void {
+		if (request.user.chatroom_ids.indexOf(body.id) !== -1)
+			throw new HttpException("User is already a chatroom member", HttpStatus.BAD_REQUEST);
 		this.chatService.join(request.user.id, body.id);
 	}
 
@@ -98,6 +100,8 @@ export class ChatController {
 
 	@Delete('leave/:id')
 	leave(@Request() request: RequestWithUser, @Param('id') id: number): void {
+		if (request.user.chatroom_ids.indexOf(id) === -1)
+			throw new HttpException("User is not a chatroom member", HttpStatus.BAD_REQUEST);
 		this.chatService.leave(request.user.id, id);
 	}
 
@@ -110,14 +114,14 @@ export class ChatController {
 		@Body() body: SetPunishmentDto
 	): void {
 		if (request.user.admin.indexOf(body.chatroom_id) === -1)
-			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
+			throw new HttpException("User is not an admin", HttpStatus.FORBIDDEN);
 		this.chatService.setPunishment(request.user.id, body.target_id, body.chatroom_id, body.type, body.ends_at);
 	}
 
 	@Delete('kick/:id/:user_id')
 	kick(@Request() request: RequestWithUser, @Param('id') chatroom_id: number, @Param('user_id') user_id: number): void {
 		if (request.user.admin.indexOf(chatroom_id) === -1)
-			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
+			throw new HttpException("User is not an admin", HttpStatus.FORBIDDEN);
 		this.chatService.leave(user_id, chatroom_id);
 	}
 }
