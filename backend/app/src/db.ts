@@ -86,8 +86,7 @@ async function createTables() {
             id SERIAL PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
             owner_uid INTEGER NOT NULL,
-            hidden BOOLEAN NOT NULL DEFAULT FALSE,
-            password VARCHAR(255)
+            password VARCHAR(255) DEFAULT NULL
         );
     `);
 

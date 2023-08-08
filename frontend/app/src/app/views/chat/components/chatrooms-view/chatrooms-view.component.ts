@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-chatrooms-view',
@@ -19,7 +20,6 @@ export class ChatroomsViewComponent {
 			chatroomName : [''],
 			accessStatus : [''],
 			accessPassword : [''],
-			accessPasswordVerif : ['']
 		});
 	};
 	
@@ -29,12 +29,15 @@ export class ChatroomsViewComponent {
 
 	triggerChatroomCreation() : void {
 		const chatroomName: string = this.newChatroomForm.get('chatroomName')?.value;
-		const accessStatus: string = this.newChatroomForm.get('accessStatus')?.value;
-		const password: string = this.newChatroomForm.get('accessPassword')?.value;
+		var password: string | null = this.newChatroomForm.get('accessPassword')?.value;
 		
 		this.closeModal();
-		// this.chatroomsService.createChatroom(chatroomName, owner, accessStatus, password);
-		this.chatroomsService.createChatroom(chatroomName, false, password);
+		if (!password || password === "")
+			password = null;
+		this.chatroomsService.createChatroom(chatroomName, password).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	openModal() : void {

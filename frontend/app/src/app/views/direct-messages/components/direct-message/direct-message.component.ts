@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { DirectMessage } from 'src/app/core/models/direct-message.model'; 
 import tippy from 'tippy.js';
 import { UsersService } from '../../../../core/services/users.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-direct-message',
@@ -33,7 +34,10 @@ export class DirectMessageComponent implements AfterViewInit {
 	}
 
 	blockUserFromDMSession() : void {
-		//this.usersService.blockUser(this.directMessage.otherPlayerId);
+		this.usersService.blockUser(this.directMessage.otherPlayerId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	initializeTooltips() {
