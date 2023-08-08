@@ -12,9 +12,19 @@ export class ChatController {
 
 	/* Chat */
 
-	@Get()
-	async findAll(): Promise<Chat[]> {
-		return this.chatService.findAll();
+	@Get('chatrooms')
+	async findAllChatrooms(): Promise<Chat[]> {
+		return this.chatService.findAllChatrooms();
+	}
+
+	@Get('my-chatrooms')
+	async findMyChatrooms(@Request() request: RequestWithUser): Promise<Chat[]> {
+		return this.chatService.findUserChatrooms(request.user.id);
+	}
+
+	@Get('my-direct-messages')
+	async findMyDirectMessages(@Request() request: RequestWithUser): Promise<Chat[]> {
+		return this.chatService.findUserDirectMessages(request.user.id);
 	}
 
 	@Get(':id')
@@ -27,11 +37,14 @@ export class ChatController {
 	}
 
 	@Post()
-	create(
+	async create(
 		@Request() request: RequestWithUser,
 		@Body() body: CreateDto
-	): void {
-		this.chatService.create(request.user.id, body.name, body.password);
+	): Promise<void> {
+		const id = await this.chatService.create(request.user.id, body.name, body.password, body.direct_message);
+		this.chatService.join(request.user.id, id);
+		if (body.direct_message)
+			this.chatService.join(body.other_user_id, id);
 	}
 
 	@Put('hidden')

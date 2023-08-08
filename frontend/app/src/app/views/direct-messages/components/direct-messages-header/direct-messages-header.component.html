@@ -1,4 +1,4 @@
 <div class="text-white" *ngIf="participants$ | async as participants">
-	<p>Messages with {{participants.otherPlayerPseudo}} </p>
+	<p>Messages with {{participants.participants[1].username}} </p>
 	<button (click)="onQuitDMSession()">Quit Conversation</button>
 </div>

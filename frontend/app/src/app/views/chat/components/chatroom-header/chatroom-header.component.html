@@ -2,7 +2,7 @@
 	<div>
 		<app-chatroom-dropdown 
 			[participants]="this.chatroom.participants"
-			[participantsId]="this.chatroom.participants_id ?? []"
+			[participantsId]="this.chatroom.participants_id"
 			[chatroomId]="chatroom.id"
 		></app-chatroom-dropdown>
 		<h1>{{chatroom.name}}</h1>

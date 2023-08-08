@@ -1,6 +1,6 @@
 import { Component, Input,Output, EventEmitter, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DirectMessage } from 'src/app/core/models/direct-message.model'; 
+import { Chatroom } from 'src/app/core/models/chatroom.model';
 import tippy from 'tippy.js';
 import { UsersService } from '../../../../core/services/users.service';
 import { httpErrorHandler } from 'src/app/http-error-handler';
@@ -13,7 +13,7 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 })
 export class DirectMessageComponent implements AfterViewInit {
 
-	@Input() directMessage!: DirectMessage;
+	@Input() directMessage!: Chatroom;
 	@Output() messageRemoved = new EventEmitter<number>();
 	
 	constructor(private router: Router, 
@@ -34,7 +34,7 @@ export class DirectMessageComponent implements AfterViewInit {
 	}
 
 	blockUserFromDMSession() : void {
-		this.usersService.blockUser(this.directMessage.otherPlayerId).subscribe(
+		this.usersService.blockUser(this.directMessage.participants_id[1]).subscribe(
 			data => {},
 			httpErrorHandler
 		);

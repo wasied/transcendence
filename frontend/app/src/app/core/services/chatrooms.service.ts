@@ -11,6 +11,7 @@ export class ChatroomsService {
 	constructor (private authHttp: AuthHttpClient) {};
 
 	private hardcodedChatrooms: Chatroom[] = [
+/*
 		{
 			id: 1,
 			name: 'test_1',
@@ -38,6 +39,7 @@ export class ChatroomsService {
 			participants: ['test', 'player'],
 			participants_id: [1]
 		}
+*/
 	];
 
 	getHardcodedChatrooms() : Observable<Chatroom[]> {
@@ -63,7 +65,9 @@ export class ChatroomsService {
 		const endpoint: string = `${this.apiURL}`;
 		const body = {
 			name: newName,
-			password: newPassword
+			password: newPassword,
+			direct_message: false,
+			other_user_id: 0
 		};
 		return this.authHttp.post<void>(endpoint, body);
 	}
@@ -71,8 +75,14 @@ export class ChatroomsService {
 	/* READ */
 
 	getAllChatrooms() : Observable<Chatroom[]> {
-		const endpoint: string = `${this.apiURL}`;
+		const endpoint: string = `${this.apiURL}/chatrooms`;
 		
+		return this.authHttp.get<Chatroom[]>(endpoint);
+	}
+
+	getMyChatrooms() : Observable<Chatroom[]> {
+		const endpoint: string = `${this.apiURL}/my-chatrooms`;
+
 		return this.authHttp.get<Chatroom[]>(endpoint);
 	}
 
