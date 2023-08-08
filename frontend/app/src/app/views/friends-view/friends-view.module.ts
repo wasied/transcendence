@@ -9,11 +9,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FriendsViewComponent } from './components/friends-view/friends-view.component';
 import { FriendsViewRoutingModule } from './friends-view-routing.module';
 import { DropdownUsersComponent } from './components/dropdown-users/dropdown-users.component';
+import { FriendsHandlerComponent } from './components/friends-handler/friends-handler.component';
 
 @NgModule({
 	declarations: [
 		FriendsViewComponent,
-		DropdownUsersComponent
+		DropdownUsersComponent,
+  		FriendsHandlerComponent
 	],
 	imports: [
 		CommonModule,

@@ -3,8 +3,7 @@ export class Chatroom {
 	public name: string;
 	public owner_uid: number;
 	public owner?: string;
-	public hidden: boolean;
-	public password: string;
+	public password: string | null;
 	public participants: string[];
 	public participants_id?: number[];
 }

@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable } from "rxjs";
+import { Router } from '@angular/router';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 import QRCode from 'qrcode';
 
 @Injectable({
@@ -15,7 +17,8 @@ export class AuthenticationService {
 
 	constructor (
 		private http: HttpClient,
-		private authHttp: AuthHttpClient
+		private authHttp: AuthHttpClient,
+		private router: Router
 	) {}
 
 	/* AUTH USING 42 API */
@@ -23,10 +26,11 @@ export class AuthenticationService {
 	async isAuthenticated(): Promise<boolean> {
 		if (!this.getTokenOnLocalSession())
 			return false;
-		try { await this.authHttp.get<void>(`${this.apiURL}/isAuthenticated`).toPromise(); }
-		catch { return false; }
+		const authenticated: boolean = await this.authHttp.get<void>(`${this.apiURL}/isAuthenticated`).toPromise()
+			.then(response => { return true; })
+			.catch(error => { return false; });
 
-		return true;
+		return authenticated;
 	}
 
 	retrieveURL() : Observable<{ url: string }> {
@@ -37,8 +41,11 @@ export class AuthenticationService {
 
 	async triggerAuth() : Promise<void> {
 		this.authObs$ = this.retrieveURL();
-		const authURL = (await this.authObs$.toPromise()).url;
-		window.location.href = authURL;
+		const authURL = await this.authObs$.toPromise()
+			.then(response => { return response.url; })
+			.catch(httpErrorHandler);
+		if (authURL)
+			window.location.href = authURL;
 	}
 
 	/* 2FA */
@@ -48,12 +55,14 @@ export class AuthenticationService {
 
 		if (this.doubleAuthActivated) {
 			const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
-				secret: string }>(`${this.apiURL}/2fa/enable`).toPromise();
-			if (!response)
-				return { success: false }; // handle err
+				secret: string }>(`${this.apiURL}/2fa/enable`).toPromise()
+				.catch(httpErrorHandler);
+			if (!response) {
+				httpErrorHandler();
+				return { success: false };
+			}
 			const qrCodeUrl = await QRCode.toDataURL(response.otpAuthUrl)
-			.then((imageUrl: string) => { return imageUrl; })
-			.catch((err: any) => { return undefined; });
+				.catch((err: any) => { return undefined; });
 			console.log(response.secret);
 			console.log(qrCodeUrl);
 
@@ -65,7 +74,8 @@ export class AuthenticationService {
 		}
 		else {
 			const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
-				secret: string }>(`${this.apiURL}/2fa/disable`).toPromise();
+				secret: string }>(`${this.apiURL}/2fa/disable`).toPromise()
+				.catch(httpErrorHandler);
 			if (response && response.success)
 				return { success: true };
 			else

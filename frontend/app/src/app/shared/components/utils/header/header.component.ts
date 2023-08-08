@@ -27,7 +27,8 @@ export class HeaderComponent implements OnInit {
 	getUserData() : void {
     	// this.currentId = this.usersService.getUserId();
     	// this.user$ = this.usersService.getUserById(this.currentId);
-		this.user$ = this.usersService.retrieveHardcodedUser(); // change this after optimization
+		//this.user$ = this.usersService.retrieveHardcodedUser(); // change this after optimization
+		this.user$ = this.usersService.getMe();
   	}
 
   	onClickOnChatrooms() : void {

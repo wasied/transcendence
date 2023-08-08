@@ -8,8 +8,14 @@
         >FRIENDS</span
       >
     </div>
+    <button (click)="openModal()">Add Friend</button>
     <ul class="grid lg:grid-cols-2 grid-col-1 gap-4 lg:w-full w-5/6 mx-auto">
-      <li
+      <app-friends></app-friends>
+    </ul>
+  </div>
+</div>
+
+<!-- <li
         *ngFor="let friend of friends"
         class="flex items-center space-x-4 rounded text-black bg-gray-200 hover:scale-[102%] lghover:scale-105 transition duration-75 cursor-pointer"
       >
@@ -43,7 +49,4 @@
             }}</span>
           </div>
         </div>
-      </li>
-    </ul>
-  </div>
-</div>
+      </li> -->

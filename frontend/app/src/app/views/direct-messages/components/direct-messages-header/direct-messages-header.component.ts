@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { DirectMessagesService } from 'src/app/core/services/direct-messages.service';
 import { DirectMessage } from 'src/app/core/models/direct-message.model';
 import { Observable } from 'rxjs';
@@ -12,19 +12,13 @@ import { Observable } from 'rxjs';
 export class DirectMessagesHeaderComponent implements OnInit {
 	
 	participants$!: Observable<DirectMessage>;
+	@Input() chatroomId!: number;
 	
 	constructor (private router: Router,
-				 private dmService: DirectMessagesService,
-				 private route: ActivatedRoute) {};
+				 private dmService: DirectMessagesService) {};
 
 	ngOnInit(): void {
-		const id: string | null = this.route.snapshot.paramMap.get('id');
-		
-		if (id) {
-			this.participants$ = this.dmService.getHardcodedDirectMessageById(+id);
-		}
-		else
-			; // raise error there
+		this.participants$ = this.dmService.getHardcodedDirectMessageById(this.chatroomId);
 	}
 	
 	onQuitDMSession() : void {

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Chatroom } from 'src/app/core/models/chatroom.model';
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
@@ -12,6 +12,7 @@ import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
 })
 export class ChatroomHeaderComponent implements OnInit {
 
+	@Input() chatroomId!: number	
 	chatroom$!: Observable<Chatroom>;
 	setPasswordForm!: FormGroup;
 	modifyPasswordForm!: FormGroup;
@@ -20,8 +21,9 @@ export class ChatroomHeaderComponent implements OnInit {
 	showModalMenu: boolean = false;
 	showChangePasswordForm: boolean = false;
 
-	constructor (private router: Router, private route: ActivatedRoute,
-		private chatroomsService: ChatroomsService, private formBuilder: FormBuilder) 
+	constructor (private router: Router, 
+				 private chatroomsService: ChatroomsService, 
+				 private formBuilder: FormBuilder) 
 	{
 		this.setPasswordForm = this.formBuilder.group({ // add authenticators
 			password: [''],
@@ -33,25 +35,17 @@ export class ChatroomHeaderComponent implements OnInit {
 			newPassword: [''],
 			newPasswordVerif: ['']
 		});
-	};
+	}
 
 	ngOnInit(): void {
-		const id: string | null = this.route.snapshot.paramMap.get('id');
-		
-		if (id) {
-			this.chatroom$ = this.chatroomsService.getHarcodedChatroomById(+id);
-		}
-		else
-			; // raise error there I guess
-		
+		//this.chatroom$ = this.chatroomsService.getHarcodedChatroomById(this.chatroomId);
+		this.chatroom$ = this.chatroomsService.getChatroomByID(this.chatroomId);
 		this.passwordProtected = false; // add some logic there
 	}
 
 	changePasswordFormDisplayStatus() : void {
 		this.showChangePasswordForm = !this.showChangePasswordForm;
 	}
-
-	// booleans
 
 	isPasswordPresent() : boolean {
 		return this.passwordPresent;
@@ -61,16 +55,22 @@ export class ChatroomHeaderComponent implements OnInit {
 		return true; // implement logic later
 	}
 
-	// modal handlers
+	/* PRIVACY/PASSWORD MODIFCATION */
 
 	addPassword() : void {
-		console.log('adding password : logic not implemented yet');
+		const password : string = this.setPasswordForm.get('password')?.value;
+		
+		// this.chatroomsService.modifyChatroomAccessRights(this.chatroomId, 'passwordProtected', password);
 		this.passwordPresent = true;
 	}
 
 	changePassword() : void {
 		this.changePasswordFormDisplayStatus();
-		console.log('password change : logic not implemented yet !');
+
+		const oldPassword : string = this.modifyPasswordForm.get('oldPassword')?.value;
+		const newPassword : string = this.modifyPasswordForm.get('newPassword')?.value;
+
+		// this.chatroomsService.modifyChatroomPassword(this.chatroomId,oldPassword, newPassword);
 	}
 
 	onTogglePasswordChange(event: Event) : void {
@@ -91,7 +91,7 @@ export class ChatroomHeaderComponent implements OnInit {
 		return false;
 	}
 
-	// exiting chatroom methods
+	/* EXITING CHATROOM METHODS */
 
 	removeYourselfFromChatroom() : void {
 		// implement logic there
@@ -102,14 +102,13 @@ export class ChatroomHeaderComponent implements OnInit {
 		this.router.navigate(['main/chatrooms']);
 	}
 	
-	// modal handling
+	/* MODAL HANDLING */
 
 	openModalMenu() : void {
 		this.showModalMenu = true;
 	}
 
 	closeModalMenu() : void {
-		console.log('Closing modal from parent...');
 		this.showModalMenu = false;
 	}
 }

@@ -3,6 +3,7 @@ import { Chat } from './chat';
 import { ChatService } from './chat.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RequestWithUser } from '../utils/RequestWithUser';
+import { CreateDto, SetHiddenDto, UpdateNameDto, UpdatePasswordDto, JoinDto, SetAdminDto, SetPunishmentDto } from './dto';
 
 @Controller('chat')
 @UseGuards(AuthGuard('jwt-chat'))
@@ -28,19 +29,33 @@ export class ChatController {
 	@Post()
 	create(
 		@Request() request: RequestWithUser,
-		@Body() body: { name: string, hidden: boolean, password: string }
+		@Body() body: CreateDto
 	): void {
-		this.chatService.create(request.user.id, body.name, body.hidden, body.password);
+		this.chatService.create(request.user.id, body.name, body.password);
 	}
 
 	@Put('hidden')
 	setHidden(
 		@Request() request: RequestWithUser,
-		@Body() body: { hidden: boolean, chatroom_id: number }
+		@Body() body: SetHiddenDto
 	): void {
 		if (request.user.owner.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
 		this.chatService.setHidden(body.chatroom_id, body.hidden);
+	}
+
+	@Put('name')
+	updateName(@Request() request: RequestWithUser, @Body() body: UpdateNameDto) {
+		if (request.user.owner.indexOf(body.id) === -1)
+			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
+		this.chatService.updateName(body.id, body.name);
+	}
+
+	@Put('password')
+	updatePassword(@Request() request: RequestWithUser, @Body() body: UpdatePasswordDto) {
+		if (request.user.owner.indexOf(body.id) === -1)
+			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
+		this.chatService.updatePassword(body.id, body.password);
 	}
 
 	@Delete(':id')
@@ -54,14 +69,14 @@ export class ChatController {
 
 
 	@Post('join')
-	join(@Request() request: RequestWithUser, @Body('id') id: number): void {
-		this.chatService.join(request.user.id, id);
+	join(@Request() request: RequestWithUser, @Body() body: JoinDto): void {
+		this.chatService.join(request.user.id, body.id);
 	}
 
 	@Put('admin')
 	setAdmin(
 		@Request() request: RequestWithUser,
-		@Body() body: { admin: boolean, chatroom_id: number, user_id: number }
+		@Body() body: SetAdminDto
 	): void {
 		if (request.user.owner.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
@@ -79,7 +94,7 @@ export class ChatController {
 	@Post('punishment')
 	setPunishment(
 		@Request() request: RequestWithUser,
-		@Body() body: { type: string, chatroom_id: number, target_id: number, ends_at: string }
+		@Body() body: SetPunishmentDto
 	): void {
 		if (request.user.admin.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);

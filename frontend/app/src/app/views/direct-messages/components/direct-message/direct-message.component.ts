@@ -1,7 +1,9 @@
-import { Component, Input, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input,Output, EventEmitter, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DirectMessage } from 'src/app/core/models/direct-message.model'; 
 import tippy from 'tippy.js';
+import { UsersService } from '../../../../core/services/users.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-direct-message',
@@ -12,15 +14,18 @@ import tippy from 'tippy.js';
 export class DirectMessageComponent implements AfterViewInit {
 
 	@Input() directMessage!: DirectMessage;
+	@Output() messageRemoved = new EventEmitter<number>();
 	
-	constructor(private router: Router, private elementRef: ElementRef) {}
+	constructor(private router: Router, 
+				private elementRef: ElementRef,
+				private usersService: UsersService) {}
 
 	ngAfterViewInit() : void {
 		// Button Tooltip
 		this.initializeTooltips()
 	}
 
-  goToDMSession(dmId: number) : void {
+	goToDMSession(dmId: number) : void {
 		this.router.navigate(['main/direct_messages', dmId]);
 	}
 
@@ -28,8 +33,11 @@ export class DirectMessageComponent implements AfterViewInit {
 		console.log('feature not implemented yet !');
 	}
 
-	blockDMSession() : void {
-		console.log('feature not implemented yet !');
+	blockUserFromDMSession() : void {
+		this.usersService.blockUser(this.directMessage.otherPlayerId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	initializeTooltips() {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { UsersService } from '../../../../core/services/users.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-info-security',
@@ -54,7 +55,10 @@ export class InfoSecurityComponent {
 		console.log('edit username : link not implemented');
 		this.closeModalUsername();
 
-		//this.usersService.modifyUsernameToRegisteredUser(newUsername);
+		this.usersService.modifyUsernameToRegisteredUser(newUsername).subscribe(
+			data => {},
+			httpErrorHandler
+		);
   	}
 
 	onClickEditPic() : void {
@@ -63,7 +67,10 @@ export class InfoSecurityComponent {
 		console.log('edit profile pic : link implemented');
 		this.closeModalPic();
 
-		//this.usersService.modifyProfilePictureToRegisteredUser(newProfilePicURL);
+		this.usersService.modifyProfilePictureToRegisteredUser(newProfilePicURL).subscribe(
+			data => {},
+			httpErrorHandler
+		);
   	}
 
 	// modal functions

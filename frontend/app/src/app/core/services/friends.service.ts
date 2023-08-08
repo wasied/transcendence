@@ -27,7 +27,7 @@ export class FriendService
 
 	// with DB
 	
-	private apiURL : string = 'http://localhost:8080/users/friends';
+	private apiURL : string = 'http://localhost:8080/friends';
 
 	/* CREATE */
 
@@ -44,7 +44,13 @@ export class FriendService
 
 	getAllFriends() : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}`;
-		
+
+		return this.authHttp.get<User[]>(endpoint);
+	}
+
+	getMyFriends() : Observable<User[]> {
+		const endpoint: string = `${this.apiURL}`;
+
 		return this.authHttp.get<User[]>(endpoint);
 	}
 

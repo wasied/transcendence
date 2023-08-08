@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { catchError, Observable, map, of } from 'rxjs';
 import { UsersService } from 'src/app/core/services/users.service';
 import { User } from '../../../../core/models/user.model';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
   	selector: 'app-searchbar',
@@ -16,8 +17,13 @@ export class DropdownUsersComponent implements OnInit {
 	constructor(private usersService: UsersService) {}
 
 	ngOnInit(): void { 
-		this.users$ = this.usersService.getHardcodedUsers().pipe( // replace getHardcodedUsers()
-			map(users => users.filter(user => user.id !== this.currentUserId))
+		//this.users$ = this.usersService.getHardcodedUsers().pipe( // replace getHardcodedUsers()
+		this.users$ = this.usersService.getAllUsers().pipe(
+			map(users => users.filter(user => user.id !== this.currentUserId)),
+			catchError(error => {
+				httpErrorHandler(error);
+				return of([]);
+			})
 		);
 	}
 

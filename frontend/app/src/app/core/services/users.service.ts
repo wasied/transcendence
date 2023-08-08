@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { User } from "../models/user.model"; 
-import { Observable, of, map, switchMap, forkJoin } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 
 @Injectable ({
 	providedIn: 'root'
@@ -21,14 +21,12 @@ export class UsersService {
 	}];
 
 	private apiURL: string = 'http://localhost:8080/users'; // change that in final product
-	private currentUserId: number = -1; // change this
 
 	getHardcodedUsers() : Observable<User[]> {
 		return of(this.harcodedUsers);
 	}
 
 	retrieveHardcodedUser() : Observable<User> { // change this after auth service is implemented
-		this.storeUserId(this.harcodedUsers[0].id);
 		return of(this.harcodedUsers[0]);
 	}
 	
@@ -38,8 +36,14 @@ export class UsersService {
 
 	getAllUsers() : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}`;
-		
+
 		return this.authHttp.get<User[]>(endpoint);
+	}
+
+	getMe() : Observable<User> {
+		const endpoint: string = `${this.apiURL}/me`;
+
+		return this.authHttp.get<User>(endpoint);
 	}
 
 	getUserById(id: number) : Observable<User> {
@@ -69,6 +73,18 @@ export class UsersService {
 		return this.authHttp.get<User[]>(endpoint);
 	}
 
+	isUserBlocked(userId: number) : Observable<boolean> {
+		const endpoint: string = `${this.apiURL}`; // modify this
+
+		return this.authHttp.get<boolean>(endpoint);
+	}
+
+	isUserOwnChatroom(chatroomId: number) : Observable<boolean> {
+		const endpoint: string = `${this.apiURL}`; // modify this
+
+		return this.authHttp.get<boolean>(endpoint);
+	}
+
 	/* UPDATE */
 
 	modifyUsernameToRegisteredUser(username: string) : Observable<void> {
@@ -89,17 +105,23 @@ export class UsersService {
 		return this.authHttp.put<void>(endpoint, body);
 	}
 
-	// suppress that and replace it with localStorage
-	
-	storeUserId(id: number) : void {		
-		this.currentUserId = id;
+	blockUser(idOfBlockedUser: number) : Observable<void> {
+		const endpoint: string =`${this.apiURL}`; // modify this
+		const body = {
+			action: 'blockUser',
+			idOfBlockedUser: idOfBlockedUser
+		};
+
+		return this.authHttp.put<void>(endpoint, body);
 	}
 
-	delUserId(id: number) : void {
-		this.currentUserId = -1;
-	}
+	unblockUser(idOfBlockedUser: number) : Observable<void> {
+		const endpoint: string =`${this.apiURL}`; // modify this
+		const body = {
+			action: 'unblockUser',
+			idOfBlockedUser: idOfBlockedUser,
+		};
 
-	getCurrentUserId() : number {
-		return this.currentUserId;
+		return this.authHttp.put<void>(endpoint, body);
 	}
 }

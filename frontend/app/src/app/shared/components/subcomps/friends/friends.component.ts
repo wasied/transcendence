@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Friend } from 'src/app/core/models/friend.model'; 
 import { User } from 'src/app/core/models/user.model';
 import { FriendService } from 'src/app/core/services/friends.service'; 
 import { Observable } from 'rxjs';
@@ -12,19 +11,15 @@ import { Observable } from 'rxjs';
 export class FriendsComponent implements OnInit {
 
 	@Input() userId!: number;
-	friends$!: Observable<Friend[]>;
+	friends$!: Observable<User[]>;
 
 	constructor (private friendsService: FriendService) {};
   
 	ngOnInit(): void {
-		this.friends$ = this.loadFriends();
+		this.friends$ = this.loadFriendsOfUser();
 	}
 
-	loadFriends() : Observable<Friend[]> {
-		return this.friendsService.getHardcodedFriends(); // change the logic after
-	}
-
-	loadFriendsOfUser(userId: number) : Observable<User[]> { // use that instead
-		return this.friendsService.getFriendsByUserId(userId);
+	loadFriendsOfUser() : Observable<User[]> {
+		return this.friendsService.getMyFriends();
 	}
 }

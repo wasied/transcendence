@@ -32,7 +32,15 @@ export class DirectMessagesService {
 
 	/* CREATE */
 
+	createDMsession(otherUserId: number) : Observable<void> {
+		const endpoint: string = `${this.apiURL}`; // modify this
+		const body = {
+			action: 'createDMSession',
+			otherUserId: otherUserId
+		};
 
+		return this.http.post<void>(endpoint, body);
+	}
 
 	/* READ */
 

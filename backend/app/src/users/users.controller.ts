@@ -4,6 +4,7 @@ import { User } from './user';
 import { Session } from '../sessions/session';
 import { UsersService } from './users.service';
 import { RequestWithUser } from '../utils/RequestWithUser';
+import { UpdateUsernameDto, UpdateProfilePictureDto, BlockDto } from './dto';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'))
@@ -49,20 +50,20 @@ export class UsersController {
 	}
 
 	@Put('username')
-	updateUsername(@Request() request: RequestWithUser, @Body('username') url: string): void {
-		this.usersService.updateUsername(request.user.id, url);
+	updateUsername(@Request() request: RequestWithUser, @Body() body: UpdateUsernameDto): void {
+		this.usersService.updateUsername(request.user.id, body.username);
 	}
 
 	@Put('profile-picture')
-	updateProfilePicture(@Request() request: RequestWithUser, @Body('url') url: string): void {
-		this.usersService.updateProfilePicture(request.user.id, url);
+	updateProfilePicture(@Request() request: RequestWithUser, @Body() body: UpdateProfilePictureDto): void {
+		this.usersService.updateProfilePicture(request.user.id, body.url);
 	}
 
 	/*** Block/Unblock ***/
 
 	@Post('block')
-	block(@Body('blocker_uid') blocker_uid: number, @Body('blocked_uid') blocked_uid: number): void {
-		this.usersService.block(blocker_uid, blocked_uid);
+	block(@Body() body: BlockDto): void {
+		this.usersService.block(body.blocker_uid, body.blocked_uid);
 	}
 
 	@Delete('block')

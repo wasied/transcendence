@@ -13,11 +13,10 @@ export class ChatroomsService {
 	private hardcodedChatrooms: Chatroom[] = [
 		{
 			id: 1,
-			name: 'testChatroom',
+			name: 'test_1',
 			owner_uid: 1,
-			owner: 'test3',
-			hidden: false,
-			password: "",
+			owner: 'random_guy',
+			password: null,
 			participants: ['test', 'player'],
 			participants_id: [1]
 		},
@@ -26,8 +25,7 @@ export class ChatroomsService {
 			name: 'testChatroom',
 			owner_uid: 1,
 			owner: 'test2',
-			hidden: false,
-			password: "",
+			password: null,
 			participants: ['test', 'player'],
 			participants_id: [1]
 		},
@@ -36,8 +34,7 @@ export class ChatroomsService {
 			name: 'testChatroom',
 			owner_uid: 1,
 			owner: 'test3',
-			hidden: false,
-			password: "",
+			password: null,
 			participants: ['test', 'player'],
 			participants_id: [1]
 		}
@@ -61,13 +58,11 @@ export class ChatroomsService {
 
 	/* CREATE */
 	
-	createChatroom(newName: string, 
-		hidden: boolean, newPassword: string) : Observable<void> {
+	createChatroom(newName: string, newPassword: string | null) : Observable<void> {
 		
 		const endpoint: string = `${this.apiURL}`;
 		const body = {
 			name: newName,
-			hidden:	hidden,
 			password: newPassword
 		};
 		return this.authHttp.post<void>(endpoint, body);
@@ -87,20 +82,13 @@ export class ChatroomsService {
 		return this.authHttp.get<Chatroom>(endpoint);
 	}
 
-	/* UPDATE */
+	// canUserCoerce(participantsId: number[]) : Observable<number[]> {
+	// 	const endpoint: string = `${this.apiURL}`; // modify this
 
-/*
-	modifyChatroomName(chatroomId: number, newName: string) : Observable<Chatroom> {
-		const body = {
-			action: 'modifyChatroomName',
-			chatroomId: chatroomId,
-			newName: newName
-		};
-		const endpoint: string = `${this.apiURL}/${chatroomId}`; // modify that
-		
-		return this.authHttp.put<Chatroom>(endpoint, body);
-	}
-*/
+	// 	return this.http.post<number[]>(endpoint, body);
+	// } 
+
+	/* UPDATE */
 
 	modifyChatroomAccessRights(chatroomId: number, hidden: boolean) : Observable<Chatroom> {
 		const body = {
@@ -163,6 +151,28 @@ export class ChatroomsService {
 		const endpoint: string = `${this.apiURL}/leave/${chatroomId}`;
 		
 		return this.authHttp.delete<void>(endpoint);
+	}
+
+/*
+	modifyChatroomName(chatroomId: number, newName: string) : Observable<void> {
+		const body = {
+			id: chatroomId,
+			name: newName
+		};
+		const endpoint: string = `${this.apiURL}/name`;
+		
+		return this.authHttp.put<void>(endpoint, body);
+	}
+*/
+
+	modifyChatroomPassword(chatroomId: number, newPassword: string | null) : Observable<void> {
+		const body = {
+			id: chatroomId,
+			password: newPassword
+		}
+		const endpoint: string = `${this.apiURL}/password`;
+
+		return this.authHttp.put<void>(endpoint, body);
 	}
 
 	kickUserFromChatroom(chatroomId: number, userId: number) : Observable<void> {

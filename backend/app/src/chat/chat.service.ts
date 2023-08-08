@@ -29,11 +29,11 @@ export class ChatService {
 		return result;
 	}
 
-	create(owner_uid: number, name: string, hidden: boolean, password: string): void {
+	create(owner_uid: number, name: string, password: string | null): void {
 		const result = dbClient.query(
-			`INSERT	INTO chatrooms(name, owner_uid, hidden, password)
-					VALUES($1, $2, $3, $4);`,
-			[name, owner_uid, hidden, password]
+			`INSERT	INTO chatrooms(name, owner_uid, password)
+					VALUES($1, $2, $3);`,
+			[name, owner_uid, password]
 		)
 		.then(queryResult => { return queryResult; })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
@@ -45,6 +45,28 @@ export class ChatService {
 					SET hidden = $1
 					WHERE id = $2;`,
 			[hidden, chatroom_id]
+		)
+		.then(queryResult => { return queryResult; })
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+	}
+
+	updateName(chatroom_id: number, name: string): void {
+		const result = dbClient.query(
+			`UPDATE	chatrooms
+					SET name = $1
+					WHERE id = $2;`,
+			[name, chatroom_id]
+		)
+		.then(queryResult => { return queryResult; })
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+	}
+
+	updatePassword(chatroom_id: number, password: string | null): void {
+		const result = dbClient.query(
+			`UPDATE	chatrooms
+					SET password = $1
+					WHERE id = $2;`,
+			[password, chatroom_id]
 		)
 		.then(queryResult => { return queryResult; })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });

@@ -39,11 +39,11 @@ export class SessionsService {
 	}
 
 	async findUserHistoryByUserId(userId: number): Promise<Session[]> {
-		const result = dbClient.query(
+		const result = await dbClient.query(
 			`SELECT *	FROM sessions
 						WHERE id IN (
 							SELECT session_uid	FROM sessions_users
-												WHERE user_uid = $1;
+												WHERE user_uid = $1
 						);`,
 			[userId]
 		)
