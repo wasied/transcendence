@@ -1,6 +1,6 @@
 <app-header></app-header>
 <div
-  class="flex flex-col justify-center items-center text-center text-gray-200 bg-black mx-auto max-w-5xl"
+  class="flex flex-col justify-center items-center text-center text-gray-200 bg-black mx-auto max-w-5xl pt-32"
 >
 	<app-profile-badge 
 		[userId]="idOfUserProfile" 
@@ -10,5 +10,5 @@
 	<app-info-security></app-info-security>
 	<app-stats [userId]="idOfUserProfile"></app-stats>
 	<app-friends [userId]="idOfUserProfile"></app-friends>
-  	<app-achievements [userId]="idOfUserProfile"></app-achievements>
+  	<app-achievements class="pb-8" [userId]="idOfUserProfile"></app-achievements>
 </div>

@@ -17,14 +17,40 @@ export class MatchHistoryService {
 				 private sessionsService: SessionsService,
 				 private sessionsUsersService: SessionsUsersService) {};
 
-	private hardcodedGameHistory: MatchHistory[] = [{
+	private hardcodedGameHistory: MatchHistory[] = [
+		{
 		userId: 1,
 		opponentId: 2,
 		opponentPseudo: 'player 2',
 		opponentStatus: 'online',
 		yourScore: 7,
 		opponentScore: 3
-	}];
+		},
+		{
+			userId: 1,
+			opponentId: 2,
+			opponentPseudo: 'player 2',
+			opponentStatus: 'online',
+			yourScore: 7,
+			opponentScore: 3
+		},
+		{
+			userId: 1,
+			opponentId: 2,
+			opponentPseudo: 'player 2',
+			opponentStatus: 'online',
+			yourScore: 7,
+			opponentScore: 3
+		},
+		{
+			userId: 1,
+			opponentId: 2,
+			opponentPseudo: 'player 2',
+			opponentStatus: 'online',
+			yourScore: 7,
+			opponentScore: 3
+		}
+	];
 
 	getHardcodedGameHistory(): Observable<MatchHistory[]> {
 		return of(this.hardcodedGameHistory);

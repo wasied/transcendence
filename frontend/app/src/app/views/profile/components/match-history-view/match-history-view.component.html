@@ -1,10 +1,20 @@
-<!-- <app-header></app-header> -->
-<div>
+<app-header></app-header>
+<div class="pt-32 mt-4 flex flex-col space-y-4 text-white w-full">
 	<app-profile-badge
 		[userId]="idOfUserProfile" 
 		[buttonText]="'Back To Profile'" 
 		(buttonAction)="goBackToProfile()"
 	></app-profile-badge>
-	<h1 class="text-white">MATCH HISTORY</h1>
-	<app-match-history [isProfileOfUser]="isProfileOfUser" [userId]="idOfUserProfile"></app-match-history>
+	<div class="max-w-3xl flex inline-flex justify-center items-center w-full">
+		<hr class="w-screen m-8" />
+		<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2 text-white"
+			  >MATCH HISTORY</span
+		>
+  	</div>
+	<app-match-history 
+		class="w-full flex justify-center align-items" 
+		[isProfileOfUser]="isProfileOfUser" 
+		[userId]="idOfUserProfile">
+	</app-match-history>
 </div>
+<!-- grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 -->
