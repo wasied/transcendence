@@ -1,46 +1,81 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
+import { Request, UseGuards } from '@nestjs/common';
+import { ChatWebsocketGuard } from './chat-websocket.guard';
+import { WsException, SubscribeMessage, WebSocketGateway, WebSocketServer, ConnectedSocket, MessageBody } from '@nestjs/websockets';
+import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets/interfaces';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
+import { MessagesService } from './messages/messages.service';
+import { RequestWithUser } from '../utils/RequestWithUser';
+import { JoinDto, LeaveDto, SetAdminDto } from './dto';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true, namespace: "chat" })
+//@UseGuards(ChatWebsocketGuard)
 export class ChatGateway {
     @WebSocketServer() server: Server;
 
-    constructor(private readonly chatService: ChatService) {}
+    constructor(
+		private readonly chatService: ChatService,
+		private readonly messagesService: MessagesService
+	) {}
 
-    @SubscribeMessage('joinRoom')
-    async handleJoinRoom(@ConnectedSocket() client: Socket, { roomId, userId }): Promise<void> {
-        client.join(String(roomId));
+/*
+GET CHATROOMS
+*/
 
-        // TODO: Update the user's status in the room (e.g., "online")
+    @SubscribeMessage('connectRoom')
+    async handleConnection(
+		@ConnectedSocket() client: Socket,
+		@Request() request: RequestWithUser,
+		@MessageBody() body: JoinDto
+	): Promise<void> {
+        client.join(String(body.chatroom_id));
 
-        const messages = await this.chatService.getMessagesByChatroomId(roomId);
+        const messages = await this.messagesService.findChatroomMessages(request.user.id, body.chatroom_id);
         client.emit('updateMessages', messages);
     }
 
-    @SubscribeMessage('leaveRoom')
-    async handleLeaveRoom(@ConnectedSocket() client: Socket, { roomId, userId }): Promise<void> {
-        client.leave(String(roomId));
-
-        // TODO: Update the user's status in the room (e.g., "offline")
+    @SubscribeMessage('disconnectRoom')
+    async handleDisconnect(
+		@ConnectedSocket() client: Socket,
+	): Promise<void> {
+        //client.leave(/*String(body.chatroom_id)*/);
     }
 
-    @SubscribeMessage('newMessage')
-    async handleNewMessage(@ConnectedSocket() client: Socket, { roomId, userId, message }): Promise<void> {
-        const chatroomUserId = 1; // TODO: Get chatroom userid
-        await this.chatService.addMessageToChatroom(chatroomUserId, message);
+	@SubscribeMessage('joinRoom')
+	async join(
+		@ConnectedSocket() client: Socket,
+		@Request() request: RequestWithUser,
+		@MessageBody() body: JoinDto
+	): Promise<void> {
+		if (request.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
+			throw new WsException("User is already a chatroom member");
+		await this.chatService.join(request.user.id, body.chatroom_id);
+	}
 
-        const updatedMessages = await this.chatService.getMessagesByChatroomId(roomId);
-        this.server.to(String(roomId)).emit('updateMessages', updatedMessages);
-    }
+	@SubscribeMessage('leaveRoom')
+	async leave(
+		@ConnectedSocket() client: Socket,
+		@Request() request: RequestWithUser,
+		@MessageBody() body: LeaveDto
+	): Promise<void> {
+		if (request.user.chatroom_ids.indexOf(body.chatroom_id) === -1)
+			throw new WsException("User is not a chatroom member");
+		await this.chatService.leave(request.user.id, body.chatroom_id);
+	}
 
     @SubscribeMessage('setAdmin')
-    async handleSetAdminStatus(@ConnectedSocket() client: Socket, { roomId, userId, admin }): Promise<void> {
-        await this.chatService.setAdmin(admin, roomId, userId);
-
-        // TODO: Notify users in the room about the admin status change
+    async handleSetAdminStatus(
+		@ConnectedSocket() client: Socket,
+		@Request() request: RequestWithUser,
+		@MessageBody() body: SetAdminDto
+	): Promise<void> {
+		if (request.user.owner.indexOf(body.chatroom_id) === -1)
+			throw new WsException("User is not the chatroom owner");
+		else
+	        await this.chatService.setAdmin(body.admin, body.chatroom_id, body.user_id);
     }
 
+/*
     @SubscribeMessage('getOwnedChatrooms')
     async handleGetOwnedChatrooms(@ConnectedSocket() client: Socket, userId: number): Promise<void> {
         const chatrooms = await this.chatService.findChatroomsOwnedByUserId(userId);
@@ -52,4 +87,5 @@ export class ChatGateway {
         const chatrooms = await this.chatService.findChatroomsWhereUserIdIsAdmin(userId);
         client.emit('adminChatrooms', chatrooms);
     }
+*/
 }

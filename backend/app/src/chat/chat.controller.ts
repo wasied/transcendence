@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Controller, Request, Body, Param, Get, Post, Put, Delete, UseGuards } from '@nestjs/common';
 import { Chat } from './chat';
 import { ChatService } from './chat.service';
+import { UsersService } from '../users/users.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RequestWithUser } from '../utils/RequestWithUser';
 import { CreateDto, SetHiddenDto, UpdateNameDto, UpdatePasswordDto, JoinDto, SetAdminDto, SetPunishmentDto } from './dto';
@@ -8,23 +9,65 @@ import { CreateDto, SetHiddenDto, UpdateNameDto, UpdatePasswordDto, JoinDto, Set
 @Controller('chat')
 @UseGuards(AuthGuard('jwt-chat'))
 export class ChatController {
-	constructor(private readonly chatService: ChatService) {}
+	constructor(
+		private readonly chatService: ChatService,
+		private readonly usersService: UsersService
+	) {}
 
 	/* Chat */
 
 	@Get('chatrooms')
 	async findAllChatrooms(): Promise<Chat[]> {
-		return this.chatService.findAllChatrooms();
+		var chatrooms: Chat[] = await this.chatService.findAllChatrooms();
+		for (const index in chatrooms) {
+			const participants_id = await this.chatService.findChatroomUsersId(chatrooms[index].id);
+			var participants = [];
+			for (const participant_id of participants_id) {
+				const participant = (await this.usersService.findOneById(participant_id))[0];
+				participants.push(participant);
+			}
+			chatrooms[index].participants_id = participants_id;
+			chatrooms[index].participants = participants;
+		}
+
+		return chatrooms;
 	}
 
 	@Get('my-chatrooms')
 	async findMyChatrooms(@Request() request: RequestWithUser): Promise<Chat[]> {
-		return this.chatService.findUserChatrooms(request.user.id);
+		var chatrooms: Chat[] = await this.chatService.findUserChatrooms(request.user.id);
+		for (const index in chatrooms) {
+			const participants_id = await this.chatService.findChatroomUsersId(chatrooms[index].id);
+			var participants = [];
+			for (const participant_id of participants_id) {
+				const participant = (await this.usersService.findOneById(participant_id))[0];
+				participants.push(participant);
+			}
+			chatrooms[index].participants_id = participants_id;
+			chatrooms[index].participants = participants;
+		}
+
+		return chatrooms;
 	}
 
 	@Get('my-direct-messages')
 	async findMyDirectMessages(@Request() request: RequestWithUser): Promise<Chat[]> {
-		return this.chatService.findUserDirectMessages(request.user.id);
+		var directMessages: Chat[] = await this.chatService.findUserDirectMessages(request.user.id);
+		for (const index in directMessages) {
+			const participants_id = await this.chatService.findChatroomUsersId(directMessages[index].id);
+			if (participants_id.length !== 2)
+				throw new HttpException("Direct message does not have 2 members", HttpStatus.BAD_REQUEST);
+			directMessages[index].participants_id.push(request.user.id);
+			directMessages[index].participants_id.push(participants_id[0] !== request.user.id ? participants_id[0] : participants_id[1]);
+			var participants = [];
+			for (const participant_id of directMessages[index].participants_id) {
+				const participant = (await this.usersService.findOneById(participant_id))[0];
+				participants.push(participant);
+			}
+			directMessages[index].participants = participants;
+		}
+
+		return directMessages;
 	}
 
 	@Get(':id')
@@ -47,6 +90,7 @@ export class ChatController {
 			this.chatService.join(body.other_user_id, id);
 	}
 
+/*
 	@Put('hidden')
 	setHidden(
 		@Request() request: RequestWithUser,
@@ -56,6 +100,7 @@ export class ChatController {
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
 		this.chatService.setHidden(body.chatroom_id, body.hidden);
 	}
+*/
 
 	@Put('name')
 	updateName(@Request() request: RequestWithUser, @Body() body: UpdateNameDto) {
@@ -83,9 +128,9 @@ export class ChatController {
 
 	@Post('join')
 	join(@Request() request: RequestWithUser, @Body() body: JoinDto): void {
-		if (request.user.chatroom_ids.indexOf(body.id) !== -1)
+		if (request.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
 			throw new HttpException("User is already a chatroom member", HttpStatus.BAD_REQUEST);
-		this.chatService.join(request.user.id, body.id);
+		this.chatService.join(request.user.id, body.chatroom_id);
 	}
 
 	@Put('admin')

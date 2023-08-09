@@ -35,10 +35,11 @@ export class ChatComponent implements OnInit {
     		return;
     	}
     
-		//this.messagesService.sendMessageToDB(inputMessage, new Date(), this.chatroomId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+	// Get chatroomId
+		this.messagesService.sendMessageToDB(inputMessage, 1).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 		this.newMessageText = '';
     	setTimeout(() => this.scrollToBottom(), 0);
 	}

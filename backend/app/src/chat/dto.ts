@@ -56,7 +56,19 @@ export class UpdatePasswordDto {
 export class JoinDto {
 	@IsNotEmpty()
 	@IsNumber()
-	id: number;
+	chatroom_id: number;
+}
+
+export class LeaveDto {
+	@IsNotEmpty()
+	@IsNumber()
+	chatroom_id: number;
+}
+
+export class DeleteDto {
+	@IsNotEmpty()
+	@IsNumber()
+	chatroom_id: number;
 }
 
 export class SetAdminDto {
