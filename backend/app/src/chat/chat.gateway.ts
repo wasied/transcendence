@@ -1,11 +1,10 @@
-import { Request, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { ChatWebsocketGuard } from './chat-websocket.guard';
 import { WsException, SubscribeMessage, WebSocketGateway, WebSocketServer, ConnectedSocket, MessageBody } from '@nestjs/websockets';
 import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets/interfaces';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { MessagesService } from './messages/messages.service';
-import { RequestWithUser } from '../utils/RequestWithUser';
 import { JoinDto, LeaveDto, SetAdminDto } from './dto';
 
 @WebSocketGateway({ cors: true, namespace: "chat" })
@@ -25,12 +24,11 @@ GET CHATROOMS
     @SubscribeMessage('connectRoom')
     async handleConnection(
 		@ConnectedSocket() client: Socket,
-		@Request() request: RequestWithUser,
 		@MessageBody() body: JoinDto
 	): Promise<void> {
         client.join(String(body.chatroom_id));
 
-        const messages = await this.messagesService.findChatroomMessages(request.user.id, body.chatroom_id);
+        const messages = await this.messagesService.findChatroomMessages(client.user.id, body.chatroom_id);
         client.emit('updateMessages', messages);
     }
 
@@ -44,32 +42,29 @@ GET CHATROOMS
 	@SubscribeMessage('joinRoom')
 	async join(
 		@ConnectedSocket() client: Socket,
-		@Request() request: RequestWithUser,
 		@MessageBody() body: JoinDto
 	): Promise<void> {
-		if (request.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
+		if (client.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
 			throw new WsException("User is already a chatroom member");
-		await this.chatService.join(request.user.id, body.chatroom_id);
+		await this.chatService.join(client.user.id, body.chatroom_id);
 	}
 
 	@SubscribeMessage('leaveRoom')
 	async leave(
 		@ConnectedSocket() client: Socket,
-		@Request() request: RequestWithUser,
 		@MessageBody() body: LeaveDto
 	): Promise<void> {
-		if (request.user.chatroom_ids.indexOf(body.chatroom_id) === -1)
+		if (client.user.chatroom_ids.indexOf(body.chatroom_id) === -1)
 			throw new WsException("User is not a chatroom member");
-		await this.chatService.leave(request.user.id, body.chatroom_id);
+		await this.chatService.leave(client.user.id, body.chatroom_id);
 	}
 
     @SubscribeMessage('setAdmin')
     async handleSetAdminStatus(
 		@ConnectedSocket() client: Socket,
-		@Request() request: RequestWithUser,
 		@MessageBody() body: SetAdminDto
 	): Promise<void> {
-		if (request.user.owner.indexOf(body.chatroom_id) === -1)
+		if (client.user.owner.indexOf(body.chatroom_id) === -1)
 			throw new WsException("User is not the chatroom owner");
 		else
 	        await this.chatService.setAdmin(body.admin, body.chatroom_id, body.user_id);
