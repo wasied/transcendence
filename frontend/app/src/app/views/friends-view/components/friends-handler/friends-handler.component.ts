@@ -34,6 +34,10 @@ export class FriendsHandlerComponent implements OnInit {
 	}
 
 	private createNewFriendship() : void {
+		if (!this.newFriendForm.get('userId')?.value) {
+			console.error("Invalid user id");
+			return ;
+		}
 		this.friendsService.addAsFriend(this.newFriendForm.get('userId')?.value).subscribe(
 			data => {},
 			httpErrorHandler

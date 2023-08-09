@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { UsersService } from 'src/app/core/services/users.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-profile-self',
@@ -10,10 +12,16 @@ export class ProfileSelfComponent {
 	
 	idOfUserProfile!: number;
 
-	constructor (private router: Router) {};
+	constructor (
+		private usersService: UsersService,
+		private router: Router
+	) {};
 
 	ngOnInit(): void {
-		this.idOfUserProfile = 1; // temporary, retrieve the id from sessionStorage
+		this.usersService.getMe().subscribe(
+			data => { this.idOfUserProfile = data.id; },
+			httpErrorHandler
+		);
 	}
 
 	goToGameHistory() : void {

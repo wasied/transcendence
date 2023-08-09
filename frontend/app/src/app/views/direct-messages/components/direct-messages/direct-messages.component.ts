@@ -20,7 +20,7 @@ export class DirectMessagesComponent implements OnInit {
 		this.directMessages$ = this.loadDirectMessages();
 	}
 
-	loadDirectMessages() : Observable<Chatroom[]> { // update this
-		return this.directMessageService.gethardcodedDirectMessages();
+	loadDirectMessages() : Observable<Chatroom[]> {
+		return this.directMessageService.getMyDirectMsgs();
 	}
 }
