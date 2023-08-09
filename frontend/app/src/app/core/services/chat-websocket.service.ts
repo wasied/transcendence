@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { io } from 'socket.io-client';
-import { Observable } from 'rxjs';
+import { io, Socket } from 'socket.io-client';
 import { AuthenticationService } from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatWebsocketService {
-	private socket: SocketIOClient.Socket;
+	private socket: Socket;
 
 	constructor(private readonly authService: AuthenticationService) {
 		const options = {
