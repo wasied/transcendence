@@ -1,9 +1,10 @@
-import { Request } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer, ConnectedSocket, MessageBody } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { RequestWithUser } from '../utils/RequestWithUser';
+import { UseGuards } from '@nestjs/common';
+import { GameWebsocketGuard } from './game-websocket.guard';
 
-@WebSocketGateway({ cors: true, namespace: "pong" })
+@WebSocketGateway({ cors: true, namespace: "game" })
+@UseGuards(GameWebsocketGuard)
 export class PongGameGateway {
     @WebSocketServer() server: Server;
 
@@ -138,7 +139,6 @@ export class PongGameGateway {
     @SubscribeMessage('spectateGame')
     async handleSpectateGame(
         @ConnectedSocket() client: Socket,
-        @Request() request: RequestWithUser,
         @MessageBody() body: any
     ): Promise<void> {
 
