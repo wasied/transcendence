@@ -5,7 +5,6 @@
 		<div *ngFor="let participant of participants; let i = index">
 			<p>{{ participant }}</p>
 			<button (click)="seeUserProfile(participantsId[i])">See Profile</button>
-			<button (click)="playWithUser(participantsId[i])">Invite to Play Pong</button>
 			<div *ngIf="isAllowedToElevateToAdmin(participantsId[i])">
 				<button (click)="makeAdmin(participantsId[i])">Make Administrator</button>
 			</div>

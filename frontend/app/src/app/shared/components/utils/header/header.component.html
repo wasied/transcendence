@@ -1,9 +1,9 @@
 <header
   *ngIf="user$ | async as user"
-  [ngClass]="{}"
-  class="flex justify-between items-center bg-yellow-500 fixed top-0 left-0 right-0 z-50 py-4 p-8"
+  class="flex justify-between items-center bg-yellow-500 fixed top-0 left-0 
+  right-0 z-50 py-4 min-w-max h-28 py-4 px-8"
 >
-	<div>
+	<div class="flex-shrink-0 mr-12">
     	<img
       		[ngClass]="{ 'fixed top-4 left-8': isMenuOpen }"
       		class="h-16"
@@ -11,52 +11,90 @@
       		alt="42 logo"
     	/>
   	</div>
-	<nav
-    	[ngClass]="{
-      	hidden: !isMenuOpen,
-      	'flex justify-center items-center h-screen': isMenuOpen
-    	}"
-    	class="lg:block flex flex-col lg:flex-row lg:space-x-12 lg:space-y-0 space-y-12 text-lg transition-all duration-500 ease-in-out"
-  	>
-    <button
-		(click)="onClickPlay()"
-		class=""
-	> PLAY
-	</button>
-    <button
-    	(click)="onClickOnChatrooms()"
-    	class="hover:underline hover:cursor-pointer"
-    >
-    	Chatrooms
-    </button>
-    <button
-    	(click)="onClickOnMessages()"
-    	class="hover:underline hover:cursor-pointer"
-    >
-    	Messages
-    </button>
-    <button
-    	(click)="onClickOnFriends()"
-    	class="hover:underline hover:cursor-pointer"
-    >
-    	Friends
-    </button>
-    <button class="self-end">
-    	<img
-        	(click)="onClickOnProfilePicture()"
-			style="max-height:100px;max-width:100px;height:auto;width:auto"
-        	class="object-cover rounded-full hover:cursor-pointer"
-        	[src]="user.profile_picture_url"
-        	alt="profile picture"
-      	/>
-    </button>
-  	</nav>
-  	<div>
-    	<button
-      		class="lg:hidden block text-white focus:outline-none fixed top-7 right-8 text-3xl z-50"
-      		(click)="toggleMenu()"
-    	>
-      	<i class="fas fa-bars"></i>
-    	</button>
-  	</div>
+
+	<!-- for big screens   -->
+	<nav class="hidden lg:flex space-x-4 items-center flex-grow justify-between">
+		<button
+			(click)="onClickPlay()"
+			class="rounded-full border border-2 border-black bg-black text-white text-2xl h-12 w-32 
+			hover:bg-white hover:text-black ease-in duration-300"
+		> PLAY
+		</button>
+		<button
+			(click)="onClickOnChatrooms()"
+			class="hover:underline hover:cursor-pointer text-2xl"
+		>
+			Chatrooms
+		</button>
+		<button
+			(click)="onClickOnMessages()"
+			class="hover:underline hover:cursor-pointer text-2xl"
+		>
+			Messages
+		</button>
+		<button
+			(click)="onClickOnFriends()"
+			class="hover:underline hover:cursor-pointer text-2xl"
+		>
+			Friends
+		</button>
+		<div class="flex justify-center align-items">
+			<button class="self-end">
+				<img
+					(click)="onClickOnProfilePicture()"
+					style="max-height:100px;max-width:100px;height:auto;width:auto"
+					class="object-cover rounded-full hover:cursor-pointer"
+					[src]="user.profile_picture_url"
+					[title]="user.username"
+					alt="profile picture"
+				/>
+			</button>
+			<p class="text-xl"> {{ user.username}}</p>
+		</div>
+	</nav>
+
+	<!-- toggle button for navbar for mobile size screens -->
+	<div class="flex-shrink-0 lg:hidden">
+        <button class="block text-white focus:outline-none text-3xl" (click)="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+	<!-- navbar for mobile devices -->
+	<nav [ngClass]="{ 'hidden': !isMenuOpen }" 
+		class="lg:hidden fixed top-16 left-0 right-0 bg-yellow-500 flex flex-col space-y-4 p-4">
+        <button
+			(click)="onClickPlay()"
+			class="w-full text-center rounded-full border border-2 border-black bg-black text-white text-2xl h-12 
+    		hover:bg-white hover:text-black ease-in duration-300"
+		> PLAY
+		</button>
+		<button
+			(click)="onClickOnChatrooms()"
+			class="hover:underline hover:cursor-pointer"
+		>
+			Chatrooms
+		</button>
+		<button
+			(click)="onClickOnMessages()"
+			class="hover:underline hover:cursor-pointer"
+		>
+			Messages
+		</button>
+		<button
+			(click)="onClickOnFriends()"
+			class="hover:underline hover:cursor-pointer"
+		>
+			Friends
+		</button>
+		<div class="flex flex-col items-center justify-center">
+			<img
+				(click)="onClickOnProfilePicture()"
+				style="max-height:100px;max-width:100px;height:auto;width:auto"
+				class="m-0 p-0 mx-auto block object-cover rounded-full hover:cursor-pointer"
+				[src]="user.profile_picture_url"
+				alt="profile picture"
+			/>
+		</div>
+    </nav>
 </header>

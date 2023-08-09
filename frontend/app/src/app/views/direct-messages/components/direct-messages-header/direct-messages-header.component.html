@@ -1,4 +1,18 @@
 <div class="text-white" *ngIf="participants$ | async as participants">
 	<p>Messages with {{participants.participants[1].username}} </p>
+	<button (click)="onOpenInviteMenu()">Invite To Play Pong</button>
 	<button (click)="onQuitDMSession()">Quit Conversation</button>
 </div>
+
+<app-modal class="text-black" [showModal]="isModalInviteOpen" (onClose)="closeInviteModal()">
+	<div>
+		<p>Invitation has been sent !!!</p>
+		<p>Do not close this window !!!</p>
+		<p>You will be automatically redirected when the invite will be accepted</p>
+	</div>
+</app-modal>
+
+<app-modal class="text-black" [showModal]="isModalAcceptOpen" (onClose)="closeAcceptModal()">
+	<button (click)="acceptInvite()"></button>
+	<button (click)="refuseInvite()"></button>
+</app-modal>

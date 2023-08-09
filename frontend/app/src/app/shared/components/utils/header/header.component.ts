@@ -58,10 +58,5 @@ export class HeaderComponent implements OnInit {
 
 	toggleMenu(): void {
 		this.isMenuOpen = !this.isMenuOpen;
-		if (this.isMenuOpen) {
-			document.body.style.overflow = 'hidden';
-		} else {
-			document.body.style.overflow = 'auto';
-		}
 	}
 }

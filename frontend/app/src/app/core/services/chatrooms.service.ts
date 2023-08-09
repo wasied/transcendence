@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable, of } from "rxjs";
 import { Chatroom } from '../models/chatroom.model'; 
+import { User } from "../models/user.model";
 
 @Injectable({
 	providedIn: 'root'
@@ -10,36 +11,55 @@ export class ChatroomsService {
 
 	constructor (private authHttp: AuthHttpClient) {};
 
+	readonly id: number;
+	readonly username: string;
+	status: string;
+	a2f_key: string;
+	profile_picture_url: string;
+	readonly updated_at: string;
+	readonly created_at: string;
+
+	private hardcodedUser: User = {
+		id: 1,
+		username: 'truc',
+		status: 'online',
+		a2f_key: '',
+		profile_picture_url: '',
+		updated_at: '',
+		created_at: ''
+	}
+
 	private hardcodedChatrooms: Chatroom[] = [
-/*
 		{
 			id: 1,
 			name: 'test_1',
 			owner_uid: 1,
-			owner: 'random_guy',
+			owner: this.hardcodedUser,
 			password: null,
-			participants: ['test', 'player'],
+			direct_message: false,
+			participants: [this.hardcodedUser, this.hardcodedUser],
 			participants_id: [1]
 		},
 		{
 			id: 2,
 			name: 'testChatroom',
 			owner_uid: 1,
-			owner: 'test2',
+			owner: this.hardcodedUser,
 			password: null,
-			participants: ['test', 'player'],
+			direct_message: false,
+			participants: [this.hardcodedUser],
 			participants_id: [1]
 		},
 		{
 			id: 2,
 			name: 'testChatroom',
 			owner_uid: 1,
-			owner: 'test3',
+			owner: this.hardcodedUser,
 			password: null,
-			participants: ['test', 'player'],
+			direct_message: false,
+			participants: [this.hardcodedUser],
 			participants_id: [1]
 		}
-*/
 	];
 
 	getHardcodedChatrooms() : Observable<Chatroom[]> {

@@ -4,6 +4,7 @@ import { Observable, of } from "rxjs";
 import { Chatroom } from "../models/chatroom.model";
 import { UsersService } from './users.service';
 import { httpErrorHandler } from 'src/app/http-error-handler';
+import { User } from '../models/user.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,15 +16,29 @@ export class DirectMessagesService {
 		private usersService: UsersService
 	) {};
 
+	private hardcodedUser: User = {
+		id: 1,
+		username: 'truc',
+		status: 'online',
+		a2f_key: '',
+		profile_picture_url: '',
+		updated_at: '',
+		created_at: ''
+	}
+
 	private hardcodedDirectMessages: Chatroom[] = [
-/*
 		{
-			id: 1,
-			otherPlayerId: 1,
-			otherPlayerPseudo: 'test other player',
-			otherPlayerStatus: 'online'
+	
+				id: 1,
+				name: 'test_1',
+				owner_uid: 1,
+				owner: this.hardcodedUser,
+				password: null,
+				direct_message: false,
+				participants: [this.hardcodedUser, this.hardcodedUser],
+				participants_id: [1]
+
 		}
-*/
 	];
 
 	gethardcodedDirectMessages() : Observable<Chatroom[]> {
