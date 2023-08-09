@@ -2,13 +2,14 @@ import { UseGuards } from '@nestjs/common';
 import { ChatWebsocketGuard } from './chat-websocket.guard';
 import { WsException, SubscribeMessage, WebSocketGateway, WebSocketServer, ConnectedSocket, MessageBody } from '@nestjs/websockets';
 import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets/interfaces';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { ChatService } from './chat.service';
 import { MessagesService } from './messages/messages.service';
+import { SocketWithUser } from '../utils/SocketWithUser';
 import { JoinDto, LeaveDto, SetAdminDto } from './dto';
 
 @WebSocketGateway({ cors: true, namespace: "chat" })
-//@UseGuards(ChatWebsocketGuard)
+@UseGuards(ChatWebsocketGuard)
 export class ChatGateway {
     @WebSocketServer() server: Server;
 
@@ -23,7 +24,7 @@ GET CHATROOMS
 
     @SubscribeMessage('connectRoom')
     async handleConnection(
-		@ConnectedSocket() client: Socket,
+		@ConnectedSocket() client: SocketWithUser,
 		@MessageBody() body: JoinDto
 	): Promise<void> {
         client.join(String(body.chatroom_id));
@@ -34,14 +35,14 @@ GET CHATROOMS
 
     @SubscribeMessage('disconnectRoom')
     async handleDisconnect(
-		@ConnectedSocket() client: Socket,
+		@ConnectedSocket() client: SocketWithUser,
 	): Promise<void> {
         //client.leave(/*String(body.chatroom_id)*/);
     }
 
 	@SubscribeMessage('joinRoom')
 	async join(
-		@ConnectedSocket() client: Socket,
+		@ConnectedSocket() client: SocketWithUser,
 		@MessageBody() body: JoinDto
 	): Promise<void> {
 		if (client.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
@@ -51,7 +52,7 @@ GET CHATROOMS
 
 	@SubscribeMessage('leaveRoom')
 	async leave(
-		@ConnectedSocket() client: Socket,
+		@ConnectedSocket() client: SocketWithUser,
 		@MessageBody() body: LeaveDto
 	): Promise<void> {
 		if (client.user.chatroom_ids.indexOf(body.chatroom_id) === -1)
@@ -61,7 +62,7 @@ GET CHATROOMS
 
     @SubscribeMessage('setAdmin')
     async handleSetAdminStatus(
-		@ConnectedSocket() client: Socket,
+		@ConnectedSocket() client: SocketWithUser,
 		@MessageBody() body: SetAdminDto
 	): Promise<void> {
 		if (client.user.owner.indexOf(body.chatroom_id) === -1)

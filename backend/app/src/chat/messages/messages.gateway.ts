@@ -2,7 +2,7 @@ import { Request, UseGuards } from '@nestjs/common';
 import { MessagesWebsocketGuard } from './messages-websocket.guard';
 import { WsException, SubscribeMessage, WebSocketGateway, WebSocketServer, ConnectedSocket, MessageBody } from '@nestjs/websockets';
 import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets/interfaces';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { MessagesService } from './messages.service';
 import { ChatService } from '../chat.service';
 import { SocketWithUser } from '../../utils/SocketWithUser';

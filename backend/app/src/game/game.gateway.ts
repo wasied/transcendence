@@ -1,9 +1,10 @@
-import { Request } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer, ConnectedSocket, MessageBody } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { RequestWithUser } from '../utils/RequestWithUser';
+import { UseGuards } from '@nestjs/common';
+import { GameWebsocketGuard } from './game-websocket.guard';
 
-@WebSocketGateway({ cors: true, namespace: "pong" })
+@WebSocketGateway({ cors: true, namespace: "game" })
+@UseGuards(GameWebsocketGuard)
 export class PongGameGateway {
     @WebSocketServer() server: Server;
 
@@ -14,8 +15,7 @@ export class PongGameGateway {
 
     @SubscribeMessage('joinGame')
     async handleJoinGame(
-        @ConnectedSocket() client: Socket,
-        @Request() request: RequestWithUser
+        @ConnectedSocket() client: Socket
     ): Promise<void> {
         // Check for a waiting player or add in the queue
 
@@ -24,8 +24,8 @@ export class PongGameGateway {
             this.waitingPlayers.delete(waitingPlayer.id);
 
             // Pair these players in a game
-            // TODO: Start a new game with request.user.id and waitingPlayer.id
-            const gameSessionId = "TODO"; // await this.ourPongGame.startNewGame(request.user.id, waitingPlayer.id);
+            // TODO: Start a new game with client.user.id and waitingPlayer.id
+            const gameSessionId = "TODO"; // await this.ourPongGame.startNewGame(client.user.id, waitingPlayer.id);
 
             // Join them to a room named after the game session
             client.join(gameSessionId);
@@ -41,24 +41,22 @@ export class PongGameGateway {
     @SubscribeMessage('gameStateUpdate')
     async handleGameStateUpdate(
         @ConnectedSocket() client: Socket,
-        @Request() request: RequestWithUser,
         @MessageBody() body: any
     ): Promise<void> {
         // Transmit the game state to the other player
 
         // TODO: Get the opponent id from the game service
-        const opponentId = "TODO"; // await this.ourPongGame.getOpponentId(request.user.id);
+        const opponentId = "TODO"; // await this.ourPongGame.getOpponentId(client.user.id);
         client.to(opponentId).emit('gameStateUpdate', body);
     }
 
     @SubscribeMessage('leaveGame')
     async handleLeaveGame(
-        @ConnectedSocket() client: Socket,
-        @Request() request: RequestWithUser
+        @ConnectedSocket() client: Socket
     ): Promise<void> {
         // Leave a game
 
-        const opponentId = "TODO"; // await this.ourPongGame.getOpponentId(request.user.id);
+        const opponentId = "TODO"; // await this.ourPongGame.getOpponentId(client.user.id);
         client.to(opponentId).emit('opponentLeft');
         client.leave(opponentId);
 
