@@ -62,6 +62,24 @@ export class ChatService {
 		return result;
 	}
 
+	async findChatroomUsersId(chatroom_id: number): Promise<number[]> {
+		const result = await dbClient.query(
+			`SELECT user_uid	FROM chatrooms_users
+								WHERE chatroom_uid = $1;`,
+			[chatroom_id]
+		)
+		.then(queryResult => {
+			var result: number[] = [];
+			for (const row of queryResult.rows)
+				result.push(+row[0]);
+
+			return result;
+		})
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+
+		return result;
+	}
+
 	async create(owner_uid: number, name: string, password: string | null, direct_message: boolean): Promise<number> {
 		const result = await dbClient.query(
 			`INSERT	INTO chatrooms(name, owner_uid, password, direct_message)
