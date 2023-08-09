@@ -9,7 +9,7 @@ import { RequestWithUser } from '../utils/RequestWithUser';
 import { JoinDto, LeaveDto, SetAdminDto } from './dto';
 
 @WebSocketGateway({ cors: true, namespace: "chat" })
-//@UseGuards(ChatWebsocketGuard)
+@UseGuards(ChatWebsocketGuard)
 export class ChatGateway {
     @WebSocketServer() server: Server;
 
