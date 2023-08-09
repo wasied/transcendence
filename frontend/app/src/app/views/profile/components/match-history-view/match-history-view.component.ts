@@ -21,8 +21,10 @@ export class MatchHistoryViewComponent implements OnInit {
 
 			if (id) {
 				this.idOfUserProfile = +id;
-			} else 
-				; // raise error there
+			} else {
+				console.error("Invalid user id");
+				return ;
+			}
 		} else {
 			this.isProfileOfUser = true;
 		}

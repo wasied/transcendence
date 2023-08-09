@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from 'src/app/core/services/users.service';
 import { Observable, Subscription } from 'rxjs';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-profile-other',
@@ -25,8 +26,10 @@ export class ProfileOtherComponent implements OnInit, OnDestroy {
 		if (id) {
 			console.log(id);
 			this.idOfUserProfile = +id;
-		} else
-			; // raise error
+		} else {
+			console.error("Invalid user id");
+			return ;
+		}
 
 		// this.isUserBlocked$ = this.usersService.isUserBlocked(this.idOfUserProfile);
 		// this.subscription = this.isUserBlocked$.subscribe((isBlocked) => {
@@ -39,11 +42,17 @@ export class ProfileOtherComponent implements OnInit, OnDestroy {
 	}
 
 	blockUser() : void {		
-		// this.usersService.blockUser(this.idOfUserProfile);
+		this.usersService.blockUser(this.idOfUserProfile).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	unblockUser() : void {
-		// this.usersService.unblockUser(this.idOfUserProfile);
+		this.usersService.unblockUser(this.idOfUserProfile).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	ngOnDestroy(): void {

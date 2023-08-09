@@ -6,11 +6,6 @@ COPY ./app/package*.json ./
 RUN npm ci
 COPY ./app ./
 
-ENV WEBSOCKET_PORT ${WEBSOCKET_PORT}
-
-RUN mkdir -p ./src/environments/
-RUN echo "export const environment = { production: true, websocketPort: '\"$WEBSOCKET_PORT\"' };" > ./src/environments/environment.ts
-
 RUN npm run build
 
 # Stage 2: Serve app with nginx server

@@ -91,16 +91,17 @@ export class GameParamsComponent implements OnDestroy {
 
 	/* GUARD */
 
-	/*grantAccess(): void {
+	grantAccess(): void {
 		this.accessControlService.setAccess(true);
-	}*/
+	}
 
 	/* LINKS */
 
 	onClickStart() : void {
 		this.initGameData();
 		this.accessControlService.setAccess(true);
-		this.router.navigate(['main/game_lobby']);
+		//this.router.navigate(['main/game_lobby']); return this
+		this.router.navigate(['main', 'game']);
 	}
 
 	onClickSpectator() : void {

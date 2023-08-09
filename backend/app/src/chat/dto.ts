@@ -10,14 +10,15 @@ export class CreateDto {
 	@Transform(({ value }) => sanitizeHtml(value))
 	name: string;
 
+	password: string | null;
+
 	@IsNotEmpty()
 	@IsBoolean()
-	hidden: boolean;
+	direct_message: boolean;
 
 	@IsDefined()
-	@IsString()
-	@Transform(({ value }) => sanitizeHtml(value))
-	password: string;
+	@IsNumber()
+	other_user_id: number;
 }
 
 export class SetHiddenDto {
@@ -30,12 +31,44 @@ export class SetHiddenDto {
 	chatroom_id: number;
 }
 
+export class UpdateNameDto {
+	@IsNotEmpty()
+	@IsNumber()
+	id: number;
+
+	@IsNotEmpty()
+	@IsString()
+	name: string;
+}
+
+export class UpdatePasswordDto {
+	@IsNotEmpty()
+	@IsNumber()
+	id: number;
+
+	@IsNotEmpty()
+	@IsString()
+	password: string | null;
+}
+
 /* Chat users */
 
 export class JoinDto {
 	@IsNotEmpty()
 	@IsNumber()
-	id: number;
+	chatroom_id: number;
+}
+
+export class LeaveDto {
+	@IsNotEmpty()
+	@IsNumber()
+	chatroom_id: number;
+}
+
+export class DeleteDto {
+	@IsNotEmpty()
+	@IsNumber()
+	chatroom_id: number;
 }
 
 export class SetAdminDto {

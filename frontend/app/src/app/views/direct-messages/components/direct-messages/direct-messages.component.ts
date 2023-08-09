@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DirectMessage } from 'src/app/core/models/direct-message.model';
+import { Chatroom } from 'src/app/core/models/chatroom.model';
 import { DirectMessagesService } from 'src/app/core/services/direct-messages.service'
 import { Observable } from 'rxjs';
 import { UsersService } from 'src/app/core/services/users.service'; 
@@ -11,7 +11,7 @@ import { UsersService } from 'src/app/core/services/users.service';
 })
 export class DirectMessagesComponent implements OnInit {
 
-	directMessages$!: Observable<DirectMessage[]>;
+	directMessages$!: Observable<Chatroom[]>;
 
 	constructor (private directMessageService: DirectMessagesService,
 				 private usersService: UsersService) {}
@@ -20,7 +20,7 @@ export class DirectMessagesComponent implements OnInit {
 		this.directMessages$ = this.loadDirectMessages();
 	}
 
-	loadDirectMessages() : Observable<DirectMessage[]> { // update this
-		return this.directMessageService.gethardcodedDirectMessages();
+	loadDirectMessages() : Observable<Chatroom[]> {
+		return this.directMessageService.getMyDirectMsgs();
 	}
 }

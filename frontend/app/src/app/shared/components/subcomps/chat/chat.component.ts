@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Message } from 'src/app/core/models/message.model'; 
 import { MessagesService } from 'src/app/core/services/messages.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-chat',
@@ -34,7 +35,11 @@ export class ChatComponent implements OnInit {
     		return;
     	}
     
-		//this.messagesService.sendMessageToDB(inputMessage, new Date(), this.chatroomId);
+	// Get chatroomId
+		this.messagesService.sendMessageToDB(inputMessage, 1).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 		this.newMessageText = '';
     	setTimeout(() => this.scrollToBottom(), 0);
 	}

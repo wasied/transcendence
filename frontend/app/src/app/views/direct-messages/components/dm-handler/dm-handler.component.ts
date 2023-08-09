@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DirectMessagesService } from 'src/app/core/services/direct-messages.service';
 import { User } from '../../../../core/models/user.model';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-dm-handler',
@@ -30,11 +31,17 @@ export class DmHandlerComponent implements OnInit {
 		  	userName: user.username,
 		  	userId: user.id
 		});
-		// console.log("Form updated with:", this.newDmForm.value); // suppress in prod repo
 		this.createNewDirectMessage();
 	}
 
 	private createNewDirectMessage() : void {
-		this.dmService.createDMsession(this.newDmForm.get('userId')?.value);
+		if (!this.newDmForm.get('userId')?.value) {
+			console.error("Invalid user id");
+			return ;
+		}
+		this.dmService.createDMsession(this.newDmForm.get('userId')?.value).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 }

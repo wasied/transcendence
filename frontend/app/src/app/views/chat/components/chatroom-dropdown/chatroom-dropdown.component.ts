@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
 import { UsersService } from 'src/app/core/services/users.service';
 import { Observable, Subscription } from 'rxjs';
+import { httpErrorHandler } from 'src/app/http-error-handler';
+import { User } from 'src/app/core/models/user.model';
 
 @Component({
 	selector: 'app-chatroom-dropdown',
@@ -12,7 +14,7 @@ import { Observable, Subscription } from 'rxjs';
 export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 
 	@Input() chatroomId!: number;
-	@Input() participants!: string[];
+	@Input() participants!: User[];
 	@Input() participantsId!: number[];
 
 	isOpen: boolean = false;
@@ -42,19 +44,31 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 	}
 
 	kickUser(participantId: number) : void {
-		// this.chatroomsService.kickUserFromChatroom(this.chatroomId, participantId);
+		this.chatroomsService.kickUserFromChatroom(this.chatroomId, participantId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	banUser(participantId: number) : void {
-		// this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId);
+		// this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId).subscribe(
+		//	data => {},
+		//	httpErrorHandler
+		//);
 	}
 
 	muteUser(participantId: number) : void {
-		// this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId);
+		// this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId).subscribe(
+		//	data => {},
+		//	httpErrorHandler
+		//);
 	}
 
 	blockUser(participantId: number) : void {
-		// this.usersService.blockUser(participantId);
+		this.usersService.blockUser(participantId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	seeUserProfile(participantId: number) : void {
@@ -66,17 +80,25 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 	}
 
 	makeAdmin(participantId: number) : void {
-		// this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId);
+		this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	makeNonAdmin(participantId: number) : void {
-		// this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId);
+		this.chatroomsService.makeUserANonAdmin(this.chatroomId, participantId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
+
 	isAllowedToElevateToAdmin(participantId: number) : boolean {
-		console.log('check if can elevate to admin : feature not implemented yet');
+		// backend will block if the user is not allowed
 		return true;
 	}
+
 
 	ngOnDestroy(): void {
 		if (this.subscription) {

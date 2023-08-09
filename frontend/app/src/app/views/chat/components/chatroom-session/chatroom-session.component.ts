@@ -19,6 +19,6 @@ export class ChatroomSessionComponent implements OnInit {
 			this.chatroomId= +id;			
 		}
 		else
-			; // raise error there;
+			console.error("Invalid chatroom id");
 	}
 }

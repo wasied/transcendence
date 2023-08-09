@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { User } from 'src/app/core/models/user.model';
 import { FriendService } from 'src/app/core/services/friends.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-friends-handler',
@@ -33,6 +34,13 @@ export class FriendsHandlerComponent implements OnInit {
 	}
 
 	private createNewFriendship() : void {
-		this.friendsService.addAsFriend(this.newFriendForm.get('userId')?.value);
+		if (!this.newFriendForm.get('userId')?.value) {
+			console.error("Invalid user id");
+			return ;
+		}
+		this.friendsService.addAsFriend(this.newFriendForm.get('userId')?.value).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 }

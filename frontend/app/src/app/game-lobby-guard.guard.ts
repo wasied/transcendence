@@ -16,7 +16,7 @@ export class GameLobbyGuard implements CanActivate {
     if (this.accessControlService.getAccess()) {
       return true;
     } else {
-      return this.router.parseUrl('./views/game-params');
+      return this.router.parseUrl('/main/game_params');
     }
   }
 }

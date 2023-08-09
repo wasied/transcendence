@@ -3,6 +3,7 @@ import { Chatroom } from 'src/app/core/models/chatroom.model';
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service'; 
 import { Observable } from 'rxjs';
 import { UsersService } from 'src/app/core/services/users.service'; 
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-chatrooms',
@@ -21,13 +22,14 @@ export class ChatroomsComponent implements OnInit, OnDestroy {
 	}
 
 	loadChatrooms() : Observable<Chatroom[]> {
-		//return this.chatroomsService.getHardcodedChatrooms(); // change that
 		return this.chatroomsService.getAllChatrooms();
 	}
 
 	deleteChatroom(chatroom: Chatroom) {
-		// this.chatroomsService.delChatroom(chatroom.id);
-		this.chatroomsService.delChatroom(chatroom.id);
+		this.chatroomsService.delChatroom(chatroom.id).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	ngOnDestroy(): void {

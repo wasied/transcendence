@@ -22,8 +22,20 @@ export class ChatStrategy extends PassportStrategy(Strategy, 'jwt-chat')  {
 		if (!userList.length)
 			throw new HttpException("User not found.", HttpStatus.NOT_FOUND);
 		var user = userList[0];
-		user.owner = await this.chatService.findChatroomsOwnedByUserId(payload.id);
-		user.admin = await this.chatService.findChatroomsWhereUserIdIsAdmin(payload.id);
+		user.chatroom_ids = await this.chatService.findUserChatrooms(payload.id)
+			.then(chatrooms=> {
+				var result: number[] = [];
+				chatrooms.forEach(chatroom => {
+					result.push(chatroom.id);
+				});
+
+				return result;
+			})
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		user.owner = await this.chatService.findChatroomsOwnedByUserId(payload.id)
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		user.admin = await this.chatService.findChatroomsWhereUserIdIsAdmin(payload.id)
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 
 		return user;
 	}
