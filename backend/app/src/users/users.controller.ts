@@ -16,6 +16,19 @@ export class UsersController {
 		return this.usersService.findAll();
 	}
 
+	@Get('all-but-me')
+	async findAllButMe(@Request() request: RequestWithUser): Promise<User[]> {
+		var users = await this.usersService.findAll();
+		if (!users.length || (users.length === 1 && users[0].id === request.user.id))
+			return [];
+		for (const index in users) {
+			if (users[index].id === request.user.id)
+				delete users[index];
+		}
+
+		return users;
+	}
+
 	@Get('me')
 	async findMe(@Request() request: RequestWithUser): Promise<User> {
 		return request.user;
@@ -62,12 +75,12 @@ export class UsersController {
 	/*** Block/Unblock ***/
 
 	@Post('block')
-	block(@Body() body: BlockDto): void {
-		this.usersService.block(body.blocker_uid, body.blocked_uid);
+	block(@Request() request: RequestWithUser, @Body() body: BlockDto): void {
+		this.usersService.block(request.user.id, body.blocked_uid);
 	}
 
-	@Delete('block')
-	unblock(@Param('blocking_id') blocking_id: number): void {
-		this.usersService.unblock(blocking_id);
+	@Delete('unblock/blocked_id')
+	unblock(@Param('blocked_id') blocked_id: number): void {
+		this.usersService.unblock(blocked_id);
 	}
 }

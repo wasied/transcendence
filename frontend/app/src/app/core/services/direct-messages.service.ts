@@ -43,30 +43,8 @@ export class DirectMessagesService {
 
 	createDMsession(otherUserId: number) : Observable<void> {
 		const endpoint: string = `${this.apiURL}`;
-		const myUsername = this.usersService.getMe().toPromise()
-			.then(result => {
-				if (!result)
-					return null;
-				return result.username;
-			})
-			.catch(error => {
-				httpErrorHandler(error);
-				return null;
-			});
-		const otherUserUsername = this.usersService.getUserById(otherUserId).toPromise()
-			.then(result => {
-				if (!result)
-					return null;
-				return result.username;
-			})
-			.catch(error => {
-				httpErrorHandler(error);
-				return null;
-			});
-		if (!myUsername || !otherUserUsername)
-			return of(void 0);
 		const body = {
-			name: `${myUsername} - ${otherUserUsername}`,
+			name: "direct message",
 			password: null,
 			direct_message: true,
 			other_user_id: otherUserId

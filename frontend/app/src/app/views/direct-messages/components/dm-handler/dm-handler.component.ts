@@ -31,11 +31,14 @@ export class DmHandlerComponent implements OnInit {
 		  	userName: user.username,
 		  	userId: user.id
 		});
-		// console.log("Form updated with:", this.newDmForm.value); // suppress in prod repo
 		this.createNewDirectMessage();
 	}
 
 	private createNewDirectMessage() : void {
+		if (!this.newDmForm.get('userId')?.value) {
+			console.error("Invalid user id");
+			return ;
+		}
 		this.dmService.createDMsession(this.newDmForm.get('userId')?.value).subscribe(
 			data => {},
 			httpErrorHandler
