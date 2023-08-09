@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io } from 'socket.io-client';
 import { Observable } from 'rxjs';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,39 +9,46 @@ import { Observable } from 'rxjs';
 export class ChatWebsocketService {
 	private socket: SocketIOClient.Socket;
 
-	constructor() {
-		this.socket = io('http://localhost:8080');
+	constructor(private readonly authService: AuthenticationService) {
+		const options = {
+			transportOptions: {
+				polling: {
+					extraHeaders: {
+						Authorization: `Bearer ${this.authService.getTokenOnLocalSession()}`
+					}
+				}
+			}
+		};
+		this.socket = io('http://localhost:8080/chat', options);
 	}
 
-	// Join a chatroom
-	joinRoom(roomId: number, userId: number): void {
-		this.socket.emit('joinRoom', { roomId, userId });
+	// Connect to a chatroom
+	connectRoom(roomId: number): void {
+		this.socket.emit('connectRoom', { chatroom_id: roomId });
 	}
 
-	// Leave a chatroom
-	leaveRoom(roomId: number, userId: number): void {
-		this.socket.emit('leaveRoom', { roomId, userId });
+	// Disconnect from a chatroom
+	disconnectRoom(roomId: number): void {
+		this.socket.emit('disconnectRoom', { chatroom_id: roomId });
 	}
 
-	// Listen for channel messages
-	getMessages(): Observable<any> {
-		return new Observable(observer => {
-			this.socket.on('updateMessages', (data: any) => {
-				observer.next(data);
-			});
+	joinRoom(roomId: number): void {
+		this.socket.emit('joinRoom', { chatroom_id: roomId });
+	}
+
+	leaveRoom(roomId: number): void {
+		this.socket.emit('leaveRoom', { chatroom_id: roomId });
+	}
+
+	setAdminStatus(roomId: number, userId: number, admin: boolean): void {
+		this.socket.emit('setAdmin', {
+			admin: admin,
+			chatroom_id: roomId,
+			user_id: userId
 		});
 	}
 
-	// Send a new message to the chatroom
-	sendMessage(roomId: number, userId: number, message: string): void {
-		this.socket.emit('newMessage', { roomId, userId, message });
-	}
-
-	// Set or unset admin rights for a user in a chatroom
-	setAdminStatus(roomId: number, userId: number, admin: boolean): void {
-		this.socket.emit('setAdmin', { roomId, userId, admin });
-	}
-
+/*
 	// Get list of chatrooms owned by user
 	getOwnedChatrooms(userId: number): Observable<number[]> {
 		this.socket.emit('getOwnedChatrooms', userId);
@@ -60,4 +68,5 @@ export class ChatWebsocketService {
 			});
 		});
 	}
+*/
 }

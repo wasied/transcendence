@@ -7,7 +7,7 @@ import { RequestWithUser } from '../../utils/RequestWithUser';
 import { SendDto } from './dto';
 
 @Controller('messages')
-@UseGuards(AuthGuard('jwt-chat'))
+@UseGuards(AuthGuard('jwt-messages'))
 export class MessagesController {
 	constructor(
 		private messagesService: MessagesService,

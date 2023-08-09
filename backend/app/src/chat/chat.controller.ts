@@ -47,6 +47,7 @@ export class ChatController {
 			this.chatService.join(body.other_user_id, id);
 	}
 
+/*
 	@Put('hidden')
 	setHidden(
 		@Request() request: RequestWithUser,
@@ -56,6 +57,7 @@ export class ChatController {
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
 		this.chatService.setHidden(body.chatroom_id, body.hidden);
 	}
+*/
 
 	@Put('name')
 	updateName(@Request() request: RequestWithUser, @Body() body: UpdateNameDto) {
@@ -83,9 +85,9 @@ export class ChatController {
 
 	@Post('join')
 	join(@Request() request: RequestWithUser, @Body() body: JoinDto): void {
-		if (request.user.chatroom_ids.indexOf(body.id) !== -1)
+		if (request.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
 			throw new HttpException("User is already a chatroom member", HttpStatus.BAD_REQUEST);
-		this.chatService.join(request.user.id, body.id);
+		this.chatService.join(request.user.id, body.chatroom_id);
 	}
 
 	@Put('admin')

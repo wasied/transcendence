@@ -2,13 +2,17 @@ import { Injectable } from "@angular/core";
 import { Message } from "../models/message.model";
 import { Observable, of } from "rxjs";
 import { AuthHttpClient } from 'src/app/auth-http-client';
+import { MessagesWebsocketService } from './messages-websocket.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class MessagesService {
 
-	constructor (private authHttp: AuthHttpClient) {};
+	constructor (
+		private messagesWebsocketService: MessagesWebsocketService,
+		private authHttp: AuthHttpClient
+	) {};
 
 	private hardcodedMessages: Message[] = [
 		{
@@ -34,6 +38,7 @@ export class MessagesService {
 	/* CREATE */
 
 	sendMessageToDB(content: string, chatroomId: number) : Observable<void> {
+/*
 		const endpoint: string = `${this.apiUrl}`;
 		const body = {
 			chatroom_id: chatroomId,
@@ -41,6 +46,8 @@ export class MessagesService {
 		}
 
 		return this.authHttp.post<void>(endpoint, body);
+*/
+		return of(this.messagesWebsocketService.sendMessage(chatroomId, content));
 	}
 
 	/* READ */

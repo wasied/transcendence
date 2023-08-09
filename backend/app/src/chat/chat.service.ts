@@ -188,7 +188,46 @@ export class ChatService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
+	/* messages */
+
+/*
+	async getMessagesByChatroomId(chatroom_id: number): Promise<any[]> {
+		const result = dbClient.query(
+			`SELECT * FROM chatrooms_messages WHERE chatroom_uid = $1 ORDER BY created_at DESC;`,
+			[chatroom_id]
+		)
+		.then(queryResult => { return treatDbResult(queryResult); })
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+
+		return result;
+	}
+
+	async addMessageToChatroom(chatroom_user_uid: number, content: string): Promise<void> {
+		const result = dbClient.query(
+			`INSERT INTO chatrooms_messages(chatroom_user_uid, content) VALUES($1, $2);`,
+			[chatroom_user_uid, content]
+		)
+		.then(queryResult => { return queryResult; })
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+	}
+*/
+
 	/* For the guard */
+
+	async findChatroomUserId(user_id: number, chatroom_id: number): Promise<number> {
+		const result = await dbClient.query(
+			`SELECT id	FROM chatrooms_users
+						WHERE chatroom_uid = $1
+						AND user_uid = $2;`,
+			[chatroom_id, user_id]
+		)
+			.then(queryResult => { return treatDbResult(queryResult); })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		if (!result || !result.length)
+			throw new HttpException("Chatroom user not found", HttpStatus.NOT_FOUND);
+
+		return result[0].id;
+	}
 
 	async findChatroomsOwnedByUserId(user_id: number): Promise<number[]> {
 		const result = dbClient.query(
@@ -227,42 +266,5 @@ export class ChatService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 
 		return result;
-	}
-
-	/* messages */
-
-	async getMessagesByChatroomId(chatroom_id: number): Promise<any[]> {
-		const result = dbClient.query(
-			`SELECT * FROM chatrooms_messages WHERE chatroom_uid = $1 ORDER BY created_at DESC;`,
-			[chatroom_id]
-		)
-		.then(queryResult => { return treatDbResult(queryResult); })
-		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
-	
-		return result;
-	}
-
-	async addMessageToChatroom(chatroom_user_uid: number, content: string): Promise<void> {
-		const result = dbClient.query(
-			`INSERT INTO chatrooms_messages(chatroom_user_uid, content) VALUES($1, $2);`,
-			[chatroom_user_uid, content]
-		)
-		.then(queryResult => { return queryResult; })
-		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
-	}
-	
-	async findChatroomUserId(user_id: number, chatroom_id: number): Promise<number> {
-		const result = await dbClient.query(
-			`SELECT id	FROM chatrooms_users
-						WHERE chatroom_uid = $1
-						AND user_uid = $2;`,
-			[chatroom_id, user_id]
-		)
-			.then(queryResult => { return treatDbResult(queryResult); })
-			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
-		if (!result || !result.length)
-			throw new HttpException("Chatroom user not found", HttpStatus.NOT_FOUND);
-
-		return result[0];
 	}
 }
