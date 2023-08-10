@@ -37,7 +37,7 @@ export class MessagesService {
 
 	/* CREATE */
 
-	sendMessageToDB(content: string, chatroomId: number) : Observable<void> {
+	//sendMessageToDB(content: string, chatroomId: number) : Observable<void> {
 /*
 		const endpoint: string = `${this.apiUrl}`;
 		const body = {
@@ -47,8 +47,8 @@ export class MessagesService {
 
 		return this.authHttp.post<void>(endpoint, body);
 */
-		return of(this.messagesWebsocketService.sendMessage(chatroomId, content));
-	}
+		//return of(this.messagesWebsocketService.sendMessage(chatroomId, content));
+	//}
 
 	/* READ */
 

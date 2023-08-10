@@ -25,7 +25,7 @@ export class MessagesWebsocketService {
 		this.socket = io('http://localhost:8080/messages', options);
 	}
 
-	private listenToServerEvents(): void {
+	public listenToServerEvents(): void {
 
 		this.socket.on('updateMessages', (data: any) => {
 			this.updateMessages$.next(data);
@@ -38,10 +38,18 @@ export class MessagesWebsocketService {
 	}
 
 	public connect(chatroomId: number): void {
-		this.socket.emit('connectMessages', { chatroom_id: chatroomId });
+		this.socket.emit('connectMessage', { chatroom_id: chatroomId });
 	}
 
 	public disconnect(chatroomId: number): void {
-		this.socket.emit('disconnectMessages', { chatroom_id: chatroomId });
+		this.socket.emit('disconnectMessage', { chatroom_id: chatroomId });
+	}
+
+	// Send a new message to the chatroom
+	public sendMessage(roomId: number, message: string): void {
+		this.socket.emit('newMessage', {
+			chatroom_id: roomId,
+			content: message
+		});
 	}
 }

@@ -17,7 +17,7 @@ export class ChatComponent implements OnInit, OnDestroy {
  
 	chatroomId!: number;
 	messages$!: Observable<Message[]>;
-	messages!: Message[];
+	messages: Message[] = [];
 	newMessageText: string = '';
 	sender!: string;
 
@@ -35,11 +35,18 @@ export class ChatComponent implements OnInit, OnDestroy {
 			console.error("Invalid chatroom id");
 			return ;
 		}
+		this.messagesWebsocketService.listenToServerEvents();
 		this.messagesWebsocketService.connect(this.chatroomId);
+
+		this.messagesWebsocketService.updateMessages$.subscribe(
+			(data: any) => {
+				this.messages = data;
+			}
+		);
 	}
 
 	private loadMessages() : void {
-		this.messages$ = this.messagesService.getAllHardcodedMessages();
+		// this.messages$ = this.messagesService.getAllHardcodedMessages();
 	}
 	
 	addMessage(inputMessage: string) : void {
@@ -48,11 +55,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     	if (inputMessage.length === 0) {
     		return;
     	}
-    
-		this.messagesService.sendMessageToDB(inputMessage, this.chatroomId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+
+		this.messagesWebsocketService.sendMessage(this.chatroomId, inputMessage);
+
 		this.newMessageText = '';
     	setTimeout(() => this.scrollToBottom(), 0);
 	}

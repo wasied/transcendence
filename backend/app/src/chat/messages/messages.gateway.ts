@@ -21,10 +21,9 @@ export class MessagesGateway {
 
 	@SubscribeMessage('connectMessage')
 	async connect(
-		client: SocketWithUser,
+		@ConnectedSocket() client: SocketWithUser,
 		@MessageBody() body: JoinDto
 	): Promise<Message[]> {
-		//const chatroom_id = client.handshake.query.chatroom_id;
 		if (!body.chatroom_id) {
 			console.error("No chatroom id specified");
 			return ;
@@ -36,7 +35,7 @@ export class MessagesGateway {
 
 	@SubscribeMessage('disconnectMessage')
 	async disconnect(
-		client: SocketWithUser,
+		@ConnectedSocket() client: SocketWithUser,
 		@MessageBody() body: LeaveDto
 	): Promise<void> {
         client.leave(String(body.chatroom_id));
@@ -56,12 +55,11 @@ export class MessagesGateway {
 			chatroom_user_id = await this.chatService.findChatroomUserId(client.user.id, body.chatroom_id);
 		client.user.punishments.forEach(punishment => {
 			if (punishment.chatroom_user_target_uid === chatroom_user_id) {
-				// Check if punishment is valid and throw error if the user cannot send message
+				// TODO: Check if punishment is valid and throw error if the user cannot send message
 			}
 		});
 		await this.messagesService.send(chatroom_user_id, body.content);
-        //await this.chatService.addMessageToChatroom(request.user.id, message);
-
+		
         const updatedMessages = await this.messagesService.findChatroomMessages(client.user.id, body.chatroom_id);
         this.server.to(String(body.chatroom_id)).emit('updateMessages', updatedMessages);
     }
