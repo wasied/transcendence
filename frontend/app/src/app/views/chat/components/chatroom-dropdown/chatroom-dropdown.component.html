@@ -1,21 +1,32 @@
-<div>
-	<button (click)="toggleDropdown()">Participants</button>
+<div class="relative flex justify-center m-8">
+    <button
+          type="button"
+          (click)="toggleDropdown()"
+          class="rounded-full border-2 border-black bg-black text-white text-2xl h-12 w-48 
+          hover:bg-white hover:text-yellow-500 ease-in duration-300">
+        Participants
+    </button>
 
-  	<div *ngIf="isOpen">
-		<div *ngFor="let participant of participants; let i = index">
-			<p>{{ participant }}</p>
-			<button (click)="seeUserProfile(participantsId[i])">See Profile</button>
-			<div *ngIf="isAllowedToElevateToAdmin(participantsId[i])">
-				<button (click)="makeAdmin(participantsId[i])">Make Administrator</button>
-			</div>
-			<div *ngIf="isAllowedToCoerce(participantsId[i])">
-				<button (click)="kickUser(participantsId[i])">Kick</button>
-				<button (click)="banUser(participantsId[i])">Ban</button>
-				<button (click)="muteUser(participantsId[i])">Mute</button>
-			</div>
-			<div>
-				<button (click)="blockUser(participantsId[i])"></button>
+    <!-- Dropdown -->
+    <div *ngIf="isOpen" class="absolute top-full mt-2 w-64 bg-white shadow-lg rounded border z-99 max-h-96 overflow-y-auto">
+		<div *ngFor="let participant of participants; let i = index" class="border-b last:border-b-0">
+			<div class="flex flex-col p-2 hover:bg-gray-100">
+				<p class="font-bold mb-2 text-center">{{ participant }}</p>
+				
+				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="seeUserProfile(participantsId[i])">See Profile</button>
+				
+				<div *ngIf="isAllowedToElevateToAdmin(participantsId[i])">
+					<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="makeAdmin(participantsId[i])">Make Administrator</button>
+				</div>
+				
+				<div *ngIf="isAllowedToCoerce(participantsId[i])">
+					<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="kickUser(participantsId[i])">Kick</button>
+					<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="banUser(participantsId[i])">Ban</button>
+					<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="muteUser(participantsId[i])">Mute</button>
+				</div>
+				
+				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="blockUser(participantsId[i])">Block</button>
 			</div>
 		</div>
-	</div>
+	</div>				
 </div>

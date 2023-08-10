@@ -28,28 +28,28 @@ export class ChatComponent implements OnInit {
 		this.messages$ = this.messagesService.getAllHardcodedMessages();
 	}
 	
-	addMessage(inputMessage: string) : void {
-    	inputMessage = inputMessage.trim();
+	// addMessage(inputMessage: string) : void {
+    // 	inputMessage = inputMessage.trim();
 
-    	if (inputMessage.length === 0) {
-    		return;
-    	}
+    // 	if (inputMessage.length === 0) {
+    // 		return;
+    // 	}
     
-	// Get chatroomId
-		this.messagesService.sendMessageToDB(inputMessage, 1).subscribe(
-			data => {},
-			httpErrorHandler
-		);
-		this.newMessageText = '';
-    	setTimeout(() => this.scrollToBottom(), 0);
-	}
+	// // Get chatroomId
+	// 	this.messagesService.sendMessageToDB(inputMessage, 1).subscribe(
+	// 		data => {},
+	// 		httpErrorHandler
+	// 	);
+	// 	this.newMessageText = '';
+    // 	setTimeout(() => this.scrollToBottom(), 0);
+	// }
 
-	/* display messages from most recent to oldest */
-  	scrollToBottom(): void {
-    	try {
-      		this.messageList.nativeElement.scrollTop = this.messageList.nativeElement.scrollHeight;
-    	} catch(error) { 
-      		console.log(error);
-    	}
-  	}
+	// /* display messages from most recent to oldest */
+  	// scrollToBottom(): void {
+    // 	try {
+    //   		this.messageList.nativeElement.scrollTop = this.messageList.nativeElement.scrollHeight;
+    // 	} catch(error) { 
+    //   		console.log(error);
+    // 	}
+  	// }
 }

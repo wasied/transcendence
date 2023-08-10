@@ -23,7 +23,6 @@ import { FriendsHandlerComponent } from './components/friends-handler/friends-ha
 		FriendsViewRoutingModule,
 		ReactiveFormsModule,
 		MatSelectModule,
-		BrowserAnimationsModule
 	]
 })
 export class FriendsViewModule { }

@@ -45,6 +45,7 @@ export class HeaderComponent implements OnInit {
   	}
 
 	onClickOnFriends() : void {
+		console.log('go there');
 		this.router.navigate(['main', 'friends']);
   	}
 

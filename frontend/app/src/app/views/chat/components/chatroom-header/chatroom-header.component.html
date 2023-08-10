@@ -1,33 +1,65 @@
 <div class="text-white" *ngIf="chatroom$ | async as chatroom">
-	<div>
-		<app-chatroom-dropdown 
-			[participants]="this.chatroom.participants"
-			[participantsId]="this.chatroom.participants_id"
-			[chatroomId]="chatroom.id"
-		></app-chatroom-dropdown>
-		<h1>{{chatroom.name}}</h1>
-		<button (click)="openModalMenu()">Modal_Menu</button>
-		<button (click)="onExitingChatroomSession()">X</button>
-	</div>
-	
+    <div class="flex items-center justify-between h-16 bg-white text-black space-x-4">
+        <app-chatroom-dropdown 
+            [participants]="this.chatroom.participants"
+            [participantsId]="this.chatroom.participants_id"
+            [chatroomId]="chatroom.id">
+        </app-chatroom-dropdown>
+
+        <div class="text-4xl">
+            <div *ngIf="chatroom.password === null">
+                <h1>{{chatroom.name}} (Public)</h1>
+            </div>
+            <div *ngIf="chatroom.password !== null">
+                <h1>{{chatroom.name}} (Password Protected)</h1>
+            </div>
+        </div>
+        
+        <!-- open the modal -->
+        <div class="flex">
+            <button
+                  type="button"
+                  (click)="openModalMenu()"
+                  class="rounded-full border-2 border-yellow-500 bg-yellow-500 text-2xl h-12 w-48 
+                  hover:bg-white hover:text-yellow-500 ease-in duration-300">
+                Chatroom Menu
+            </button>
+        </div>
+        
+        <!-- exit chat session -->
+        <div class="flex pr-8">
+            <button
+                  type="button"
+                  (click)="onExitingChatroomSession()"
+                  class="rounded-full border-2 border-yellow-500 bg-yellow-500 text-2xl h-12 w-48 
+                  hover:bg-white hover:text-yellow-500 ease-in duration-300">
+                Exit Chatroom
+            </button>
+        </div>
+    </div>
+</div>
+
+	<!-- modals -->
 	<app-modal class="text-black" [showModal]="showModalMenu" (onClose)="closeModalMenu()">
-		<div>
-			<div *ngIf="isUserAnOwner()">
+		<div class="flex flex-col items-center justify-center h-full space-y-4">
+			<div *ngIf="isUserAnOwner()" class="text-center">
 				<span>Password Protected Chatroom</span>
 				<input
-            		id="link-checkbox"
-            		type="checkbox"
-            		[checked]="passwordProtected"
-            		class="w-4 h-4 rounded accent-[#ffc93b] cursor-pointer"
+					id="link-checkbox"
+					type="checkbox"
+					[checked]="passwordProtected"
+					class="w-4 h-4 rounded accent-[#ffc93b] cursor-pointer"
 					(change)="onTogglePasswordChange($event)"
-          		/>
+				/>
+	
 				<div *ngIf="passwordProtected">
 					<div *ngIf="passwordPresent">
 						<div *ngIf="!showChangePasswordForm">
 							<button (click)="changePasswordFormDisplayStatus()">Change Password ?</button>
 						</div>
+	
 						<div *ngIf="showChangePasswordForm">
-							<div class="flex flex-col justify-center items-center bg-white text-black">
+							<div class="flex flex-col justify-center items-center bg-white text-black space-y-4">
 								<form [formGroup]="modifyPasswordForm" (ngSubmit)="changePassword()">
 									<div class="mb-4">
 										<label class="block">Old Password</label>
@@ -51,8 +83,9 @@
 							</div>
 						</div>
 					</div>
+	
 					<div *ngIf="!passwordPresent">
-						<div class="flex flex-col justify-center items-center bg-white text-black">
+						<div class="flex flex-col justify-center items-center bg-white text-black space-y-4">
 							<form [formGroup]="setPasswordForm" (ngSubmit)="addPassword()">
 								<div class="mb-4">
 									<label class="block">Password</label>
@@ -75,4 +108,4 @@
 			<button (click)="removeYourselfFromChatroom()">Remove Yourself From Chatroom</button>
 		</div>
 	</app-modal>
-</div>
+	

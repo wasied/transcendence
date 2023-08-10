@@ -16,8 +16,6 @@ const routes: Routes = [
 	() => import('./views/main-menu/main-menu.module').then(m => m.MainMenuModule)},
 	{path: 'main/friends', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
 	() => import('./views/friends-view/friends-view.module').then(m => m.FriendsViewModule)},
-	{ path: 'main/games', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
-	() => import('./views/games-view/games-view.module').then(m => m.GamesViewModule)},
 	{ path: 'main/profile', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
 	() => import('./views/profile/profile.module').then(m => m.ProfileModule)},
 	// game menus

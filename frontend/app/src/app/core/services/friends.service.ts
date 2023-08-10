@@ -12,14 +12,40 @@ export class FriendService
 {
 	constructor (private authHttp : AuthHttpClient) {};
 
-	private hardcodedFriends: Friend[] = [{
-		id: 1,
-		userId: 1,
-		friendId: 2,
-		friendName: 'test friend',
-		friendStatus: 'online',
-		createdAt: new Date()
-	}];
+	private hardcodedFriends: Friend[] = [
+		{
+			id: 1,
+			userId: 1,
+			friendId: 2,
+			friendName: 'test friend',
+			friendStatus: 'online',
+			createdAt: new Date()
+		},
+		{
+			id: 1,
+			userId: 1,
+			friendId: 2,
+			friendName: 'test friend',
+			friendStatus: 'online',
+			createdAt: new Date()
+		},
+		{
+			id: 1,
+			userId: 1,
+			friendId: 2,
+			friendName: 'test friend',
+			friendStatus: 'online',
+			createdAt: new Date()
+		},
+		{
+			id: 1,
+			userId: 1,
+			friendId: 2,
+			friendName: 'test friend',
+			friendStatus: 'online',
+			createdAt: new Date()
+		}
+	];
 	
 	getHardcodedFriends() : Observable<Friend[]> {
 		return of(this.hardcodedFriends);

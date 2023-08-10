@@ -1,56 +1,63 @@
 <div class="mt-4">
-  <div class="max-w-3xl inline-flex items-center w-full">
-    <hr class="w-screen m-8" />
-    <span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
-      >INFORMATION AND SECURITY</span
-    >
-  </div>
-  <div class="max-w-2xl mx-auto">
-    <ul class="flex flex-col items-center space-y-4">
-      <li
-        class="flex flex-row justify-between items-center w-3/4 mx-auto bg-zinc-900 hover:bg-zinc-800 transform duration-200 p-5 rounded"
-      >
-        <p class="space-x-3 flex items-baseline">
-          <i class="fa-solid fa-shield-halved"></i>
-          <span>Enable Two-Factor Authentification</span>
-        </p>
-        <label class="relative inline-flex items-center cursor-pointer">
-          <input
-            id="link-checkbox"
-            type="checkbox"
-            value=""
-            class="sr-only peer"
-            (change)="onToggleTwoFactorAuth($event)"
-          />
-          <div
-            class="w-11 h-6 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent rounded-full peer bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-yellow-500"
-          ></div>
-        </label>
-      </li>
-      <li
-        class="flex flex-row justify-between items-center w-3/4 mx-auto bg-zinc-900 hover:bg-zinc-800 transform duration-200 p-5 rounded"
-      >
-        <p class="space-x-3 flex items-baseline">
-          <i class="fa-solid fa-phone"></i>
-          <span class="">Pseudo</span>
-        </p>
-        <button (click)="openModalUsername()" class="text-[#ffc93b] underline">
-          Edit
-        </button>
-      </li>
-      <li
-        class="flex flex-row justify-between items-center w-3/4 mx-auto bg-zinc-900 hover:bg-zinc-800 transform duration-200 p-5 rounded"
-      >
-        <p class="space-x-3 flex items-baseline">
-          <i class="fa-solid fa-user"></i>
-          <span class="">Profile Picture</span>
-        </p>
-        <button (click)="openModalPic()" class="text-[#ffc93b] underline">
-          Edit
-        </button>
-      </li>
-    </ul>
-  </div>
+ 	 <div class="max-w-3xl inline-flex items-center w-full">
+    	<hr class="w-screen m-8" />
+    	<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+      		>INFORMATION AND SECURITY</span
+    	>
+  	</div>
+  	<div class="max-w-2xl mx-auto">
+    	<ul class="flex flex-col items-center space-y-4">
+      		<li
+        		class="flex flex-row justify-between items-center w-3/4 mx-auto bg-zinc-900 
+				hover:bg-zinc-800 transform duration-200 p-5 rounded"
+      		>
+        		<p class="space-x-3 flex items-baseline">
+          			<i class="fa-solid fa-shield-halved"></i>
+          			<span>Enable Two-Factor Authentification</span>
+       			</p>
+        		<label class="relative inline-flex items-center cursor-pointer">
+					<input
+						id="link-checkbox"
+						type="checkbox"
+						value=""
+						class="sr-only peer"
+						(change)="onToggleTwoFactorAuth($event)"
+					/>
+					<div
+						class="w-11 h-6 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent 
+						rounded-full peer bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white
+						after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white 
+						after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all 
+						dark:border-gray-600 peer-checked:bg-yellow-500"
+					></div>
+        		</label>
+      		</li>
+      		<li
+        		class="flex flex-row justify-between items-center w-3/4 mx-auto bg-zinc-900 
+				hover:bg-zinc-800 transform duration-200 p-5 rounded"
+      		>
+        		<p class="space-x-3 flex items-baseline">
+          			<i class="fa-solid fa-phone"></i>
+          			<span class="">Pseudo</span>
+       		 	</p>
+        		<button (click)="openModalUsername()" class="text-[#ffc93b] underline">
+          			Edit
+        		</button>
+      		</li>
+      		<li
+        		class="flex flex-row justify-between items-center w-3/4 mx-auto 
+				bg-zinc-900 hover:bg-zinc-800 transform duration-200 p-5 rounded"
+      		>
+        		<p class="space-x-3 flex items-baseline">
+          			<i class="fa-solid fa-user"></i>
+          			<span class="">Profile Picture</span>
+        		</p>
+        		<button (click)="openModalPic()" class="text-[#ffc93b] underline">
+          			Edit
+        		</button>
+      		</li>
+    	</ul>
+  	</div>
 
   <app-modal [showModal]="showModalUsername" (onClose)="closeModalUsername()">
 		<div class="flex flex-col justify-center items-center bg-white text-black">

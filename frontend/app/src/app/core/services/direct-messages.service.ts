@@ -38,6 +38,54 @@ export class DirectMessagesService {
 				participants: [this.hardcodedUser, this.hardcodedUser],
 				participants_id: [1]
 
+		},
+		{
+	
+			id: 1,
+			name: 'test_1',
+			owner_uid: 1,
+			owner: this.hardcodedUser,
+			password: null,
+			direct_message: false,
+			participants: [this.hardcodedUser, this.hardcodedUser],
+			participants_id: [1]
+
+		},
+		{
+	
+			id: 1,
+			name: 'test_1',
+			owner_uid: 1,
+			owner: this.hardcodedUser,
+			password: null,
+			direct_message: false,
+			participants: [this.hardcodedUser, this.hardcodedUser],
+			participants_id: [1]
+
+		},
+		{
+	
+			id: 1,
+			name: 'test_1',
+			owner_uid: 1,
+			owner: this.hardcodedUser,
+			password: null,
+			direct_message: false,
+			participants: [this.hardcodedUser, this.hardcodedUser],
+			participants_id: [1]
+
+		},
+		{
+	
+			id: 1,
+			name: 'test_1',
+			owner_uid: 1,
+			owner: this.hardcodedUser,
+			password: null,
+			direct_message: false,
+			participants: [this.hardcodedUser, this.hardcodedUser],
+			participants_id: [1]
+
 		}
 	];
 
