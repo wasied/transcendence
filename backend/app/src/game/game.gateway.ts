@@ -15,6 +15,8 @@ export class PongGameGateway {
 
     private performGameLogic(gameData: any): void {
         this.updateBallPosition(gameData);
+
+        // STILL TODO: Collision with paddles
     }
 
     private updateBallPosition(gameData:any): void {
