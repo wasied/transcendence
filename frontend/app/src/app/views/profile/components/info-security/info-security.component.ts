@@ -52,7 +52,6 @@ export class InfoSecurityComponent {
   	onClickEditUsername() : void {
 		const newUsername: string = this.usernameForm.get('newUsername')?.value;
 		
-		console.log('edit username : link not implemented');
 		this.closeModalUsername();
 
 		this.usersService.modifyUsernameToRegisteredUser(newUsername).subscribe(
@@ -64,7 +63,6 @@ export class InfoSecurityComponent {
 	onClickEditPic() : void {
 		const newProfilePicURL: string = this.picForm.get('newPicURL')?.value;
 		
-		console.log('edit profile pic : link implemented');
 		this.closeModalPic();
 
 		this.usersService.modifyProfilePictureToRegisteredUser(newProfilePicURL).subscribe(

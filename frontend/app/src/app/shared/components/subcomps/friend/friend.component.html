@@ -1,29 +1,44 @@
-<div class="bg-yellow-400 p-2 rounded flex">
-  <!-- Il y a pas de lien vers la photo. Il faudra se baser sur l'ID et mettre un condition pour
-renvoyer noProfile le cas échéant -->
-  <div *ngIf="!this.friend.id; else noProfile">
-    <img
-      alt="Profile Picture"
-      class="w-12 h-12 object-fill shadow-md rounded-full hover:shadow-inner"
-    />
-  </div>
-  <ng-template #noProfile>
-    <i
-      class="fa-solid fa-user w-auto h-auto shadow-md text-zinc-800 bg-gray-200 p-4 rounded-full hover:shadow-inner"
-    ></i>
-  </ng-template>
-</div>
-<div class="flex flex-col">
-  <span class="font-semibold">{{ this.friend.username }}</span>
-  <div class="flex items-center text-sm space-x-1">
-    <span
-      class="-mt-0.5"
-      [ngClass]="{
-        'text-green-600': this.friend.status === 'online',
-        'text-red-600': this.friend.status === 'offline'
-      }"
-      >●</span
-    >
-    <span class="text-gray-800">{{ this.friend.status }} </span>
-  </div>
+<div class="flex">
+    <!-- Left section with image and details -->
+    <div class="flex items-center space-x-4">
+        <div class="bg-yellow-400 p-2 rounded flex">
+            <div>
+                <img [src]="this.friend.profile_picture_url" alt="Profile Picture" class="w-12 h-12 object-fill shadow-md rounded-full hover:shadow-inner" />
+            </div>
+        </div>
+
+        <div class="flex flex-col">
+            <span class="font-semibold">{{ this.friend.username }}</span>
+            <div class="flex items-center text-sm space-x-1">
+                <span class="-mt-0.5" [ngClass]="{
+                    'text-green-600': this.friend.status === 'online',
+                    'text-red-600': this.friend.status === 'offline',
+                    'text-orange-600': this.friend.status === 'inAGame'
+                }">●</span>
+                <span class="text-gray-800">{{ this.friend.status }} </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right section with Visit Profile button -->
+    <div class="flex-grow flex items-center justify-end pl-4"> <!-- added flex-grow and justify-end -->
+        <button type="button" (click)="goToVisitProfile(this.friend.id)" class="hover:underline hover:cursor-pointer text-l">
+            Visit Profile
+        </button>
+    </div>
+
+	<div class="flex justify-end space-x-4 px-4">
+		<button (click)="blockUserFromFriendsInterface(this.friend.id)" title="block user"
+		class="p-2" id="block"><i class="fa fa-ban hover:scale-125 transition-transform 
+		duration-300 cursor-pointer"></i></button>
+  	</div>
+
+	<div *ngIf="this.friend.status === 'inAGame'" class="flex justify-end space-x-4 px-4">
+		<button (click)="triggerPongSpectator(this.friend.id)" title="Watch this player's game"
+		class="p-2" id="block">
+			<i class="fa fa-binoculars hover:scale-125 transition-transform duration-300 cursor-pointer"
+			></i>
+		</button>
+	</div>
+		
 </div>

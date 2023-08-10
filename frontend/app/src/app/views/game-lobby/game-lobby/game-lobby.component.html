@@ -1,3 +1,4 @@
+<app-header></app-header>
 <!-- Display when matchmaking process has been completed -->
 <div *ngIf="players$ | async as players; else standby" class="text-white">
 	<div *ngIf="players">
@@ -13,8 +14,7 @@
 
 <!-- Display when matchmaking process is currently proceed -->
 <ng-template #standby>
-	<div class="text-white">
-		<p>{{ this.loadingMessage }}</p>
+	<div class="flex justify-center items-center h-screen w-screen text-white">
+	  <p class="text-6xl">{{ this.loadingMessage }}</p>
 	</div>
 </ng-template>
-

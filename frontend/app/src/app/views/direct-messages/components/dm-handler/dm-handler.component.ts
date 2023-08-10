@@ -31,7 +31,6 @@ export class DmHandlerComponent implements OnInit {
 		  	userName: user.username,
 		  	userId: user.id
 		});
-		// console.log("Form updated with:", this.newDmForm.value); // suppress in prod repo
 		this.createNewDirectMessage();
 	}
 

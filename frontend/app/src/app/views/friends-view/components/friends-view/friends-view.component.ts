@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Friend } from 'src/app/core/models/friend.model'; 
 import { FriendService } from 'src/app/core/services/friends.service'; 
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';

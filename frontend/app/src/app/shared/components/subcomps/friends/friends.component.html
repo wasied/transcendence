@@ -2,14 +2,15 @@
   *ngIf="friends$ | async as friends"
   class="grid lg:grid-cols-2 grid-col-1 gap-4 lg:w-full w-5/6 mx-auto"
 >
-  	<li
-    	*ngFor="let friend of friends"
-    	class="flex flex-row w-full items-center space-x-4 rounded text-black bg-gray-200 hover:scale-[102%] transition duration-75 cursor-pointer"
-  	>
-    	<app-friend
-      		*ngFor="let friendCard of friends"
-      		[friend]="friendCard"
-      		class="flex flex-row w-full space-x-4 items-center"
-    	></app-friend>
-  	</li>
+  	<ng-container *ngFor="let friendCard of friends">
+    	<li
+      	  class="flex flex-row w-full items-center space-x-4 rounded text-black bg-gray-200 hover:scale-[102%] 
+		  transition duration-75 cursor-pointer"
+    	>
+      		<app-friend
+        		[friend]="friendCard"
+        		class="flex flex-row w-full space-x-4 items-center"
+      		></app-friend>
+    	</li>
+	</ng-container>
 </div>
