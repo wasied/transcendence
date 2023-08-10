@@ -1,7 +1,8 @@
-import { Component, ViewChild, ElementRef, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Message } from 'src/app/core/models/message.model'; 
 import { MessagesService } from 'src/app/core/services/messages.service';
+import { MessagesWebsocketService } from 'src/app/core/services/messages-websocket.service';
 import { ActivatedRoute } from '@angular/router';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 
@@ -10,18 +11,20 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 	templateUrl: './chat.component.html',
 	styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
 	
 	@ViewChild('messageList', { static: false }) messageList!: ElementRef;
  
 	chatroomId!: number;
 	messages$!: Observable<Message[]>;
+	messages!: Message[];
 	newMessageText: string = '';
 	sender!: string;
 
 	constructor (
 		private messagesService: MessagesService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private messagesWebsocketService: MessagesWebsocketService
 	) {}
 
 	ngOnInit(): void {
@@ -32,8 +35,10 @@ export class ChatComponent implements OnInit {
 			console.error("Invalid chatroom id");
 			return ;
 		}
-		// call websocket.join
-		this.loadMessages();
+		this.messagesWebsocketService.connect(this.chatroomId);
+		this.messages$ = this.messagesWebsocketService.getMessages();
+		console.log(this.messages$);
+		//this.loadMessages();
 	}
 
 	private loadMessages() : void {
@@ -47,7 +52,6 @@ export class ChatComponent implements OnInit {
     		return;
     	}
     
-	// Get chatroomId
 		this.messagesService.sendMessageToDB(inputMessage, this.chatroomId).subscribe(
 			data => {},
 			httpErrorHandler
@@ -64,4 +68,8 @@ export class ChatComponent implements OnInit {
       		console.log(error);
     	}
   	}
+
+	ngOnDestroy() {
+		this.messagesWebsocketService.disconnect(this.chatroomId);
+	}
 }

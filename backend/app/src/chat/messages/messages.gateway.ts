@@ -3,10 +3,11 @@ import { MessagesWebsocketGuard } from './messages-websocket.guard';
 import { WsException, SubscribeMessage, WebSocketGateway, WebSocketServer, ConnectedSocket, MessageBody } from '@nestjs/websockets';
 import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets/interfaces';
 import { Server } from 'socket.io';
+import { Message } from './message';
 import { MessagesService } from './messages.service';
 import { ChatService } from '../chat.service';
 import { SocketWithUser } from '../../utils/SocketWithUser';
-import { SendDto } from './dto';
+import { SendDto, JoinDto, LeaveDto } from './dto';
 
 @WebSocketGateway({ cors: true, namespace: "messages" })
 @UseGuards(MessagesWebsocketGuard)
@@ -17,6 +18,30 @@ export class MessagesGateway {
 		private readonly messagesService: MessagesService,
 		private readonly chatService: ChatService
 	) {}
+
+	@SubscribeMessage('connectMessage')
+	async connect(
+		client: SocketWithUser,
+		@MessageBody() body: JoinDto
+	): Promise<Message[]> {
+		//const chatroom_id = client.handshake.query.chatroom_id;
+		if (!body.chatroom_id) {
+			console.error("No chatroom id specified");
+			return ;
+		}
+		client.join(String(body.chatroom_id));
+        const updatedMessages = await this.messagesService.findChatroomMessages(client.user.id, body.chatroom_id);
+        client.emit('updateMessages', updatedMessages);
+	}
+
+	@SubscribeMessage('disconnectMessage')
+	async disconnect(
+		client: SocketWithUser,
+		@MessageBody() body: LeaveDto
+	): Promise<void> {
+        client.leave(String(body.chatroom_id));
+		client.disconnect();
+	}
 
     @SubscribeMessage('newMessage')
     async send(
