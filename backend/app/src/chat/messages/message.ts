@@ -3,4 +3,5 @@ export class Message {
 	chatroom_user_uid: number;
 	content: string;
 	created_at: Date;
+	author_image_url: string;
 }

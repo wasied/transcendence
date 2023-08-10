@@ -4,8 +4,8 @@
 	</div>
 	<div class="p-4 rounded-lg max-w-3xl break-all text-black w-screen" 
 	[ngClass]="{'bg-yellow-500 ml-auto': sender === 'me', 'bg-white mr-auto': sender === 'other'}">
-		<p>{{ text }}</p>
-	  	<p class="text-xs">
+		<p style="color: white">{{ text }}</p> <!-- TODO: Style may not be the right way to do it -->
+	  	<p class="text-xs" style="color: white"> <!-- TODO: Style may not be the right way to do it -->
 			<span>{{ timestamp | displayMsgTimestamp }}</span>
 	  	</p>
 	</div>

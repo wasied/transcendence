@@ -7,20 +7,20 @@ import { treatDbResult } from '../../utils/treatDbResult';
 export class MessagesService {
 	async findChatroomMessages(user_id: number, chatroom_id: number): Promise<Message[]> {
 		const result = dbClient.query(
-			`SELECT * 
-			FROM chatrooms_messages
-			WHERE chatroom_user_uid IN (
-				SELECT id 
-				FROM chatrooms_users
-				WHERE chatroom_uid = $1
-				AND user_uid NOT IN (
+			`SELECT 
+				cm.*, 
+				u.profile_picture_url AS author_image_url
+			FROM chatrooms_messages AS cm
+			JOIN chatrooms_users AS cu ON cm.chatroom_user_uid = cu.id
+			JOIN users AS u ON cu.user_uid = u.id
+			WHERE 
+				cu.chatroom_uid = $1
+				AND cu.user_uid NOT IN (
 					SELECT blocked_uid
 					FROM blocked
 					WHERE blocker_uid = $2
 				)
-			)
-			ORDER BY created_at ASC;
-			`,
+			ORDER BY cm.created_at ASC;`,
 			[chatroom_id, user_id]
 		)
 			.then(queryResult => { return treatDbResult(queryResult); })

@@ -33,9 +33,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 			console.error("Invalid chatroom id");
 			return ;
 		}
+		
 		this.messagesWebsocketService.listenToServerEvents();
 		this.messagesWebsocketService.connect(this.chatroomId);
-
 
 		this.messagesWebsocketService.updateMessages$.subscribe(
 			(data: any) => {

@@ -1,6 +1,6 @@
 <div *ngIf="messages" class="flex flex-col h-screen justify-between">
     <div id="message-list" #messageList class="overflow-y-auto flex-grow flex flex-col-reverse bg-black p-4 pb-24">
-        <app-message *ngFor="let message of messages" [text]="message.content" [timestamp]="message.created_at"></app-message>
+        <app-message *ngFor="let message of messages" [text]="message.content" [timestamp]="message.created_at" [photoUrl]="message.author_image_url"></app-message>
     </div>
     <form class="w-full absolute bottom-0 left-0 flex items-center justify-between p-4 bg-gray-800">
         <input #messageInput [(ngModel)]="newMessageText" name="message" class="rounded-lg p-2 w-full mr-4 bg-gray-200" 
