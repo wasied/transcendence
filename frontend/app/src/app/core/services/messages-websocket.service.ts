@@ -4,10 +4,10 @@ import { Subject } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class MessagesWebsocketService {
-	private socket: Socket;
+  private socket: Socket;
 
 	public updateMessages$: Subject<any> = new Subject();
 	public newMessage$: Subject<any> = new Subject();

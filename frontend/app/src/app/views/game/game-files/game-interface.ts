@@ -59,5 +59,5 @@ export class GameState implements GameEvolution {
 
 export class Keys implements KeysInterface {
 	arrowUp = false;
-	arrowDown = false; 
+	arrowDown = false;
 }

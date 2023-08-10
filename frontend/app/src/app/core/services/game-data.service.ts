@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { User } from "../models/user.model";
 
 export interface GameData {
 	variant: 'standard' | 'mortSubite' | 'twoPoints' | 'chaos',
@@ -8,7 +9,9 @@ export interface GameData {
 	scoreLeftPlayer: number,
 	scoreRightPlayer: number,
 	durationInSec: number,
-	isActive: boolean;
+	isActive: boolean,
+	user1: User | null,
+	user2: User | null
 }
 
 @Injectable({
@@ -50,6 +53,18 @@ export class GameDataService {
 		const updatedGameData = { ...currentGameData, isActive: isActive };
 
 		this.updateGameData(updatedGameData)
+	}
+
+	updateWithPlayers(user1: User, user2: User) : void {
+		const currentGameData = this.gameData.getValue();
+
+		if (!currentGameData) {
+			return;
+		}
+
+		const updatedGameData = { ...currentGameData,  player1: user1, player2: user2 };
+
+		this.updateGameData(updatedGameData);
 	}
 
 	getGameData() : Observable<GameData | null> {

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable, of } from "rxjs";
 import { Chatroom } from '../models/chatroom.model'; 
+import { User } from "../models/user.model";
 
 @Injectable({
 	providedIn: 'root'
@@ -10,47 +11,14 @@ export class ChatroomsService {
 
 	constructor (private authHttp: AuthHttpClient) {};
 
-	private hardcodedChatrooms: Chatroom[] = [
-/*
-		{
-			id: 1,
-			name: 'test_1',
-			owner_uid: 1,
-			owner: 'random_guy',
-			password: null,
-			participants: ['test', 'player'],
-			participants_id: [1]
-		},
-		{
-			id: 2,
-			name: 'testChatroom',
-			owner_uid: 1,
-			owner: 'test2',
-			password: null,
-			participants: ['test', 'player'],
-			participants_id: [1]
-		},
-		{
-			id: 2,
-			name: 'testChatroom',
-			owner_uid: 1,
-			owner: 'test3',
-			password: null,
-			participants: ['test', 'player'],
-			participants_id: [1]
-		}
-*/
-	];
+	readonly id: number;
+	readonly username: string;
+	status: string;
+	a2f_key: string;
+	profile_picture_url: string;
+	readonly updated_at: string;
+	readonly created_at: string;
 
-	getHardcodedChatrooms() : Observable<Chatroom[]> {
-		return of(this.hardcodedChatrooms);
-	}
-
-	getHarcodedChatroomById(id: number) : Observable<Chatroom> {
-		return of(this.hardcodedChatrooms[id - 1]);
-	}
-
-	// with DB
 
 	private apiURL: string = 'http://localhost:8080/chat';
 

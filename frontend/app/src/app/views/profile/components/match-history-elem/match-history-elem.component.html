@@ -1,18 +1,27 @@
-<div class="text-white">
-	<p>Opponent : </p>
-	<p>{{ matchHistoryElem.opponentPseudo }}</p>
-	<div *ngIf="matchHistoryElem.opponentStatus === 'online'">
-		<p>Status : Online 🟢</p>
+<li
+    class="flex flex-row justify-between items-center w-3/4 mx-auto bg-zinc-900 
+	hover:bg-zinc-800 transform duration-200 p-5 rounded m-5"
+	>	
+	<div class="flex flex-col">
+		<p>Opponent : </p>
+		<p>{{ matchHistoryElem.opponentPseudo }}</p>
 	</div>
-	<div *ngIf="matchHistoryElem.opponentStatus === 'offline'">
-		<p>Status : Offline 🔴</p>
+	<div class="flex">
+		<div *ngIf="matchHistoryElem.opponentStatus === 'online'">
+			<p>Status : Online 🟢</p>
+		</div>
+		<div *ngIf="matchHistoryElem.opponentStatus === 'offline'">
+			<p>Status : Offline 🔴</p>
+		</div>
+		<div *ngIf="matchHistoryElem.opponentStatus === 'in a game'">
+			<p>Status : In a Game 🟠</p>
+		</div>
 	</div>
-	<div *ngIf="matchHistoryElem.opponentStatus === 'in a game'">
-		<p>Status : In a Game 🟠</p>
+	<div class="flex">
+		<button (click)="goToOpponentProfile(matchHistoryElem.opponentId)">See Profile</button>
 	</div>
-	<button (click)="goToOpponentProfile(matchHistoryElem.opponentId)">See Profile</button>
-	<div>
+	<div class="">
 		<p>Result : </p>
 		<p>{{ matchHistoryElem.yourScore }} - {{ matchHistoryElem.opponentScore }}</p>
 	</div>
-</div>
+</li>

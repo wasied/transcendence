@@ -75,9 +75,6 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 		this.router.navigate(['main', 'profile', participantId]);
 	}
 
-	playWithUser(participantId: number) : void {
-		console.log('feature not implemented yet');
-	}
 
 	makeAdmin(participantId: number) : void {
 		this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId).subscribe(

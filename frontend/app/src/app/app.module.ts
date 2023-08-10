@@ -15,6 +15,8 @@ import { SharedModule } from './shared/shared.module';
 
 import { AuthHttpClient } from './auth-http-client';
 
+import { AccessControlService } from './core/services/access-control.service';
+
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -30,7 +32,7 @@ import { AuthHttpClient } from './auth-http-client';
     	CoreModule,
 		SharedModule
 	],
-	providers: [AuthHttpClient],
+	providers: [AuthHttpClient, AccessControlService],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

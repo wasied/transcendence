@@ -29,11 +29,9 @@ export class DirectMessageComponent implements AfterViewInit {
 		this.router.navigate(['main/direct_messages', dmId]);
 	}
 
-/*
 	rmDMSession() : void {
 		console.log('feature not implemented yet !');
 	}
-*/
 
 	blockUserFromDMSession() : void {
 		this.usersService.blockUser(this.directMessage.participants_id[1]).subscribe(

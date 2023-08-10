@@ -13,16 +13,6 @@ export class HeaderComponent implements OnInit {
 
 	user$!: Observable<User>;
 	isMenuOpen = false;
-
-	private hardodedUser: User = {
-		id: 1,
-		username: 'styx',
-		status: 'online',
-		profile_picture_url: 'not',
-		a2f_key: 'lol',
-		created_at: '',
-		updated_at: '',
-	}
   
 	constructor (private usersService: UsersService,
     			 private router: Router) {}
@@ -32,8 +22,7 @@ export class HeaderComponent implements OnInit {
   	}
 
 	getUserData() : void {
-		// this.user$ = this.usersService.getMe();
-		this.user$ = of(this.hardodedUser); // suppress that when non necessary
+		this.user$ = this.usersService.getMe();
   	}
 
   	onClickOnChatrooms() : void {
@@ -58,10 +47,5 @@ export class HeaderComponent implements OnInit {
 
 	toggleMenu(): void {
 		this.isMenuOpen = !this.isMenuOpen;
-		if (this.isMenuOpen) {
-			document.body.style.overflow = 'hidden';
-		} else {
-			document.body.style.overflow = 'auto';
-		}
 	}
 }

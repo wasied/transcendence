@@ -1,19 +1,31 @@
-<div>
-	<!-- <app-header></app-header> -->
-	<div class="text-white">
-		<h1>CHATROOMS</h1>
+<app-header></app-header>
+<div class="pt-28 text-white mt-12 flex flex-col items-center space-y-4">
+	<div class="max-w-3xl inline-flex items-center w-full">
+		<hr class="w-screen m-8" />
+		<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+			  >CHATROOMS</span
+		>
+  	</div>
+
+	<div class="flex justify-center m-8 pb-8">
+		<button
+		  	type="button"
+		  	(click)="onCreateChatroom()"
+		  	class="rounded-full border-2 border-yellow-500 bg-yellow-500 text-2xl h-12 w-48 
+		  	hover:bg-white hover:text-yellow-500 ease-in duration-300"
+		>
+			Create Chatroom
+		</button>
 	</div>
-	<div>
-		<button class="text-white" (click)="onCreateChatroom()">Create Chatroom</button>
-	</div>
+
 	<app-chatrooms></app-chatrooms>
 
 	<app-modal [showModal]="showModal" (onClose)="closeModal()">
 		<div class="flex flex-col justify-center items-center bg-white text-black">
-		  <form [formGroup]="newChatroomForm" (ngSubmit)="triggerChatroomCreation()">
+		  	<form [formGroup]="newChatroomForm" (ngSubmit)="triggerChatroomCreation()">
 			<div class="mb-4">
-			  <label class="block">Chatroom Name</label>
-			  <input type="text" formControlName="chatroomName" class="w-full px-3 py-2 border rounded">
+				<label class="block">Chatroom Name</label>
+			  	<input type="text" formControlName="chatroomName" class="w-full px-3 py-2 border rounded">
 			</div>
 
 			<div class="mb-4">
@@ -33,5 +45,5 @@
 			<button type="submit" class="w-full py-2 bg-blue-500 text-white rounded">Create New Chatroom</button>
 		  </form>
 		</div>
-  </app-modal>
+  	</app-modal>
 </div>

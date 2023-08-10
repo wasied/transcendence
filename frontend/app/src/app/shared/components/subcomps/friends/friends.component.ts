@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { User } from 'src/app/core/models/user.model';
-import { FriendService } from 'src/app/core/services/friends.service'; 
+import { FriendService } from 'src/app/core/services/friends.service';
 import { Observable } from 'rxjs';
 
 @Component({
