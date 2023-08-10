@@ -46,22 +46,22 @@ export class ChatComponent implements OnInit {
     	if (inputMessage.length === 0) {
     		return;
     	}
-    
-	// Get chatroomId
-		this.messagesService.sendMessageToDB(inputMessage, this.chatroomId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
-		this.newMessageText = '';
-    	setTimeout(() => this.scrollToBottom(), 0);
+
+	// GetchatroomId() : void {
+	// 	this.messagesService.sendMessageToDB(inputMessage, this.chatroomId).subscribe(
+	// 		data => {},
+	// 		httpErrorHandler
+	// 	);
+	// 	this.newMessageText = '';
+    // 	setTimeout(() => this.scrollToBottom(), 0);
 	}
 
-	/* display messages from most recent to oldest */
-  	scrollToBottom(): void {
-    	try {
-      		this.messageList.nativeElement.scrollTop = this.messageList.nativeElement.scrollHeight;
-    	} catch(error) { 
-      		console.log(error);
-    	}
-  	}
+	// /* display messages from most recent to oldest */
+  	// scrollToBottom(): void {
+    // 	try {
+    //   		this.messageList.nativeElement.scrollTop = this.messageList.nativeElement.scrollHeight;
+    // 	} catch(error) { 
+    //   		console.log(error);
+    // 	}
+  	// }
 }

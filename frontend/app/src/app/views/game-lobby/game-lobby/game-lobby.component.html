@@ -1,11 +1,20 @@
-<!-- Display when matchmaking process is currently proceed -->
-<div class="text-white" *ngIf="!isMatched">
-	<p>{{ this.loadingMessage }}</p>
+<app-header></app-header>
+<!-- Display when matchmaking process has been completed -->
+<div *ngIf="players$ | async as players; else standby" class="text-white">
+	<div *ngIf="players">
+		<div>
+			<p> {{ players[0].username }}</p>
+		</div>
+		<p>VS</p>
+		<div>
+			<p> {{ players[1].username }}</p>
+		</div>
+	</div>
 </div>
 
-<!-- Display when matchmaking process has been completed -->
-<div class="text-white" *ngIf="isMatched">
-	<!-- put player card there -->
-	<p>VS</p>
-	<!-- put opponent there -->
-</div>
+<!-- Display when matchmaking process is currently proceed -->
+<ng-template #standby>
+	<div class="flex justify-center items-center h-screen w-screen text-white">
+	  <p class="text-6xl">{{ this.loadingMessage }}</p>
+	</div>
+</ng-template>

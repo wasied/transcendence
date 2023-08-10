@@ -45,6 +45,7 @@ export class HeaderComponent implements OnInit {
   	}
 
 	onClickOnFriends() : void {
+		console.log('go there');
 		this.router.navigate(['main', 'friends']);
   	}
 
@@ -58,10 +59,5 @@ export class HeaderComponent implements OnInit {
 
 	toggleMenu(): void {
 		this.isMenuOpen = !this.isMenuOpen;
-		if (this.isMenuOpen) {
-			document.body.style.overflow = 'hidden';
-		} else {
-			document.body.style.overflow = 'auto';
-		}
 	}
 }

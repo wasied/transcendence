@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { User } from 'src/app/core/models/user.model';
 import { FriendService } from 'src/app/core/services/friends.service';
 import { httpErrorHandler } from 'src/app/http-error-handler';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-friends-handler',
 	template: ''})
-export class FriendsHandlerComponent implements OnInit {
+export class FriendsHandlerComponent implements OnInit, OnDestroy {
 
 	newFriendForm!: FormGroup;
+	subscription!: Subscription;
 	
 	constructor(private fb: FormBuilder,
 				private friendsService: FriendService) {}
@@ -34,13 +36,15 @@ export class FriendsHandlerComponent implements OnInit {
 	}
 
 	private createNewFriendship() : void {
-		if (!this.newFriendForm.get('userId')?.value) {
-			console.error("Invalid user id");
-			return ;
-		}
-		this.friendsService.addAsFriend(this.newFriendForm.get('userId')?.value).subscribe(
+		this.subscription = this.friendsService.addAsFriend(this.newFriendForm.get('userId')?.value).subscribe(
 			data => {},
 			httpErrorHandler
 		);
+	}
+
+	ngOnDestroy(): void {
+		if (this.subscription) {
+			this.subscription.unsubscribe();
+		}
 	}
 }

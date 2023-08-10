@@ -22,7 +22,12 @@ export class ChatroomsComponent implements OnInit, OnDestroy {
 	}
 
 	loadChatrooms() : Observable<Chatroom[]> {
+<<<<<<< HEAD
+		return this.chatroomsService.getHardcodedChatrooms(); // change that
+		// return this.chatroomsService.getAllChatrooms();
+=======
 		return this.chatroomsService.getAllChatrooms();
+>>>>>>> 2abd1b0db414530d5850ac29f7181635f8a17a32
 	}
 
 	deleteChatroom(chatroom: Chatroom) {

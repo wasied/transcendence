@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Message } from "../models/message.model";
 import { Observable, of } from "rxjs";
 import { AuthHttpClient } from 'src/app/auth-http-client';
-import { MessagesWebsocketService } from './messages-websocket.service';
+// import { MessagesWebsocketService } from './messages-websocket.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,7 +10,7 @@ import { MessagesWebsocketService } from './messages-websocket.service';
 export class MessagesService {
 
 	constructor (
-		private messagesWebsocketService: MessagesWebsocketService,
+		// private messagesWebsocketService: MessagesWebsocketService,
 		private authHttp: AuthHttpClient
 	) {};
 
@@ -37,7 +37,7 @@ export class MessagesService {
 
 	/* CREATE */
 
-	sendMessageToDB(content: string, chatroomId: number) : Observable<void> {
+	// sendMessageToDB(content: string, chatroomId: number) : Observable<void> {
 /*
 		const endpoint: string = `${this.apiUrl}`;
 		const body = {
@@ -47,14 +47,14 @@ export class MessagesService {
 
 		return this.authHttp.post<void>(endpoint, body);
 */
-		return of(this.messagesWebsocketService.sendMessage(chatroomId, content));
+		// return of(this.messagesWebsocketService.sendMessage(chatroomId, content));
 	}
 
 	/* READ */
 
-	getChatroomMessages(chatroomId: number): Observable<Message[]> {
-		const endpoint: string = `${this.apiUrl}/${chatroomId}`;
+// 	getChatroomMessages(chatroomId: number): Observable<Message[]> {
+// 		const endpoint: string = `${this.apiUrl}/${chatroomId}`;
 
-		return this.authHttp.get<Message[]>(endpoint);
-	}
-}
+// 		return this.authHttp.get<Message[]>(endpoint);
+// 	}
+// }
