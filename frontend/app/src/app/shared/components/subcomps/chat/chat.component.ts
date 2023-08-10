@@ -24,7 +24,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 	constructor (
 		private messagesService: MessagesService,
 		private route: ActivatedRoute,
-		private messagesWebsocketService: MessagesWebsocketService
+		public messagesWebsocketService: MessagesWebsocketService
 	) {}
 
 	ngOnInit(): void {
@@ -36,9 +36,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 			return ;
 		}
 		this.messagesWebsocketService.connect(this.chatroomId);
-		this.messages$ = this.messagesWebsocketService.getMessages();
-		console.log(this.messages$);
-		//this.loadMessages();
 	}
 
 	private loadMessages() : void {
