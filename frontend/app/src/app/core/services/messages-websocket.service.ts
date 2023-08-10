@@ -3,9 +3,7 @@ import { Socket, io } from 'socket.io-client';
 import { Subject } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class MessagesWebsocketService {
   private socket: Socket;
 
@@ -22,6 +20,7 @@ export class MessagesWebsocketService {
 				}
 			}
 		};
+		
 		this.socket = io('http://localhost:8080/messages', options);
 	}
 

@@ -8,7 +8,8 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 @Component({
 	selector: 'app-chat',
 	templateUrl: './chat.component.html',
-	styleUrls: ['./chat.component.css']
+	styleUrls: ['./chat.component.css'],
+	providers: [MessagesWebsocketService]
 })
 export class ChatComponent implements OnInit, OnDestroy {
 	
@@ -32,7 +33,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 			console.error("Invalid chatroom id");
 			return ;
 		}
-		
+
 		this.messagesWebsocketService.listenToServerEvents();
 		this.messagesWebsocketService.connect(this.chatroomId);
 
@@ -69,6 +70,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   	}
 
 	ngOnDestroy() {
+		console.log("DESTROYEDDDDD");
 		this.messagesWebsocketService.updateMessages$.unsubscribe();
 		this.messagesWebsocketService.disconnect(this.chatroomId);
 	}
