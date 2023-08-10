@@ -23,7 +23,7 @@ GET CHATROOMS
 */
 
     @SubscribeMessage('connectRoom')
-    async handleConnection(
+    async connectRoom(
 		@ConnectedSocket() client: SocketWithUser,
 		@MessageBody() body: JoinDto
 	): Promise<void> {
@@ -34,10 +34,12 @@ GET CHATROOMS
     }
 
     @SubscribeMessage('disconnectRoom')
-    async handleDisconnect(
+    async disconnectRoom(
 		@ConnectedSocket() client: SocketWithUser,
+		@MessageBody() body: LeaveDto
 	): Promise<void> {
-        //client.leave(/*String(body.chatroom_id)*/);
+        client.leave(String(body.chatroom_id));
+		client.disconnect();
     }
 
 	@SubscribeMessage('joinRoom')
