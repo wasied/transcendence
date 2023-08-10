@@ -15,7 +15,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 	@ViewChild('messageList', { static: false }) messageList!: ElementRef;
  
 	chatroomId!: number;
-	messages$!: Observable<Message[]>;
 	messages: Message[] = [];
 	newMessageText: string = '';
 	sender!: string;
@@ -70,6 +69,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   	}
 
 	ngOnDestroy() {
+		this.messagesWebsocketService.updateMessages$.unsubscribe();
 		this.messagesWebsocketService.disconnect(this.chatroomId);
 	}
 }
