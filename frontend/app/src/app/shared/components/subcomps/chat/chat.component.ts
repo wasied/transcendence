@@ -1,7 +1,6 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Message } from 'src/app/core/models/message.model'; 
-import { MessagesService } from 'src/app/core/services/messages.service';
 import { MessagesWebsocketService } from 'src/app/core/services/messages-websocket.service';
 import { ActivatedRoute } from '@angular/router';
 import { httpErrorHandler } from 'src/app/http-error-handler';
@@ -22,7 +21,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 	sender!: string;
 
 	constructor (
-		private messagesService: MessagesService,
 		private route: ActivatedRoute,
 		public messagesWebsocketService: MessagesWebsocketService
 	) {}
