@@ -49,15 +49,18 @@ export class MessagesGateway {
 	): Promise<void> {
 		const chatroom_index = client.user.chatroom_ids.indexOf(body.chatroom_id);
 		var chatroom_user_id: number;
+		
 		if (chatroom_index === -1)
 			throw new WsException("User is not a chatroom member");
 		else
 			chatroom_user_id = await this.chatService.findChatroomUserId(client.user.id, body.chatroom_id);
+
 		client.user.punishments.forEach(punishment => {
 			if (punishment.chatroom_user_target_uid === chatroom_user_id) {
 				// TODO: Check if punishment is valid and throw error if the user cannot send message
 			}
 		});
+
 		await this.messagesService.send(chatroom_user_id, body.content);
 		
         const updatedMessages = await this.messagesService.findChatroomMessages(client.user.id, body.chatroom_id);

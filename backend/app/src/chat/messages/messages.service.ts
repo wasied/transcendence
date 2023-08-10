@@ -18,7 +18,8 @@ export class MessagesService {
 					FROM blocked
 					WHERE blocker_uid = $2
 				)
-			);
+			)
+			ORDER BY created_at ASC;
 			`,
 			[chatroom_id, user_id]
 		)

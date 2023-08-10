@@ -38,15 +38,15 @@ export class ChatComponent implements OnInit, OnDestroy {
 		this.messagesWebsocketService.listenToServerEvents();
 		this.messagesWebsocketService.connect(this.chatroomId);
 
+
 		this.messagesWebsocketService.updateMessages$.subscribe(
 			(data: any) => {
-				this.messages = data;
+				for (const message of data) {
+					message.created_at = new Date(message.created_at);
+				}
+				this.messages = data.reverse();
 			}
 		);
-	}
-
-	private loadMessages() : void {
-		// this.messages$ = this.messagesService.getAllHardcodedMessages();
 	}
 	
 	addMessage(inputMessage: string) : void {
