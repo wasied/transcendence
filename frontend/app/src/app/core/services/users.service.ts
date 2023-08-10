@@ -68,7 +68,7 @@ export class UsersService {
 
 	];
 
-	private apiURL: string = 'http://localhost:8080/users'; // change that in final product
+	private apiURL: string = 'http://localhost:8080/users';
 
 	getHardcodedUsers() : Observable<User[]> {
 		return of(this.harcodedUsers);
@@ -84,6 +84,12 @@ export class UsersService {
 
 	getAllUsers() : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}`;
+
+		return this.authHttp.get<User[]>(endpoint);
+	}
+
+	getAllUsersButMe() : Observable<User[]> {
+		const endpoint: string = `${this.apiURL}/all-but-me`;
 
 		return this.authHttp.get<User[]>(endpoint);
 	}
@@ -121,6 +127,7 @@ export class UsersService {
 		return this.authHttp.get<User[]>(endpoint);
 	}
 
+/*
 	isUserBlocked(userId: number) : Observable<boolean> {
 		const endpoint: string = `${this.apiURL}`; // modify this
 
@@ -132,6 +139,7 @@ export class UsersService {
 
 		return this.authHttp.get<boolean>(endpoint);
 	}
+*/
 
 	getPlayersAfterMatchmaking() : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}`; // modify this
@@ -160,22 +168,17 @@ export class UsersService {
 	}
 
 	blockUser(idOfBlockedUser: number) : Observable<void> {
-		const endpoint: string =`${this.apiURL}`; // modify this
+		const endpoint: string =`${this.apiURL}/block`;
 		const body = {
-			action: 'blockUser',
-			idOfBlockedUser: idOfBlockedUser
+			blocked_uid: idOfBlockedUser
 		};
 
-		return this.authHttp.put<void>(endpoint, body);
+		return this.authHttp.post<void>(endpoint, body);
 	}
 
 	unblockUser(idOfBlockedUser: number) : Observable<void> {
-		const endpoint: string =`${this.apiURL}`; // modify this
-		const body = {
-			action: 'unblockUser',
-			idOfBlockedUser: idOfBlockedUser,
-		};
+		const endpoint: string =`${this.apiURL}/unblock/${idOfBlockedUser}`;
 
-		return this.authHttp.put<void>(endpoint, body);
+		return this.authHttp.delete<void>(endpoint);
 	}
 }

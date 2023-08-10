@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameDataService, GameData } from 'src/app/core/services/game-data.service';
 import { Subscription } from 'rxjs';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-game-params',
@@ -33,7 +34,7 @@ export class GameParamsComponent implements OnDestroy {
 		}
   	];
 
-  	constructor(private router: Router, private gameDataService: GameDataService) {}
+  	constructor(private router: Router, private gameDataService: GameDataService, private accessControlService: AccessControlService ) {}
 
 	/* CHECKBOX MANAGEMENT */
 	
@@ -90,10 +91,17 @@ export class GameParamsComponent implements OnDestroy {
 		this.gameDataService.updateGameData(gameData);
 	}
 
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+	}
+
 	/* LINKS */
 
 	onClickStart() : void {
 		this.initGameData();
+		this.accessControlService.setAccess(true);
 		//this.router.navigate(['main/game_lobby']); return this
 		this.router.navigate(['main', 'game']);
 	}

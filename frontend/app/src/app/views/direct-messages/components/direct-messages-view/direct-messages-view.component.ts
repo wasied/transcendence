@@ -5,6 +5,7 @@ import { DirectMessagesService } from '../../../../core/services/direct-messages
 import { UsersService } from '../../../../core/services/users.service';
 import { User } from 'src/app/core/models/user.model';
 import { DmHandlerComponent } from '../dm-handler/dm-handler.component';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-direct-messages-view',
@@ -26,9 +27,12 @@ export class DirectMessagesViewComponent implements OnInit, OnDestroy {
 	{};
 
 	ngOnInit(): void {
-		this.subscription = this.usersService.getHardcodedUsers().subscribe(data => { // change hardoded users
-			this.users = data;
-		});
+		this.subscription = this.usersService.getAllUsersButMe().subscribe(
+			data => {
+				this.users = data;
+			},
+			httpErrorHandler
+		);
 	}
 
 	fillForm(user: User) { // triggers 
@@ -41,10 +45,10 @@ export class DirectMessagesViewComponent implements OnInit, OnDestroy {
 	}
 
 	private triggerDMSessionCreation(otherUserId: number) : void {
-		//this.dmService.createDMsession(otherUserId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+		this.dmService.createDMsession(otherUserId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	openModal() : void {

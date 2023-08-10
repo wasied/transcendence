@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { catchError, Observable, map, of } from 'rxjs';
+import { FriendService } from 'src/app/core/services/friends.service';
 import { UsersService } from 'src/app/core/services/users.service';
 import { User } from '../../../../core/models/user.model';
 import { httpErrorHandler } from 'src/app/http-error-handler';

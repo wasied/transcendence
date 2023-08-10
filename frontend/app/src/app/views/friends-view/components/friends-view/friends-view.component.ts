@@ -4,7 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FriendsHandlerComponent } from '../friends-handler/friends-handler.component';
 import { User } from 'src/app/core/models/user.model';
-import { UsersService } from 'src/app/core/services/users.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
   selector: 'app-friends-view',
@@ -20,12 +20,13 @@ export class FriendsViewComponent implements OnInit, OnDestroy {
 	users: User[] = [];
 	private subscription!: Subscription;
 
-	constructor(private usersService: UsersService) {};
+	constructor(private friendService: FriendService) {};
 
 	ngOnInit(): void {
-		this.subscription = this.usersService.getHardcodedUsers().subscribe(data => { // change hardoded users
-			this.users = data;
-		});
+		this.subscription = this.friendService.getMyFriends().subscribe(
+			data => { this.users = data; },
+			httpErrorHandler
+		);
 	}
 
 	fillForm(user: User) { // triggers 

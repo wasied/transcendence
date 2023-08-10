@@ -21,7 +21,7 @@ export class DirectMessagesHeaderComponent implements OnInit {
 				 private dmService: DirectMessagesService) {};
 
 	ngOnInit(): void {
-		this.participants$ = this.dmService.getHardcodedDirectMessageById(this.chatroomId);
+		this.participants$ = this.dmService.getDirectMsgById(this.chatroomId);
 	}
 	
 	onQuitDMSession() : void {

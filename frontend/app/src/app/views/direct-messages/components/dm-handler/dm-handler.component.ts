@@ -35,6 +35,10 @@ export class DmHandlerComponent implements OnInit {
 	}
 
 	private createNewDirectMessage() : void {
+		if (!this.newDmForm.get('userId')?.value) {
+			console.error("Invalid user id");
+			return ;
+		}
 		this.dmService.createDMsession(this.newDmForm.get('userId')?.value).subscribe(
 			data => {},
 			httpErrorHandler

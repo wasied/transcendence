@@ -4,6 +4,7 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
 import { ActivatedRoute } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-double-auth',
@@ -24,8 +25,10 @@ export class DoubleAuthComponent implements OnInit {
 
 	ngOnInit(): void {
 		const userId = this.route.snapshot.queryParamMap.get('user_id');
-		if (!userId || userId === "")
-			return ; // handling err there
+		if (!userId || userId === "") {
+			console.error("User not found");
+			return ;
+		}
 		this.userId = +userId;
 
 		this.authForm = this.formBuilder.group({
@@ -47,7 +50,7 @@ export class DoubleAuthComponent implements OnInit {
 					else {
 					}
 				},
-				error: error => console.log(error)
+				error: httpErrorHandler
 			})
 		);
 	}
