@@ -1,4 +1,5 @@
-import { Component, Input, Output, ViewEncapsulation, EventEmitter, AfterViewInit, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, ViewEncapsulation, EventEmitter, 
+	AfterViewInit, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Chatroom } from 'src/app/core/models/chatroom.model'; 
@@ -32,7 +33,7 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 	
 	ngAfterViewInit() : void {
-		// Button Tooltip
+		/* Button Tooltip */
 		this.initializeTooltips()
 	}
 
@@ -89,8 +90,8 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	ngOnDestroy(): void {
-		// if (this.subscription) {
-		// 	this.subscription.unsubscribe();
-		// }
+		if (this.subscription) {
+			this.subscription.unsubscribe();
+		}
 	}
 }
