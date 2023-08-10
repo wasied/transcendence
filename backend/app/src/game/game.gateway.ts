@@ -2,6 +2,7 @@ import { SubscribeMessage, WebSocketGateway, WebSocketServer, ConnectedSocket, M
 import { Server, Socket } from 'socket.io';
 import { UseGuards } from '@nestjs/common';
 import { GameWebsocketGuard } from './game-websocket.guard';
+import { SocketWithUser } from '../utils/SocketWithUser';
 
 @WebSocketGateway({ cors: true, namespace: "game" })
 @UseGuards(GameWebsocketGuard)
@@ -115,8 +116,7 @@ export class PongGameGateway {
     // When a player joins the matchmaking
     @SubscribeMessage('joinMatchmaking')
     async handleJoinMatchmaking(
-        @ConnectedSocket() client: Socket,
-        @Request() request: RequestWithUser
+        @ConnectedSocket() client: SocketWithUser
     ): Promise<void> {
 
         // Check if the user is already in a room
@@ -128,9 +128,9 @@ export class PongGameGateway {
             const waitingPlayer = Array.from(this.waitingPlayers.keys())[0];
             this.waitingPlayers.delete(waitingPlayerSocket.id);
 
-            this.startGame(true, String(request.user.id), waitingPlayer, client, waitingPlayerSocket);
+            this.startGame(true, String(client.user.id), waitingPlayer, client, waitingPlayerSocket);
         } else {
-            this.waitingPlayers.set(String(request.user.id), client);
+            this.waitingPlayers.set(String(client.user.id), client);
         }
 
     }
@@ -158,8 +158,8 @@ export class PongGameGateway {
         }
         if (!gameSessionId) return;
         
-        this.spectators[request.user.id] = this.spectators[request.user.id] || {};
-        this.spectators[request.user.id] = [gameSessionId, client] 
+        this.spectators[client.user.id] = this.spectators[client.user.id] || {};
+        this.spectators[client.user.id] = [gameSessionId, client]
 
         client.join(gameSessionId);
 
@@ -167,8 +167,7 @@ export class PongGameGateway {
 
     @SubscribeMessage('disconnect')
     async handleDisconnect(
-        @ConnectedSocket() client: Socket,
-        @Request() request: RequestWithUser
+        @ConnectedSocket() client: SocketWithUser,
     ): Promise<void> {
 
         const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
@@ -186,23 +185,23 @@ export class PongGameGateway {
             for (const spectatorData of Object.values(this.spectators)) {
                 if (spectatorData[0] === theRoomTheUserIsIn) {
                     spectatorData[1].leave(spectatorData[0]);
-                    delete this.spectators[request.user.id];
+                    delete this.spectators[client.user.id];
                 }
             }
 
-        } else if (this.waitingPlayers.has(String(request.user.id))) {
-            this.waitingPlayers.delete(String(request.user.id));
+        } else if (this.waitingPlayers.has(String(client.user.id))) {
+            this.waitingPlayers.delete(String(client.user.id));
         }
 
         // Delete all invitations to this player
-        if (this.playersInvitations[String(request.user.id)]) {
-            delete this.playersInvitations[String(request.user.id)];
+        if (this.playersInvitations[String(client.user.id)]) {
+            delete this.playersInvitations[String(client.user.id)];
         }
 
         // Delete all invitations sent to another players
         for (const inviterMap of Object.values(this.playersInvitations)) {
-            if (inviterMap.has(String(request.user.id))) {
-                inviterMap.delete(String(request.user.id));
+            if (inviterMap.has(String(client.user.id))) {
+                inviterMap.delete(String(client.user.id));
             }
         }
     }
@@ -210,8 +209,7 @@ export class PongGameGateway {
     // Transmit to other players when they updated the paddle position
     @SubscribeMessage('paddlePositionUpdate')
     async handlePaddlePositionUpdate(
-        @ConnectedSocket() client: Socket,
-        @Request() request: RequestWithUser,
+        @ConnectedSocket() client: SocketWithUser,
         @MessageBody() body: any
     ): Promise<void> {
 
@@ -221,7 +219,7 @@ export class PongGameGateway {
         const gameSession = this.gameSessions[theRoomTheUserIsIn];
         if (!gameSession) return;
 
-        const populatedGameData = this.populateGameData(String(request.user.id), gameSession);
+        const populatedGameData = this.populateGameData(String(client.user.id), gameSession);
         if (!populatedGameData) return;
 
         const paddleY = body.paddleY;
@@ -247,8 +245,7 @@ export class PongGameGateway {
     // Invite a player to a game
     @SubscribeMessage('invitePlayer')
     async handleInvitePlayer(
-        @ConnectedSocket() client: Socket,
-        @Request() request: RequestWithUser,
+        @ConnectedSocket() client: SocketWithUser,
         @MessageBody() body: any
     ): Promise<void> {
 
@@ -256,30 +253,29 @@ export class PongGameGateway {
         if (!opponentId) return;
 
         this.playersInvitations[opponentId] = this.playersInvitations[opponentId] || (new Map());
-        this.playersInvitations[opponentId].set(String(request.user.id), client);
+        this.playersInvitations[opponentId].set(String(client.user.id), client);
 
     }
 
     // Accept an invitation
     @SubscribeMessage('acceptInvitation')
     async handleAcceptInvitation(
-        @ConnectedSocket() client: Socket,
-        @Request() request: RequestWithUser,
+        @ConnectedSocket() client: SocketWithUser,
         @MessageBody() body: any
     ): Promise<void> {
 
         const opponentId = String(body.opponentId);
         if (!opponentId) return;
 
-        if (this.playersInvitations[String(request.user.id)].has(opponentId)) {
-            const opponentSocket = this.playersInvitations[String(request.user.id)].get(opponentId);
+        if (this.playersInvitations[String(client.user.id)].has(opponentId)) {
+            const opponentSocket = this.playersInvitations[String(client.user.id)].get(opponentId);
 
-            this.playersInvitations[String(request.user.id)].delete(opponentId);
-            if (this.playersInvitations[String(request.user.id)].size === 0) {
-                delete this.playersInvitations[String(request.user.id)];
+            this.playersInvitations[String(client.user.id)].delete(opponentId);
+            if (this.playersInvitations[String(client.user.id)].size === 0) {
+                delete this.playersInvitations[String(client.user.id)];
             }
 
-            this.startGame(false, String(request.user.id), opponentId, client, opponentSocket);
+            this.startGame(false, String(client.user.id), opponentId, client, opponentSocket);
         }
 
     }
