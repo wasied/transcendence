@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  	providedIn: 'root'
 })
-
 export class AccessControlService {
-  private hasAccess: boolean = false;
+  	private hasAccess: boolean = false;
 
-  setAccess(hasAccess: boolean): void {
-    this.hasAccess = hasAccess;
-  }
+  	setAccess(hasAccess: boolean): void {
+    	this.hasAccess = hasAccess;
+  	}
 
-  getAccess(): boolean {
-    return this.hasAccess;
-  }
+  	getAccess(): boolean {
+    	return this.hasAccess;
+  	}
 }
