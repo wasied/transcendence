@@ -46,8 +46,6 @@ export class UpdatePasswordDto {
 	@IsNumber()
 	id: number;
 
-	@IsNotEmpty()
-	@IsString()
 	password: string | null;
 }
 
@@ -57,6 +55,8 @@ export class JoinDto {
 	@IsNotEmpty()
 	@IsNumber()
 	chatroom_id: number;
+
+	password: string | null;
 }
 
 export class LeaveDto {

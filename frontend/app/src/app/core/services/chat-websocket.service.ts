@@ -57,8 +57,8 @@ export class ChatWebsocketService {
 		this.socket.emit('deleteRoom', { chatroom_id: chatroomId });
 	}
 
-	joinRoom(roomId: number): void {
-		this.socket.emit('joinRoom', { chatroom_id: roomId });
+	joinRoom(roomId: number, password: string | null): void {
+		this.socket.emit('joinRoom', { chatroom_id: roomId, password: password });
 	}
 
 	leaveRoom(roomId: number): void {

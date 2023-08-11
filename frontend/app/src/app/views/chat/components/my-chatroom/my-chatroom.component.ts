@@ -4,18 +4,16 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Chatroom } from 'src/app/core/models/chatroom.model'; 
 import tippy from 'tippy.js';
-import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
-import { ChatWebsocketService } from 'src/app/core/services/chat-websocket.service';
+import { ChatroomsService } from '../../../../core/services/chatrooms.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
-	selector: 'app-chatroom',
-	templateUrl: './chatroom.component.html',
-	styleUrls: ['./chatroom.component.css'],
+	selector: 'app-my-chatroom',
+	templateUrl: './my-chatroom.component.html',
+	styleUrls: ['./my-chatroom.component.css'],
 	encapsulation: ViewEncapsulation.None,  // Needed to apply tooltip CSS
 })
-export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MyChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
   
 	@Input () chatroom!: Chatroom;
 	@Output() deleteRequest = new EventEmitter<Chatroom>();
@@ -25,18 +23,13 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	private subscriptions: Subscription = new Subscription();
 	
 	showParticipants: boolean = false;
-	isModalOpen: boolean = false;
 
 	accessForm!: FormGroup;
 
-	constructor(
-		private router: Router,
-		private elementRef: ElementRef,
-		private chatroomsService: ChatroomsService,
-		private formBuilder : FormBuilder,
-		private chatWebsocketService: ChatWebsocketService,
-		private accessControlService: AccessControlService
-	)
+	constructor(private router: Router, 
+				private elementRef: ElementRef,
+				private chatroomsService: ChatroomsService,
+				private formBuilder : FormBuilder) 
 	{
 		this.accessForm = this.formBuilder.group({
 			accessPassword : ['']
@@ -58,7 +51,7 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	initializeTooltips() : void {
 		tippy(this.elementRef.nativeElement.querySelector('#joinChatRoom'), {
-			content: 'Join the ChatRoom',
+			content: 'Enter the ChatRoom',
 			arrow: true,
 			theme: 'custom-theme',
 			duration: [100, 100],
@@ -99,50 +92,11 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.initializeTooltips();
 	}
 
-	/* GUARD */
-
-	grantAccess(): void {
-		this.accessControlService.setAccess(true);
-		}
-
-	accessChatroom(chatroomId: number) : void {
-		if (this.chatroom.password !== null) {
-			this.openModal();
-		} else {
-<<<<<<< HEAD
-			this.accessControlService.setAccess(true);
-			this.router.navigate(['main/chatrooms', chatroomId]);
-=======
-			this.chatWebsocketService.joinRoom(chatroomId, null);
->>>>>>> 1738cf74b3d6aeb2f993ead5e61645ff83ff7e89
-		}
+	enterChatroom(chatroomId: number) : void {
+		console.log('OKOK', chatroomId);
+		this.router.navigate(['main/chatrooms', chatroomId]);
 	}
 
-	handlePasswordProtection() : void {
-		const password: string | null = this.accessForm.get('accessPassword')?.value;
-
-		this.closeModal();
-
-		if (password) {
-			this.onSubmitPassword(this.chatroom.id, password);
-		}
-	}
-
-	onSubmitPassword(chatroomId: number, password: string) : void {
-<<<<<<< HEAD
-		this.chatroomsService.requestAccessToChatroom(chatroomId, password).subscribe(
-			isValid => {
-				if (isValid === true) {
-					this.accessControlService.setAccess(true);
-					this.router.navigate(['main/chatrooms', chatroomId]);
-				}
-			}
-		);
-=======
-		this.chatWebsocketService.joinRoom(chatroomId, password);
->>>>>>> 1738cf74b3d6aeb2f993ead5e61645ff83ff7e89
-	}
-	
 	deleteChatroom() : void {
 		this.deleteRequest.emit(this.chatroom);
 	}
@@ -151,15 +105,5 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 		if (this.subscriptions) {
 			this.subscriptions.unsubscribe();
 		}
-	}
-
-	/* MODAL HANDLING */
-
-	openModal() : void {
-		this.isModalOpen = true;
-	}
-
-	closeModal() : void {
-		this.isModalOpen = false;
 	}
 }

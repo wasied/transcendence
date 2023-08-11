@@ -96,10 +96,15 @@ export class ChatController {
 		@Request() request: RequestWithUser,
 		@Body() body: CreateDto
 	): Promise<void> {
-		const id = await this.chatService.create(request.user.id, body.name, body.password, body.direct_message);
-		this.chatService.join(request.user.id, id);
+		var password: string | null;
 		if (body.direct_message)
-			this.chatService.join(body.other_user_id, id);
+			password = null;
+		else
+			password = body.password;
+		const id = await this.chatService.create(request.user.id, body.name, password, body.direct_message);
+		this.chatService.join(request.user.id, id, password);
+		if (body.direct_message)
+			this.chatService.join(body.other_user_id, id, password);
 	}
 
 /*
@@ -142,7 +147,7 @@ export class ChatController {
 	join(@Request() request: RequestWithUser, @Body() body: JoinDto): void {
 		if (request.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
 			throw new HttpException("User is already a chatroom member", HttpStatus.BAD_REQUEST);
-		this.chatService.join(request.user.id, body.chatroom_id);
+		this.chatService.join(request.user.id, body.chatroom_id, body.password);
 	}
 
 	@Put('admin')

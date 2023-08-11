@@ -1,0 +1,47 @@
+<button
+  	class="bg-[#ffc93b] p-2 rounded-l h-full flex items-center"
+  	(click)="enterChatroom(chatroom.id)"
+  	id="joinChatRoom"
+>
+  	<i
+    	class="fa-solid fa-comments h-12 w-12 shadow-md text-zinc-800 bg-gray-200 p-4 rounded-full hover:shadow-inner"
+  	></i>
+</button>
+
+<div class="flex flex-col py-1">
+  	<span class="font-semibold">{{ chatroom.name }}</span>
+  	<div class="flex flex-col">
+    	<div class="flex items-center text-sm space-x-1">
+      		<span class="">Owner:</span>
+			<a class="text-gray-600" href=""> {{ chatroom.owner_username }}</a>
+    	</div>
+    	<div
+			id="participants"
+			class="text-sm flex flex-col mt-2"
+			[class.hidden]="!showParticipants"
+		>
+			<span class="">Participants:</span>
+			<a
+				*ngFor="let participant of chatroom.participants"
+				class="text-gray-600"
+				href=""
+			>{{ participant.username }}</a>
+    	</div>
+	</div>
+</div>
+
+<div class="flex justify-between w-full">
+  	<!-- this is the dropdown -->
+	<button
+    	class="p-2"
+    	(click)="toggleParticipants()"
+    	[id]="showParticipants ? 'showParticipants' : 'hideParticipants'"
+  	>
+    	<i class="ml-2 fa fa-chevron-down" [class.hidden]="showParticipants"></i>
+    	<i class="ml-2 fa fa-chevron-up" [class.hidden]="!showParticipants"></i>
+  	</button>
+	<!-- this is the suppress chatroom button -->
+	<div class="flex justify-end space-x-4 px-4">
+		<button *ngIf="isOwner$ | async as isOwner" class="p-2" id="cross"><i class="fa-solid fa-x" (click)="deleteChatroom()"></i></button>
+	</div>
+</div>
