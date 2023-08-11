@@ -155,8 +155,9 @@ export class ChatService {
 
 	/* Chat users */
 
-	join(user_id: number, chatroom_id: number): void {
-		const result = dbClient.query(
+	async join(user_id: number, chatroom_id: number, password: string | null): Promise<void> {
+		// TODO: Check if password is the same
+		const result = await dbClient.query(
 			`INSERT INTO	chatrooms_users(chatroom_uid, user_uid, admin)
 							VALUES($2, $1, false);`,
 			[user_id, chatroom_id]
