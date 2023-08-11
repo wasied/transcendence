@@ -109,12 +109,9 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 		if (this.chatroom.password !== null) {
 			this.openModal();
 		} else {
-<<<<<<< HEAD
 			this.accessControlService.setAccess(true);
-			this.router.navigate(['main/chatrooms', chatroomId]);
-=======
+			//this.router.navigate(['main/chatrooms', chatroomId]);
 			this.chatWebsocketService.joinRoom(chatroomId, null);
->>>>>>> 1738cf74b3d6aeb2f993ead5e61645ff83ff7e89
 		}
 	}
 
@@ -129,18 +126,8 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	onSubmitPassword(chatroomId: number, password: string) : void {
-<<<<<<< HEAD
-		this.chatroomsService.requestAccessToChatroom(chatroomId, password).subscribe(
-			isValid => {
-				if (isValid === true) {
-					this.accessControlService.setAccess(true);
-					this.router.navigate(['main/chatrooms', chatroomId]);
-				}
-			}
-		);
-=======
+		this.accessControlService.setAccess(true);
 		this.chatWebsocketService.joinRoom(chatroomId, password);
->>>>>>> 1738cf74b3d6aeb2f993ead5e61645ff83ff7e89
 	}
 	
 	deleteChatroom() : void {
