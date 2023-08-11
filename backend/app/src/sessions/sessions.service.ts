@@ -1,5 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Session } from './session';
+import { MatchHistory } from './match-history';
 import { dbClient } from '../db';
 import { treatDbResult } from '../utils/treatDbResult';
 
@@ -16,7 +17,7 @@ export class SessionsService {
 	}
 
 	async findAllActive(): Promise<Session[]> {
-		const result = dbClient.query(
+		const result = await dbClient.query(
 			`SELECT *	FROM sessions
 						WHERE ended = false;`
 		)
@@ -26,26 +27,62 @@ export class SessionsService {
 		return result;
 	}
 
-	async findOne(session_id: number): Promise<Session[]> {
-		const result = dbClient.query(
-			`SELECT *	FROM sessions
-						WHERE id = $1;`,
-			[session_id]
+	async findUserHistoryByUserId(userId: number, my_username: string): Promise<MatchHistory[]> {
+		console.log(userId);
+		const result = await dbClient.query(
+			`SELECT users.username, su.winner_uid
+				FROM sessions_users su
+				INNER JOIN users ON su.user_uid = users.id
+				INNER JOIN sessions ON su.session_uid = sessions.id
+				WHERE su.spectator = false
+				AND su.session_uid  = $1;`
+				/*IN (
+					SELECT session_uid	FROM sessions_users
+										WHERE user_uid = $1
+										AND spectator = false
+				);`*/
+			[userId]
 		)
-		.then(queryResult => { return treatDbResult(queryResult); })
-		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+			.then(queryResult => { return treatDbResult(queryResult); })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 
-		return result;
+		var match_history: MatchHistory[] = [];
+		for (const opponent of result) {
+			var match: MatchHistory;
+			match.my_username = my_username;
+			match.opponent_username = opponent.username;
+			if (opponent.winner_uid === userId)
+				match.winner_username = my_username;
+			else
+				match.winner_username = opponent.username;
+			match_history.push(match);
+		}
+
+		return match_history;
 	}
 
-	async findUserHistoryByUserId(userId: number): Promise<Session[]> {
+	async findUserSessionsByUserId(userId: number): Promise<Session[]> {
 		const result = await dbClient.query(
 			`SELECT *	FROM sessions
 						WHERE id IN (
 							SELECT session_uid	FROM sessions_users
 												WHERE user_uid = $1
-						);`,
-			[userId]
+												AND spectator = false
+						)
+						AND ended = true;`,
+				[userId]
+		)
+			.then(queryResult => { return treatDbResult(queryResult); })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+
+		return result;
+	}
+
+	async findOne(session_id: number): Promise<Session[]> {
+		const result = dbClient.query(
+			`SELECT *	FROM sessions
+						WHERE id = $1;`,
+			[session_id]
 		)
 		.then(queryResult => { return treatDbResult(queryResult); })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });

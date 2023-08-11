@@ -43,7 +43,7 @@ export class StatsService {
 	}
 
 	async findOneByUserId(user_id: number): Promise<Stats> {
-		const sessions = await this.sessionsService.findUserHistoryByUserId(user_id)
+		const sessions = await this.sessionsService.findUserSessionsByUserId(user_id)
 			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 		if (!sessions.length) {
 			return {

@@ -7,6 +7,7 @@ import { User } from "../models/user.model";
 import { UsersService } from "./users.service";
 import { SessionsUsersService } from "./sessions-users.service";
 import { SessionsUser } from "../models/sessions-user.model"; 
+import { AuthHttpClient } from 'src/app/auth-http-client';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,15 +16,11 @@ export class MatchHistoryService {
 
 	matchHistory$!: Observable<MatchHistory[]>
 
-	constructor (
-		private usersService: UsersService,
-		private sessionsService: SessionsService,
-		private sessionsUsersService: SessionsUsersService
-	) {}
+	constructor (private authHttp: AuthHttpClient) {}
 
 	getUserHistory(userId: number): Observable<MatchHistory[]> {
 		const endpoint = `http://localhost:8080/sessions/history/${userId}`;
 
-		this. matchHistory$ = this.authHttp.get<MatchHistory[]>(endpoint);
+		return this.authHttp.get<MatchHistory[]>(endpoint);
 	}
 }

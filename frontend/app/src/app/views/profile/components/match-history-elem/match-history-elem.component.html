@@ -3,17 +3,17 @@
 	hover:bg-zinc-800 transform duration-200 p-5 rounded m-5"
 	>	
 	<div class="flex flex-col">
-		<p>{{ matchHistoryElem.myUsername }}</p>
+		<p>{{ matchHistoryElem.my_username }}</p>
 	</div>
 	<div>
-		<p>{{ matchHistoryElem.opponentUsername }}</p>
+		<p>{{ matchHistoryElem.opponent_username }}</p>
 	</div>
 	<div class="">
 		<p>You are the : </p>
-		<div *ngIf="matchHistoryElem.winnerUsername === matchHistoryElem.myUsername">
+		<div *ngIf="matchHistoryElem.winner_username === matchHistoryElem.my_username">
 			<p>The winner</p>
 		</div>
-		<div *ngIf="matchHistoryElem.winnerUsername === matchHistoryElem.opponentUsername">
+		<div *ngIf="matchHistoryElem.winner_username === matchHistoryElem.opponent_username">
 			<p>The Loser</p>
 		</div>
 	</div>
