@@ -13,7 +13,7 @@
   	<div class="flex flex-col">
     	<div class="flex items-center text-sm space-x-1">
       		<span class="">Owner:</span>
-      		<a class="text-gray-600" href=""> {{ chatroom.owner_uid }}</a>
+			<a class="text-gray-600" href=""> {{ chatroom.owner_username }}</a>
     	</div>
     	<div
 			id="participants"
@@ -25,7 +25,7 @@
 				*ngFor="let participant of chatroom.participants"
 				class="text-gray-600"
 				href=""
-			>{{ participant }}</a>
+			>{{ participant.username }}</a>
     	</div>
 	</div>
 </div>

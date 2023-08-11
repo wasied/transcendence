@@ -38,7 +38,7 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
 			})
 		);
 		/* init matchmaking process */
-			this.triggerMatchmakingProcess();
+		this.triggerMatchmakingProcess();
 		/* timeout to display standby message */
 		this.updateLoadingMessage();
 	}

@@ -41,6 +41,10 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	ngOnInit() : void {
 		this.isOwner$ = this.chatroomsService.amIChatroomOwner(this.chatroom.id);
+		for (const participant of this.chatroom.participants) {
+			if (this.chatroom.owner_uid === participant.id)
+				this.chatroom.owner_username = participant.username;
+		}
 	}
 	
 	ngAfterViewInit() : void {

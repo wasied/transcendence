@@ -10,7 +10,6 @@ export class GameService {
 
 	constructor (private usersService: UsersService,
 				 private sessionsUsersService: SessionsUsersService,
-				 private sessionsService: SessionsService) {};
-	
-	
+				 private sessionsService: SessionsService) {};	
+
 }

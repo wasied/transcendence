@@ -1,20 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+<<<<<<< HEAD
 import { AccessControlService } from 'src/app/core/services/access-control.service';
+=======
+import { Subscription } from 'rxjs';
+import { UsersService } from '../../../../core/services/users.service';
+>>>>>>> b0a986bef60ea304ea2f1edaeca01ffdf8332a9c
 
 @Component({
 	selector: 'app-match-history-view',
 	templateUrl: './match-history-view.component.html',
 	styleUrls: ['./match-history-view.component.css']
 })
-export class MatchHistoryViewComponent implements OnInit {
+export class MatchHistoryViewComponent implements OnInit, OnDestroy {
 
 	idOfUserProfile!: number;
 	isProfileOfUser: boolean = false;
+
+	private subscription!: Subscription;
 	
 	constructor (private router: Router,
 				 private route: ActivatedRoute,
+<<<<<<< HEAD
 				 private accessControlService: AccessControlService) {};
+=======
+				 private usersService: UsersService) {};
+>>>>>>> b0a986bef60ea304ea2f1edaeca01ffdf8332a9c
 
 	ngOnInit(): void {
 		
@@ -29,7 +40,17 @@ export class MatchHistoryViewComponent implements OnInit {
 			}
 		} else {
 			this.isProfileOfUser = true;
+			this.getUserIdIfCurrent();
+			console.log(this.idOfUserProfile);
 		}
+	}
+
+	private getUserIdIfCurrent() : void {
+		this.subscription = this.usersService.getMe().subscribe(data=> {
+			console.log('go there', data.id);
+			this.idOfUserProfile = data.id;
+			console.log(this.idOfUserProfile);
+		});
 	}
 
 	private isIdInURL() : boolean {
@@ -53,6 +74,12 @@ export class MatchHistoryViewComponent implements OnInit {
 		} else {
 			this.accessControlService.setAccess(true);
 			this.router.navigate(['main', 'profile', this.idOfUserProfile]);
+		}
+	}
+
+	ngOnDestroy(): void {
+		if (this.subscription) {
+			this.subscription.unsubscribe();
 		}
 	}
 }

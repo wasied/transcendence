@@ -57,7 +57,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.subscription = this.gameDataService.getGameData().subscribe(gameData => {
 			this.gameData = gameData;
 		});
-		this.debug();
+		//this.debug();
 	}
 
 	ngOnDestroy(): void {
