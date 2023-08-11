@@ -4,7 +4,8 @@ export class Chatroom {
 	public id: number;
 	public name: string;
 	public owner_uid: number;
-	public owner: User;
+	public owner?: User;
+	public owner_username?: string;
 	public password: string | null;
 	public direct_message: boolean;
 	public participants: User[];
