@@ -16,11 +16,14 @@ import { SharedModule } from './shared/shared.module';
 import { AuthHttpClient } from './auth-http-client';
 
 import { AccessControlService } from './core/services/access-control.service';
+import { NotFoundComponent } from './views/not-found/not-found/not-found.component';
+import { NotFoundModule } from './views/not-found/not-found.module';
 
 @NgModule({
 	declarations: [
 		AppComponent,
     	WhitePageComponent,
+     NotFoundComponent,
 	],
 	imports: [
     	BrowserModule,
@@ -30,7 +33,8 @@ import { AccessControlService } from './core/services/access-control.service';
     	MatDialogModule,
     	HttpClientModule,
     	CoreModule,
-		SharedModule
+		SharedModule,
+		NotFoundModule
 	],
 	providers: [AuthHttpClient, AccessControlService],
 	bootstrap: [AppComponent]

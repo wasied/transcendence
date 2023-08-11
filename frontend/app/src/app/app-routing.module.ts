@@ -5,7 +5,6 @@ import { WhitePageComponent } from "./views/white-page/white-page.component";
 
 import { isAuthenticatedGuard } from './is-authenticated.guard'
 import { GameLobbyGuard } from "./game-lobby-guard.guard";
-// import { isAuthenticatedGuard } from './is-authenticated.guard'
 
 const routes: Routes = [
 	{path: 'auth/redirect', component: WhitePageComponent},
@@ -34,12 +33,14 @@ const routes: Routes = [
 	{path: 'main/chatrooms', canActivate: [isAuthenticatedGuard], loadChildren:
 	() => import('./views/chat/chat.module').then(m => m.ChatModule)},
 	{path: 'main/direct_messages', canActivate: [isAuthenticatedGuard], loadChildren: 
-	() => import('./views/direct-messages/direct-messages.module').then(m => m.DirectMessagesModule)}
+	() => import('./views/direct-messages/direct-messages.module').then(m => m.DirectMessagesModule)},
+	{path: '**', redirectTo: 'not-found'}
 ];
 
 @NgModule({
 	imports: [
-		RouterModule.forRoot(routes)
+		RouterModule.forRoot(routes),
+		NotFoundRoutingModule
 	],
 	exports: [
 		RouterModule
