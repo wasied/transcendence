@@ -1,9 +1,6 @@
-<app-header></app-header>
-
-<app-chatroom-header 
-    class="fixed top-28 left-0 right-0 z-40"
-    [chatroomId]="chatroomId">
-</app-chatroom-header>
-
-<app-chat class="pt-56"></app-chat>
+<div class="flex flex-col h-screen">
+    <app-header></app-header>
+    <app-chatroom-header class="fixed top-28 left-0 right-0 z-40" [chatroomId]="chatroomId"></app-chatroom-header>
+    <app-chat class="flex-grow pt-40"></app-chat>
+</div>
 

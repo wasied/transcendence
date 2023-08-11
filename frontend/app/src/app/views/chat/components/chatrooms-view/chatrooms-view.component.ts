@@ -19,7 +19,7 @@ export class ChatroomsViewComponent {
 		this.newChatroomForm = this.formBuilder.group({
 			chatroomName : [''],
 			accessStatus : [''],
-			accessPassword : [''],
+			accessPassword : ['']
 		});
 	};
 	
@@ -29,7 +29,7 @@ export class ChatroomsViewComponent {
 
 	triggerChatroomCreation() : void {
 		const chatroomName: string = this.newChatroomForm.get('chatroomName')?.value;
-		var password: string | null = this.newChatroomForm.get('accessPassword')?.value;
+		let password: string | null = this.newChatroomForm.get('accessPassword')?.value;
 		
 		this.closeModal();
 		if (!password || password === "")
