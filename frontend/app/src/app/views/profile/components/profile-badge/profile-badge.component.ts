@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { User } from 'src/app/core/models/user.model';
 import { UsersService } from 'src/app/core/services/users.service';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 	templateUrl: './profile-badge.component.html',
 	styleUrls: ['./profile-badge.component.css']
 })
-export class ProfileBadgeComponent implements OnInit {
+export class ProfileBadgeComponent implements OnChanges {
 
 	@Input() userId!: number;
 	@Input() buttonText!: string;
@@ -16,9 +16,11 @@ export class ProfileBadgeComponent implements OnInit {
 	user$!: Observable<User>;
 	
 	constructor (private usersService: UsersService) {};
-	
-	ngOnInit(): void {
-		this.user$ = this.usersService.getUserById(this.userId);
+
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes['userId'] && changes['userId'].currentValue) {
+			this.user$ = this.usersService.getUserById(changes['userId'].currentValue);
+		}
 	}
 	
 	onButtonClick(): void {
