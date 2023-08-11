@@ -1,9 +1,10 @@
 <app-header></app-header>
 <div
   class="flex flex-col justify-center items-center text-center text-gray-200 bg-black mx-auto max-w-5xl pt-32"
+  *ngIf="user$ | async as userProfile"
 >
 	<app-profile-badge 
-		[userId]="idOfUserProfile" 
+		[userId]="userProfile.id" 
 		[buttonText]="'Match History'" 
 		(buttonAction)="goToGameHistory()">
 	</app-profile-badge>
@@ -14,12 +15,12 @@
       		>STATS</span
     	>
   	</div>
-	<app-stats [userId]="idOfUserProfile"></app-stats>
+	<app-stats [userId]="idOfUserProfile.id"></app-stats>
 	<div class="max-w-3xl inline-flex items-center w-full">
     	<hr class="w-screen m-8" />
     	<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
       		>FRIENDS</span
     	>
   	</div>
-	<app-friends [userId]="idOfUserProfile"></app-friends>
+	<app-friends [userId]="idOfUserProfile.id"></app-friends>
 </div>

@@ -1,27 +1,28 @@
-import { Component, ViewChild, ElementRef, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Message } from 'src/app/core/models/message.model'; 
-import { MessagesService } from 'src/app/core/services/messages.service';
+import { MessagesWebsocketService } from 'src/app/core/services/messages-websocket.service';
 import { ActivatedRoute } from '@angular/router';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-chat',
 	templateUrl: './chat.component.html',
-	styleUrls: ['./chat.component.css']
+	styleUrls: ['./chat.component.css'],
+	providers: [MessagesWebsocketService]
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
 	
 	@ViewChild('messageList', { static: false }) messageList!: ElementRef;
  
 	chatroomId!: number;
-	messages$!: Observable<Message[]>;
+	messages: Message[] = [];
 	newMessageText: string = '';
 	sender!: string;
 
 	constructor (
-		private messagesService: MessagesService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		public messagesWebsocketService: MessagesWebsocketService
 	) {}
 
 	ngOnInit(): void {
@@ -32,12 +33,18 @@ export class ChatComponent implements OnInit {
 			console.error("Invalid chatroom id");
 			return ;
 		}
-		// call websocket.join
-		this.loadMessages();
-	}
 
-	private loadMessages() : void {
-		this.messages$ = this.messagesService.getAllHardcodedMessages();
+		this.messagesWebsocketService.listenToServerEvents();
+		this.messagesWebsocketService.connect(this.chatroomId);
+
+		this.messagesWebsocketService.updateMessages$.subscribe(
+			(data: any) => {
+				for (const message of data) {
+					message.created_at = new Date(message.created_at);
+				}
+				this.messages = data.reverse();
+			}
+		);
 	}
 	
 	addMessage(inputMessage: string) : void {
@@ -47,21 +54,24 @@ export class ChatComponent implements OnInit {
     		return;
     	}
 
-	// GetchatroomId() : void {
-	// 	this.messagesService.sendMessageToDB(inputMessage, this.chatroomId).subscribe(
-	// 		data => {},
-	// 		httpErrorHandler
-	// 	);
-	// 	this.newMessageText = '';
-    // 	setTimeout(() => this.scrollToBottom(), 0);
+		this.messagesWebsocketService.sendMessage(this.chatroomId, inputMessage);
+
+		this.newMessageText = '';
+    	setTimeout(() => this.scrollToBottom(), 0);
 	}
 
-	// /* display messages from most recent to oldest */
-  	// scrollToBottom(): void {
-    // 	try {
-    //   		this.messageList.nativeElement.scrollTop = this.messageList.nativeElement.scrollHeight;
-    // 	} catch(error) { 
-    //   		console.log(error);
-    // 	}
-  	// }
+	/* display messages from most recent to oldest */
+  	scrollToBottom(): void {
+    	try {
+      		this.messageList.nativeElement.scrollTop = this.messageList.nativeElement.scrollHeight;
+    	} catch(error) { 
+      		console.log(error);
+    	}
+  	}
+
+	ngOnDestroy() {
+		console.log("DESTROYEDDDDD");
+		this.messagesWebsocketService.updateMessages$.unsubscribe();
+		this.messagesWebsocketService.disconnect(this.chatroomId);
+	}
 }

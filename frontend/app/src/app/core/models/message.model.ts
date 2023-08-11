@@ -3,4 +3,5 @@ export class Message {
 	public chatroom_user_uid: number;
 	public content: string;
 	public created_at: Date;
+	public author_image_url: string;
 }
