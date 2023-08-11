@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Chatroom } from 'src/app/core/models/chatroom.model'; 
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service'; 
-import { Observable } from 'rxjs';
+import { Observable, shareReplay, Subscription } from 'rxjs';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
@@ -23,7 +23,8 @@ export class ChatroomsComponent implements OnInit {
 		return this.chatroomsService.getAllChatrooms();
 	}
 
-	deleteChatroom(chatroom: Chatroom) { // should be handle by an observable
+	onDeleteRequest(chatroom: Chatroom) {
+		console.log('go there');
 		this.chatroomsService.delChatroom(chatroom.id).subscribe(
 			data => {},
 			httpErrorHandler
