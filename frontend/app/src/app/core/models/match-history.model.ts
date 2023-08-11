@@ -1,5 +1,5 @@
 export class MatchHistory {
-	myUsername
+	myUsername: string;
 	opponentUsername: string;
 	winnerUsername: string;
 }

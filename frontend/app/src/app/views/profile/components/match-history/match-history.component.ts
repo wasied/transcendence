@@ -20,6 +20,6 @@ export class MatchHistoryComponent implements OnInit {
 	constructor (private matchHistService: MatchHistoryService) {};
 	
 	ngOnInit(): void {
-		this.matchHistory$ = this.matchHistService.getGameHistory(this.userId);
+		this.matchHistory$ = this.matchHistService.getUserHistory(this.userId);
 	}
 }
