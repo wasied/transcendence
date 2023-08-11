@@ -73,26 +73,19 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/* update gameData */
 	private endgameDataProcessing() : void {
-		const gameDuration: number | undefined = this.gameDataService.endGame();
 		const scoreLeftPlayer: number = this.gameState.player1Score;
 		const scoreRightPlayer: number = this.gameState.player2Score;
 		
 		if (this.gameData) {
-			this.gameData.durationInSec = gameDuration;
 			this.gameData.scoreLeftPlayer = scoreLeftPlayer;
 			this.gameData.scoreRightPlayer = scoreRightPlayer;
 		}
-		
-		console.log('go there motherfucker');
 		/* then go to game exit view */
 		this.router.navigate(['main', 'exit_game']);
 	}
 	
 	/* GAME INIT AND TRIGGER EVERY_FRAME LOOP */
 	ngAfterViewInit(): void {
-		/* start timer */
-		this.gameDataService.startGame();
-		/* canvas management */
 		this.pongData.ctx = this.canvasRef.nativeElement.getContext('2d') as CanvasRenderingContext2D;
 		this.resizeCanvas();
 		this.draw();
@@ -370,50 +363,3 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 	}
 }
-
-// /* HostListener to handle key events */
-	// @HostListener('window:keydown', ['$event'])
-	// handleKeyDown(event: KeyboardEvent) {
-	// 	if (this.playerPaddle) {
-	// 		if (this.gameState && this.gameState.paddle1Y !== undefined && this.gameState.paddle2Y !== undefined) {
-	// 	  		if (this.gameState.paddle1Y !== undefined && this.leftPaddleControl) {
-	// 				if (event.key === 'ArrowUp') {
-	// 		  			this.socket.emit('paddleMove', 
-	// 					{ paddle1Y: this.gameState.paddle1Y - 5, paddle2Y: this.gameState.paddle2Y });
-	// 				} else if (event.key === 'ArrowDown') {
-	// 		  			this.socket.emit('paddleMove', 
-	// 					{ paddle1Y: this.gameState.paddle1Y + 5, paddle2Y: this.gameState.paddle2Y });
-	// 			}
-	// 	  	} else if (this.gameState.paddle2Y !== undefined && this.rightPaddleControl) {
-	// 			if (event.key === 'ArrowUp') {
-	// 		  		this.socket.emit('paddleMove', 
-	// 				{ paddle1Y: this.gameState.paddle1Y, paddle2Y: this.gameState.paddle2Y - 5 });
-	// 			} else if (event.key === 'ArrowDown') {
-	// 		  		this.socket.emit('paddleMove', 
-	// 				{ paddle1Y: this.gameState.paddle1Y, paddle2Y: this.gameState.paddle2Y + 5 });
-	// 				}
-	// 	  		}
-	// 		}
-	//   	}
-	// }
-
-// private playerPaddle = false;
-	// private leftPaddleControl = false;
-	// private rightPaddleControl = false;
-
-	// private onGameState(data: any): void {
-	// 	this.gameState = data;
-	// 	this.draw();
-	// }
-	
-	// private onAssignedPaddle(data: any): void {
-	// 	if (data.paddle === 'left' && !this.playerPaddle) {
-	// 		this.playerPaddle = true;
-	// 		this.leftPaddleControl = true;
-	// 		this.rightPaddleControl = false;
-	// 	} else if (data.paddle === 'right' && !this.playerPaddle) {
-	// 		this.playerPaddle = true;
-	// 		this.leftPaddleControl = false;
-	// 		this.rightPaddleControl = true;
-	// 	}
-	// }

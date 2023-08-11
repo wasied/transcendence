@@ -77,8 +77,6 @@ export class UsersService {
 	retrieveHardcodedUser() : Observable<User> { // change this after auth service is implemented
 		return of(this.harcodedUsers[0]);
 	}
-	
-	// with observables
 
 	/* READ */
 
@@ -113,7 +111,6 @@ export class UsersService {
 		return forkJoin([user1$, user2$]);
 	}
 
-	// should be used for displaying users actually playing pong !
 	getUsersInActiveSession() : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}/playing`;
 		
