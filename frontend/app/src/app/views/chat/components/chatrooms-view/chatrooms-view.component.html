@@ -1,11 +1,5 @@
 <app-header></app-header>
 <div class="pt-28 text-white mt-12 flex flex-col items-center space-y-4">
-	<div class="max-w-3xl inline-flex items-center w-full">
-		<hr class="w-screen m-8" />
-		<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
-			  >CHATROOMS</span
-		>
-  	</div>
 
 	<div class="flex justify-center m-8 pb-8">
 		<button
@@ -16,6 +10,22 @@
 		>
 			Create Chatroom
 		</button>
+	</div>
+
+	<div class="max-w-3xl inline-flex items-center w-full">
+		<hr class="w-screen m-8" />
+		<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+			  >MY CHATROOMS</span
+		>
+	</div>
+
+	<app-my-chatrooms></app-my-chatrooms>
+
+	<div class="max-w-3xl inline-flex items-center w-full">
+		<hr class="w-screen m-8" />
+		<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+			  >ALL CHATROOMS</span
+		>
 	</div>
 
 	<app-chatrooms></app-chatrooms>

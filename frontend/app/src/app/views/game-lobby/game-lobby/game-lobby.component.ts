@@ -16,7 +16,8 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
 	isMatched: boolean = false;
 	loadingMessage: string = 'Please stand by';
 	dotCount: number = 0;
-  	timeoutId!: any;
+  	timeoutStandById!: any;
+	timeoutBootGameId!: any;
 	players$!: Observable<User[]>;
 	player1!: User;
 	player2!: User;
@@ -34,31 +35,27 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
 				this.player2 = players[1];
 			})
 		);
-		/* sent session to active */
-		this.uploadGameDataStatus();
+		/* init matchmaking process */
+		this.triggerMatchmakingProcess();
 		/* timeout to display standby message */
 		this.updateLoadingMessage();
 	}
 
-	private uploadGameDataStatus() : void {
-		this.gameDataService.updateIsActive(true);
+	/* MATCHMAKING */
+
+	triggerMatchmakingProcess() : void {
+		// include the logic there
 	}
 
-	private createGameSession() : void {
-		this.sessionsService.createGameSession();
+	afterMatchmakingComplete() : void {
+
+		// this.triggerGameSession();
 	}
 
-	updateLoadingMessage() : void {
-		if (!this.isMatched) {
-			this.loadingMessage = 'Please stand by' + '.'.repeat(this.dotCount);
-			this.dotCount = (this.dotCount + 1) % 4;
-			this.timeoutId = setTimeout(() => this.updateLoadingMessage(), 500);
-		}
-	}
+	/* REROUTE TO GAME SESSION */
 
 	triggerGameSession(gameId: number) : void {
-		console.log('implement this : link to game session');
-		this.router.navigate(['main', 'game', gameId]);
+		this.router.navigate(['main', 'game', gameId]); // change this
 	}
 
 	private updateGameDataWithPlayers() : void {
@@ -66,9 +63,19 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		/* clear timeout for stanby message */
-		clearTimeout(this.timeoutId);
+		/* clear timeouts */
+		clearTimeout(this.timeoutStandById);
+		clearTimeout(this.timeoutBootGameId);
 		/* update the gameData with players to further reuse in game exit component */
 		this.updateGameDataWithPlayers();
+	}
+
+	/* DISPLAY STANDBY MESSAGE */
+	updateLoadingMessage() : void {
+		if (!this.isMatched) {
+			this.loadingMessage = 'Please stand by' + '.'.repeat(this.dotCount);
+			this.dotCount = (this.dotCount + 1) % 4;
+			this.timeoutStandById = setTimeout(() => this.updateLoadingMessage(), 500);
+		}
 	}
 }

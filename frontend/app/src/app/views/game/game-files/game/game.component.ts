@@ -34,6 +34,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 	/* GAME DATA TRANSPORTATION */
 	ngOnInit(): void {
 		this.keys = new Keys();
+
 		this.pongData = new PongData();
 
 		this.gameSocket.joinMatchmaking('standard');

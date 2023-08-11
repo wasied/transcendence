@@ -128,20 +128,36 @@ export class ChatService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
-	delete(id: number): void {
-		const result = dbClient.query(
+	async delete(id: number): Promise<void> {
+		await dbClient.query(
+			`DELETE	FROM chatrooms_messages
+					WHERE chatroom_user_uid IN (
+						SELECT id	FROM chatrooms_users
+									WHERE chatroom_uid = $1
+					);`,
+			[id]
+		)
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		await dbClient.query(
+			`DELETE	FROM chatrooms_users
+					WHERE chatroom_uid = $1`,
+			[id]
+		)
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		const result = await dbClient.query(
 			`DELETE	FROM chatrooms
 					WHERE id = $1;`,
 			[id]
 		)
-		.then(queryResult => { return queryResult; })
-		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+			.then(queryResult => { return queryResult; })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
 	/* Chat users */
 
-	join(user_id: number, chatroom_id: number): void {
-		const result = dbClient.query(
+	async join(user_id: number, chatroom_id: number, password: string | null): Promise<void> {
+		// TODO: Check if password is the same
+		const result = await dbClient.query(
 			`INSERT INTO	chatrooms_users(chatroom_uid, user_uid, admin)
 							VALUES($2, $1, false);`,
 			[user_id, chatroom_id]
@@ -162,7 +178,17 @@ export class ChatService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
-	leave(user_id: number, chatroom_id: number): void {
+	async leave(user_id: number, chatroom_id: number): Promise<void> {
+		await dbClient.query(
+			`DELETE	FROM chatrooms_messages
+					WHERE chatroom_user_uid IN (
+						SELECT id	FROM chatrooms_users
+									WHERE chatroom_uid = $1
+									AND user_uid = $2
+					);`,
+			[chatroom_id, user_id]
+		)
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 		const result = dbClient.query(
 			`DELETE	FROM	chatrooms_users
 							WHERE user_uid = $1

@@ -23,8 +23,8 @@ const routes: Routes = [
 	// game menus
 	{ path: 'main/game_params', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
 	() => import('./views/game-params/game-params.module').then(m => m.GameParamsModule)},
-	{ path: 'main/game_lobby', canActivate: [/*isAuthenticatedGuard,*/ GameLobbyGuard], loadChildren:
-	//{ path: 'main/game_lobby', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
+	//{ path: 'main/game_lobby', canActivate: [/*isAuthenticatedGuard,*/ GameLobbyGuard], loadChildren:
+	{ path: 'main/game_lobby', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
 	() => import('./views/game-lobby/game-lobby.module').then(m => m.GameLobbyModule)},
 	{ path: 'main/exit_game', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
 	() => import('./views/game-exit/game-exit.module').then(m => m.GameExitModule)},

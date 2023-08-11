@@ -6,11 +6,11 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 import { ChatWebsocketService } from 'src/app/core/services/chat-websocket.service';
 
 @Component({
-	selector: 'app-chatrooms',
-	templateUrl: './chatrooms.component.html',
-	styleUrls: ['./chatrooms.component.css']
+	selector: 'app-my-chatrooms',
+	templateUrl: './my-chatrooms.component.html',
+	styleUrls: ['./my-chatrooms.component.css']
 })
-export class ChatroomsComponent implements OnInit {
+export class MyChatroomsComponent implements OnInit {
   
 	chatrooms!: Chatroom[];
   
@@ -22,10 +22,12 @@ export class ChatroomsComponent implements OnInit {
 	ngOnInit(): void {
 		this.chatWebsocketService.listenToServerEvents();
 		this.chatWebsocketService.connect();
-		this.chatWebsocketService.rooms$.subscribe(chatrooms => { this.chatrooms = chatrooms; });
+		this.chatWebsocketService.myRooms$.subscribe(myChatrooms => { this.chatrooms = myChatrooms; });
 	}
 
 	onDeleteRequest(chatroom: Chatroom) {
+		console.log('go there');
+		console.log(chatroom);
 		this.chatWebsocketService.deleteRoom(chatroom.id);
 	}
 }

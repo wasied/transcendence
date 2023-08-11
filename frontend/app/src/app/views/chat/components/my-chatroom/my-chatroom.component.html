@@ -1,6 +1,6 @@
 <button
   	class="bg-[#ffc93b] p-2 rounded-l h-full flex items-center"
-  	(click)="accessChatroom(chatroom.id)"
+  	(click)="enterChatroom(chatroom.id)"
   	id="joinChatRoom"
 >
   	<i
@@ -45,15 +45,3 @@
 		<button *ngIf="isOwner$ | async as isOwner" class="p-2" id="cross"><i class="fa-solid fa-x" (click)="deleteChatroom()"></i></button>
 	</div>
 </div>
-
-<app-modal [showModal]="isModalOpen" (onClose)="closeModal()">
-	<div class="flex flex-col justify-center items-center bg-white text-black">
-		<form [formGroup]="accessForm" (ngSubmit)="handlePasswordProtection()">
-			<div class="mb-4">
-				<label class="block">Password</label>
-				<input type="password" formControlName="accessPassword" class="w-full px-3 py-2 border rounded">
-			</div>
-	  		<button type="submit" class="w-full py-2 bg-blue-500 text-white rounded">Submit Password</button>
-		</form>
-  	</div>
-</app-modal>

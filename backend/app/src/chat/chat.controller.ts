@@ -72,12 +72,23 @@ export class ChatController {
 	}
 
 	@Get(':id')
-	async findOne(@Param('id') id: number): Promise<Chat> {
-		const result = await this.chatService.findOne(id);
+	async findOne(@Param('id') id: string): Promise<Chat> {
+		const result = await this.chatService.findOne(+id);
 		if (!result.length)
 			throw new HttpException("Chatroom not found.", HttpStatus.NOT_FOUND);
 
 		return result[0];
+	}
+
+	@Get('is-owner/:chatroom_id')
+	amIOwner(
+		@Request() request: RequestWithUser,
+		@Param('chatroom_id') chatroom_id: string
+	): boolean {
+		if (request.user.owner.indexOf(+chatroom_id) === -1)
+			return false;
+		else
+			return true;
 	}
 
 	@Post()
@@ -85,10 +96,15 @@ export class ChatController {
 		@Request() request: RequestWithUser,
 		@Body() body: CreateDto
 	): Promise<void> {
-		const id = await this.chatService.create(request.user.id, body.name, body.password, body.direct_message);
-		this.chatService.join(request.user.id, id);
+		var password: string | null;
 		if (body.direct_message)
-			this.chatService.join(body.other_user_id, id);
+			password = null;
+		else
+			password = body.password;
+		const id = await this.chatService.create(request.user.id, body.name, password, body.direct_message);
+		this.chatService.join(request.user.id, id, password);
+		if (body.direct_message)
+			this.chatService.join(body.other_user_id, id, password);
 	}
 
 /*
@@ -118,10 +134,10 @@ export class ChatController {
 	}
 
 	@Delete(':id')
-	delete(@Request() request: RequestWithUser, @Param('id') id: number): void {
-		if (request.user.owner.indexOf(id) === -1)
+	delete(@Request() request: RequestWithUser, @Param('id') id: string): void {
+		if (request.user.owner.indexOf(+id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
-		this.chatService.delete(id);
+		this.chatService.delete(+id);
 	}
 
 	/* Chat users */
@@ -131,7 +147,7 @@ export class ChatController {
 	join(@Request() request: RequestWithUser, @Body() body: JoinDto): void {
 		if (request.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
 			throw new HttpException("User is already a chatroom member", HttpStatus.BAD_REQUEST);
-		this.chatService.join(request.user.id, body.chatroom_id);
+		this.chatService.join(request.user.id, body.chatroom_id, body.password);
 	}
 
 	@Put('admin')
@@ -145,10 +161,10 @@ export class ChatController {
 	}
 
 	@Delete('leave/:id')
-	leave(@Request() request: RequestWithUser, @Param('id') id: number): void {
-		if (request.user.chatroom_ids.indexOf(id) === -1)
+	leave(@Request() request: RequestWithUser, @Param('id') id: string): void {
+		if (request.user.chatroom_ids.indexOf(+id) === -1)
 			throw new HttpException("User is not a chatroom member", HttpStatus.BAD_REQUEST);
-		this.chatService.leave(request.user.id, id);
+		this.chatService.leave(request.user.id, +id);
 	}
 
 
@@ -165,9 +181,9 @@ export class ChatController {
 	}
 
 	@Delete('kick/:id/:user_id')
-	kick(@Request() request: RequestWithUser, @Param('id') chatroom_id: number, @Param('user_id') user_id: number): void {
-		if (request.user.admin.indexOf(chatroom_id) === -1)
+	kick(@Request() request: RequestWithUser, @Param('id') chatroom_id: string, @Param('user_id') user_id: string): void {
+		if (request.user.admin.indexOf(+chatroom_id) === -1)
 			throw new HttpException("User is not an admin", HttpStatus.FORBIDDEN);
-		this.chatService.leave(user_id, chatroom_id);
+		this.chatService.leave(+user_id, +chatroom_id);
 	}
 }
