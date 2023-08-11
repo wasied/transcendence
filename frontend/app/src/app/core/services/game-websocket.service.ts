@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { AuthenticationService } from './authentication.service';
 
+@Injectable()
 export class GameWebsocketService {
 	private socket: Socket;
 
@@ -32,10 +33,13 @@ export class GameWebsocketService {
 		// WARNING: EVERYTHING IS IN % (0-1) !!! So x=0.5 means the ball is in the middle of the screen
         this.socket.on('gameUpdate', (data: any) => {
 
-			// data.paddleLeft.y
-			// data.paddleRight.y
-			// data.ball.x
-			// data.ball.y
+			// WARNING: Every position is in % (between 0 and 1) !
+			// data.paddleLeft.y: left paddle position y (in %)
+			// data.paddleRight.y: right paddle position y (in %)
+			// data.ball.x: ball position x (in %) 
+			// data.ball.y: ball position y (in %)
+			// data.playerLeftScore: score of the left player
+			// data.playerRightScore: score of the right player
 
         	this.gameUpdate$.next(data);
 			

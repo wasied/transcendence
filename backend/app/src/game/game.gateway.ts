@@ -4,7 +4,7 @@ import { UseGuards } from '@nestjs/common';
 import { GameWebsocketGuard } from './game-websocket.guard';
 import { SocketWithUser } from '../utils/SocketWithUser';
 
-@WebSocketGateway({ cors: true, namespace: "game" })
+@WebSocketGateway({ cors: true, namespace: 'game' })
 @UseGuards(GameWebsocketGuard)
 export class PongGameGateway {
     @WebSocketServer() server: Server;
@@ -12,12 +12,38 @@ export class PongGameGateway {
     private waitingPlayers: Map<string, Socket> = new Map();
     private playersInvitations = new Map<string, Map<string, Socket>>();
     private gameSessions = {};
-    private spectators = {};    
+    private spectators = {};
 
     private performGameLogic(gameData: any): void {
         this.updateBallPosition(gameData);
+        this.handlePaddleCollision(gameData);
 
-        // STILL TODO: Collision with paddles
+        if (this.checkGameOver(gameData)) return;
+    }
+
+    private handlePaddleCollision(gameData: any): void {
+        const paddleHeight = 0.1 * gameData.canvasHeight;
+            
+        // Left paddle collision
+        if (gameData.ball.x - gameData.ball.radius <= 0 &&
+            gameData.ball.y + gameData.ball.dy > gameData.paddleLeft.y * gameData.canvasHeight &&
+            gameData.ball.y + gameData.ball.dy < (gameData.paddleLeft.y * gameData.canvasHeight) + paddleHeight) {
+            gameData.ball.dx = -gameData.ball.dx;
+        }
+
+        // Right paddle collision
+        if (gameData.ball.x + gameData.ball.radius >= gameData.canvasWidth &&
+            gameData.ball.y + gameData.ball.dy > gameData.paddleRight.y * gameData.canvasHeight &&
+            gameData.ball.y + gameData.ball.dy < (gameData.paddleRight.y * gameData.canvasHeight) + paddleHeight) {
+            gameData.ball.dx = -gameData.ball.dx;
+        }
+    }
+
+    private resetBallPosition(gameData: any): void {
+        gameData.ball.x = gameData.canvasWidth / 2;
+        gameData.ball.y = gameData.canvasHeight / 2;
+        gameData.ball.dx = -gameData.ball.dx; // Change the ball's direction to the last scoring side
+        gameData.ball.dy = (Math.random() - 0.5) * 10; // A random vertical direction to add variability
     }
 
     private updateBallPosition(gameData:any): void {
@@ -30,9 +56,27 @@ export class PongGameGateway {
         }
 
         // Collision with left and right
-        if (gameData.ball.x + gameData.ball.dx < gameData.ball.radius || gameData.ball.x + gameData.ball.dx > gameData.canvasWidth - gameData.ball.radius) {
-            gameData.ball.dx = -gameData.ball.dx;
+        if (gameData.ball.x + gameData.ball.dx < gameData.ball.radius) {
+            gameData.playerRightScore += 1;
+            this.resetBallPosition(gameData);
+        } else if (gameData.ball.x + gameData.ball.dx > gameData.canvasWidth - gameData.ball.radius) {
+            gameData.playerLeftScore += 1;
+            this.resetBallPosition(gameData);
         }
+    }
+
+    private checkGameOver(gameData: any): boolean {
+        if ((gameData.playerLeftScore >= 11 || gameData.playerRightScore >= 11) && Math.abs(gameData.playerLeftScore - gameData.playerRightScore) >= 2) {
+            const netGameData = this.convertGameDataToPercentages(this.gameSessions[gameData.gameSession]);
+            netGameData.winnerId = gameData.playerLeftScore > gameData.playerRightScore ? gameData.playerLeft : gameData.playerRight;
+
+            this.server.emit('gameEnded', netGameData);
+    
+            clearInterval(gameData.gameInterval);
+            delete this.gameSessions[gameData.gameSessionId];
+            return true;
+        }
+        return false;
     }
 
     private populateGameData(userId: string, gameData: any): any {
@@ -66,14 +110,20 @@ export class PongGameGateway {
 
     // Pair these players in a game
     private startGame(isPublic: boolean, playerOneId: string, playerTwoId: string, playerOneSocket: Socket, playerTwoSocket: Socket): void {
-        const gameSessionId = `${isPublic ? "public" : "private"}-${playerOneId}-${playerTwoId}`;
+        const gameSessionId = `${isPublic ? 'public' : 'private'}-${playerOneId}-${playerTwoId}`;
 
         const gameInterval = setInterval(() => {
+
             this.performGameLogic(this.gameSessions[gameSessionId]);
+
+            this.gameSessions[gameSessionId].timeElapsed = Date.now() - this.gameSessions[gameSessionId].startingTime;
             this.server.to(gameSessionId).emit('gameUpdate', this.convertGameDataToPercentages(this.gameSessions[gameSessionId]));
+
         }, 1000 / 60);
 
         this.gameSessions[gameSessionId] = {
+            startingTime: Date.now(),
+            gameSessionId: gameSessionId,
             playerLeft: playerOneId,
             playerRight: playerTwoId,
             canvasWidth: 1920,
@@ -109,7 +159,7 @@ export class PongGameGateway {
         if (explodedGameId.length !== 3) return (null);
 
         return ({
-            isPublic: explodedGameId[0] === "public",
+            isPublic: explodedGameId[0] === 'public',
             playerOneId: explodedGameId[1],
             playerTwoId: explodedGameId[2]
         });
