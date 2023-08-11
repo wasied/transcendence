@@ -1,10 +1,11 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-import { FriendsViewComponent } from "./components/friends-view/friends-view.component"; 
+import { FriendsViewComponent } from "./components/friends-view/friends-view.component";
+import { isAuthenticatedGuard } from "src/app/is-authenticated.guard";
 
 const routes: Routes = [
-	{path: '', component: FriendsViewComponent }
+	{path: '', component: FriendsViewComponent, canActivate: [isAuthenticatedGuard] }
 ];
 
 @NgModule ({

@@ -4,6 +4,7 @@ import { Chatroom } from 'src/app/core/models/chatroom.model';
 import tippy from 'tippy.js';
 import { UsersService } from '../../../../core/services/users.service';
 import { httpErrorHandler } from 'src/app/http-error-handler';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-direct-message',
@@ -18,14 +19,22 @@ export class DirectMessageComponent implements AfterViewInit {
 	
 	constructor(private router: Router, 
 				private elementRef: ElementRef,
-				private usersService: UsersService) {}
+				private usersService: UsersService,
+				private accessControlService: AccessControlService) {}
 
 	ngAfterViewInit() : void {
 		// Button Tooltip
 		this.initializeTooltips()
 	}
 
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+	}
+
 	goToDMSession(dmId: number) : void {
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main/direct_messages', dmId]);
 	}
 

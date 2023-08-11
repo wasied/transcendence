@@ -5,6 +5,7 @@ import { SessionsService } from '../../../core/services/sessions.service';
 import { UsersService } from '../../../core/services/users.service';
 import { User } from 'src/app/core/models/user.model';
 import { Observable, tap } from 'rxjs';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-game-lobby',
@@ -25,7 +26,8 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
 	constructor (private gameDataService: GameDataService,
 				 private sessionsService: SessionsService,
 				 private usersService: UsersService,
-				 private router: Router) {}
+				 private router: Router,
+				 private accessControlService: AccessControlService) {}
 
 	ngOnInit(): void {
 		/* init observables */
@@ -52,9 +54,16 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
 		// this.triggerGameSession();
 	}
 
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+	}
+
 	/* REROUTE TO GAME SESSION */
 
 	triggerGameSession(gameId: number) : void {
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main', 'game', gameId]); // change this
 	}
 

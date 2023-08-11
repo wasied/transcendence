@@ -3,6 +3,7 @@ import { GameData, GameDataService } from 'src/app/core/services/game-data.servi
 import { PongData, GameState, Keys } from '../game-interface';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-game',
@@ -34,7 +35,8 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 	private animationFrameID!: number;
 
 	constructor(private gameDataService: GameDataService,
-				private router: Router) {};
+				private router: Router,
+				private accessControlService: AccessControlService) {};
 
 	/* DEBUG */
 	private debug() : void {
@@ -71,6 +73,12 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		}	
 	}
 
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+	}
+
 	/* update gameData */
 	private endgameDataProcessing() : void {
 		const scoreLeftPlayer: number = this.gameState.player1Score;
@@ -81,6 +89,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.gameData.scoreRightPlayer = scoreRightPlayer;
 		}
 		/* then go to game exit view */
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main', 'exit_game']);
 	}
 	

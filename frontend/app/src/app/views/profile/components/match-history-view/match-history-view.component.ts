@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-match-history-view',
@@ -12,7 +13,8 @@ export class MatchHistoryViewComponent implements OnInit {
 	isProfileOfUser: boolean = false;
 	
 	constructor (private router: Router,
-				 private route: ActivatedRoute) {};
+				 private route: ActivatedRoute,
+				 private accessControlService: AccessControlService) {};
 
 	ngOnInit(): void {
 		
@@ -37,11 +39,19 @@ export class MatchHistoryViewComponent implements OnInit {
 		return true;
 	}
 
+
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+		}
+
 	goBackToProfile() : void {
 		console.log('boolean = ', this.isProfileOfUser);
 		if (this.isProfileOfUser) {
 			this.router.navigate(['main', 'profile']);
 		} else {
+			this.accessControlService.setAccess(true);
 			this.router.navigate(['main', 'profile', this.idOfUserProfile]);
 		}
 	}
