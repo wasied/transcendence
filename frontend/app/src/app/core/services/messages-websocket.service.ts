@@ -20,7 +20,7 @@ export class MessagesWebsocketService {
 				}
 			}
 		};
-		
+
 		this.socket = io('http://localhost:8080/messages', options);
 	}
 

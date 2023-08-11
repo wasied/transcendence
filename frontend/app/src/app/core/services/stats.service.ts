@@ -9,23 +9,6 @@ import { AuthHttpClient } from 'src/app/auth-http-client';
 export class StatsService {
 
 	constructor (private authHttp: AuthHttpClient) {}
-
-	private hardcodedStats: Stat[] = [{
-		wins: 13,
-		losses: 7,
-		games_played: 20,
-		win_ratio: '0.78'
-	}];
-	
-	getHardcodedStats() : Observable<Stat[]> {
-		return of(this.hardcodedStats);
-	}
-
-	getHardcodedStat() : Observable<Stat> { // placeholder
-		return of(this.hardcodedStats[0]);
-	}
-
-	// with DB
 	
 	private apiUrl : string = 'http://localhost:8080/stats';
 

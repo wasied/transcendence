@@ -13,6 +13,18 @@
 	<div *ngIf="!userBlocked">
 		<button (click)="blockUser()">Block</button>
 	</div>
+	<div class="max-w-3xl inline-flex items-center w-full">
+    	<hr class="w-screen m-8" />
+    	<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+      		>STATS</span
+    	>
+  	</div>
 	<app-stats [userId]="idOfUserProfile"></app-stats>
+	<div class="max-w-3xl inline-flex items-center w-full">
+    	<hr class="w-screen m-8" />
+    	<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+      		>FRIENDS</span
+    	>
+  	</div>
 	<app-friends [userId]="idOfUserProfile"></app-friends>
 </div>

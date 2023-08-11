@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GameDataService, GameData } from 'src/app/core/services/game-data.service';
-import { StatsService } from 'src/app/core/services/stats.service';
 import { Subscription, Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { User } from 'src/app/core/models/user.model';
+import { UsersService } from 'src/app/core/services/users.service';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
@@ -13,29 +14,34 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 export class GameExitComponent implements OnInit, OnDestroy {
 
 	gameData: GameData | null = null;
-	private subscription: Subscription | undefined;
+	private subscriptionUser: Subscription | undefined;
+	private subscriptionPlayers: Subscription | undefined;
+	user$!: Observable<User>;
+
+	idPlayer1!: number | null | undefined;
+	idPlayer2!: number | null | undefined;
+	currentId: number | null = null;
 	
 	constructor (private gameDataService: GameDataService,
-				 private statsService: StatsService,
-				 private router: Router) {};
+				 private router: Router,
+				 private usersService: UsersService) {};
 
 	ngOnInit(): void {
 		this.retrieveGameData();
+		this.user$ = this.usersService.getMe();
+		this.subscriptionUser = this.user$.subscribe(data => {
+			this.currentId = data.id;
+		})
 		this.loadPlayers();
-		this.updateStats();
 	}
 
 	private loadPlayers() : void {
-		const idPlayer1 = this.gameData?.leftPlayerId;
-		const idPlayer2 = this.gameData?.rightPlayerId;
-	}
-
-	private updateStats() : void {
-		// this.statsService.updateStatsOfUserAfterGame(); // create and enable this
+		this.idPlayer1 = this.gameData?.leftPlayerId;
+		this.idPlayer2 = this.gameData?.rightPlayerId;
 	}
 
 	private retrieveGameData() : void {
-		this.subscription = this.gameDataService.getGameData().subscribe(
+		this.subscriptionPlayers = this.gameDataService.getGameData().subscribe(
 			data => { this.gameData = data; },
 			httpErrorHandler
 		);
@@ -46,8 +52,11 @@ export class GameExitComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.subscription) {
-			this.subscription.unsubscribe();
+		if (this.subscriptionUser) {
+			this.subscriptionUser.unsubscribe();
+		}
+		if (this.subscriptionPlayers) {
+			this.subscriptionPlayers.unsubscribe();
 		}
 	}
 }
