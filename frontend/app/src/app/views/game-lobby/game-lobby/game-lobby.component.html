@@ -1,16 +1,21 @@
 <app-header></app-header>
 <!-- Display when matchmaking process has been completed -->
-<div *ngIf="players$ | async as players; else standby" class="text-white">
-	<div *ngIf="players">
-		<div>
-			<p> {{ players[0].username }}</p>
-		</div>
-		<p>VS</p>
-		<div>
-			<p> {{ players[1].username }}</p>
-		</div>
-	</div>
+<div *ngIf="players$ | async as players; else standby" class="flex flex-col h-screen">
+    <!-- Remaining space after the header -->
+    <div *ngIf="players" class="text-white flex-grow flex items-center justify-center">
+        <div class="text-center">
+            <div class="text-8xl mx-auto">
+                <p>hihiuhihiuh</p>
+            </div>
+            <p class="text-6xl pt-8 pb-8 mx-auto">VS</p>
+            <div class="text-8xl mx-auto">
+                <p>trewewe</p>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 
 <!-- Display when matchmaking process is currently proceed -->
 <ng-template #standby>
@@ -18,3 +23,6 @@
 	  	<p class="text-6xl">{{ this.loadingMessage }}</p>
 	</div>
 </ng-template>
+
+<!-- <div *ngIf="players$ | async as players; else standby" class="text-white flex items-center justify-center h-screen">
+	<div *ngIf="players" class="text-center"> -->
