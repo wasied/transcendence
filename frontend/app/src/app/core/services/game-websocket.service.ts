@@ -52,19 +52,14 @@ export class GameWebsocketService {
 
 	// This will make the player join the matchmaking queue (the public one) until he finds someone
 	// When he'll find someone, gameStarted will be called
-	public joinMatchmaking(): void {
-        this.socket.emit('joinMatchmaking');
+	public joinMatchmaking(matchType: string): void {
+        this.socket.emit('joinMatchmaking', matchType);
     }
 
 	// This will make the player join the session without actually being a player
 	// So he'll just receive game updates for the match
     public spectateGame(spectatingUserId: string): void {
         this.socket.emit('spectateGame', spectatingUserId);
-    }
-
-	// This will update the paddle position of the player serverside and sync it to everyone
-    public updatePaddlePosition(state: any): void {
-        this.socket.emit('paddlePositionUpdate', state);
     }
 
 	// This will disconnect and stop the party for everyone
@@ -83,6 +78,14 @@ export class GameWebsocketService {
 	// It has nothing to do with the chat system but it's needed for the invitation to work
 	public acceptInvitation(opponentId: string): void {
 		this.socket.emit('acceptInvitation', opponentId);
+	}
+
+	public movePaddleUp(): void {
+		this.socket.emit('movePaddleUp');
+	}
+
+	public movePaddleDown(): void {
+		this.socket.emit('movePaddleDown');
 	}
 
 }
