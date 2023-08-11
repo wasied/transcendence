@@ -1,8 +1,5 @@
 export class MatchHistory {
-	constructor (public userId: number,
-				 public opponentId: number,
-				 public opponentPseudo: string,
-				 public opponentStatus: string,
-				 public yourScore: number,
-				 public opponentScore: number) {}
+	user1_username: string;
+	user2_username: string;
+	winner_username: string;
 }
