@@ -7,17 +7,6 @@
 		<p>{{ matchHistoryElem.opponentPseudo }}</p>
 	</div>
 	<div class="flex">
-		<div *ngIf="matchHistoryElem.opponentStatus === 'online'">
-			<p>Status : Online 🟢</p>
-		</div>
-		<div *ngIf="matchHistoryElem.opponentStatus === 'offline'">
-			<p>Status : Offline 🔴</p>
-		</div>
-		<div *ngIf="matchHistoryElem.opponentStatus === 'in a game'">
-			<p>Status : In a Game 🟠</p>
-		</div>
-	</div>
-	<div class="flex">
 		<button (click)="goToOpponentProfile(matchHistoryElem.opponentId)">See Profile</button>
 	</div>
 	<div class="">

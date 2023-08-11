@@ -6,7 +6,7 @@ import { ChatroomsViewComponent } from "./components/chatrooms-view/chatrooms-vi
 
 const routes: Routes = [
 	{ path: ':id', component: ChatroomSessionComponent },
-	{ path: '', component: ChatroomsViewComponent } // add paths for chatrooms
+	{ path: '', component: ChatroomsViewComponent }
 ];
 
 @NgModule({

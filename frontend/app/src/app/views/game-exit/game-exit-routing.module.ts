@@ -4,7 +4,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { GameExitComponent } from "./game-exit/game-exit.component";
 
 const routes: Routes = [
-	{path: '', component: GameExitComponent}
+	{path: ':id', component: GameExitComponent}
 ];
 
 @NgModule ({
