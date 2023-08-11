@@ -1,3 +1,6 @@
-<div *ngIf="matchHistory$ | async as matchHistory">
-	<app-match-history-elem *ngFor="let elem of matchHistory" [matchHistoryElem]="elem"></app-match-history-elem>
+<div *ngIf="matchHistory$ | async as matchHistory" class="max-w-2xl w-full mx-auto">
+	<ul class="flex flex-col items-center space-y-4">
+		<app-match-history-elem class="w-full flex justify-center" 
+		*ngFor="let elem of matchHistory" [matchHistoryElem]="elem"></app-match-history-elem>
+	</ul>
 </div>

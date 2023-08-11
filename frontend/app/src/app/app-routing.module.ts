@@ -3,6 +3,8 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { WhitePageComponent } from "./views/white-page/white-page.component";
 
+import { isAuthenticatedGuard } from './is-authenticated.guard'
+import { GameLobbyGuard } from "./game-lobby-guard.guard";
 // import { isAuthenticatedGuard } from './is-authenticated.guard'
 
 const routes: Routes = [
@@ -16,14 +18,13 @@ const routes: Routes = [
 	() => import('./views/main-menu/main-menu.module').then(m => m.MainMenuModule)},
 	{path: 'main/friends', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
 	() => import('./views/friends-view/friends-view.module').then(m => m.FriendsViewModule)},
-	{ path: 'main/games', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
-	() => import('./views/games-view/games-view.module').then(m => m.GamesViewModule)},
 	{ path: 'main/profile', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
 	() => import('./views/profile/profile.module').then(m => m.ProfileModule)},
 	// game menus
 	{ path: 'main/game_params', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
 	() => import('./views/game-params/game-params.module').then(m => m.GameParamsModule)},
-	{ path: 'main/game_lobby', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
+	{ path: 'main/game_lobby', canActivate: [/*isAuthenticatedGuard,*/ GameLobbyGuard], loadChildren:
+	//{ path: 'main/game_lobby', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
 	() => import('./views/game-lobby/game-lobby.module').then(m => m.GameLobbyModule)},
 	{ path: 'main/exit_game', /*canActivate: [isAuthenticatedGuard],*/ loadChildren:
 	() => import('./views/game-exit/game-exit.module').then(m => m.GameExitModule)},

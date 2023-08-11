@@ -342,7 +342,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 	}
 
-	/* CONTROLS*/
+	/* CONTROLS */
 
 	@HostListener('window:keydown', ['$event'])
 	handleKeyDown(event: KeyboardEvent): void {
@@ -369,7 +369,6 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 				break;
 		}
 	}
-
 }
 
 // /* HostListener to handle key events */

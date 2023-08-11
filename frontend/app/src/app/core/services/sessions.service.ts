@@ -29,6 +29,20 @@ export class SessionsService {
 	
 	private apiURL = 'http://localhost:8080/sessions';
 
+	/* CREATE */
+
+	// do that after matchmaking, useful ???
+	createGameSession() : Observable<void> {
+		const endpoint: string = `${this.apiURL}`; // modify this
+		const body = {
+			action: 'createGameSession',
+		};
+		return this.authHttp.post<void>(endpoint, body);
+	}
+	
+
+	/* READ */
+	
 	// return all the game sessions
 	getAllSessions() : Observable<Session[]> {
 		const endpoint: string = `${this.apiURL}`;

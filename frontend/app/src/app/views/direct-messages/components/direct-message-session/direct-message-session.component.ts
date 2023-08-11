@@ -18,6 +18,6 @@ export class DirectMessageSessionComponent implements OnInit {
 			this.chatroomId= +id;			
 		}
 		else
-			; // raise error there
+			console.error("No direct message id specified");
 	}
 }

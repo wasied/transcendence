@@ -20,9 +20,5 @@ export class UpdateProfilePictureDto {
 export class BlockDto {
 	@IsNotEmpty()
 	@IsNumber()
-	blocker_uid: number;
-
-	@IsNotEmpty()
-	@IsNumber()
 	blocked_uid: number;
 }

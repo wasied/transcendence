@@ -57,6 +57,7 @@ export class ChatController {
 			const participants_id = await this.chatService.findChatroomUsersId(directMessages[index].id);
 			if (participants_id.length !== 2)
 				throw new HttpException("Direct message does not have 2 members", HttpStatus.BAD_REQUEST);
+			directMessages[index].participants_id = [];
 			directMessages[index].participants_id.push(request.user.id);
 			directMessages[index].participants_id.push(participants_id[0] !== request.user.id ? participants_id[0] : participants_id[1]);
 			var participants = [];

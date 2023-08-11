@@ -44,10 +44,10 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 	}
 
 	kickUser(participantId: number) : void {
-		// this.chatroomsService.kickUserFromChatroom(this.chatroomId, participantId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+		this.chatroomsService.kickUserFromChatroom(this.chatroomId, participantId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	banUser(participantId: number) : void {
@@ -65,38 +65,37 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 	}
 
 	blockUser(participantId: number) : void {
-		// this.usersService.blockUser(participantId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+		this.usersService.blockUser(participantId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	seeUserProfile(participantId: number) : void {
 		this.router.navigate(['main', 'profile', participantId]);
 	}
 
-	playWithUser(participantId: number) : void {
-		console.log('feature not implemented yet');
-	}
 
 	makeAdmin(participantId: number) : void {
-		// this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+		this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	makeNonAdmin(participantId: number) : void {
-		// this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+		this.chatroomsService.makeUserANonAdmin(this.chatroomId, participantId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
+
 	isAllowedToElevateToAdmin(participantId: number) : boolean {
-		console.log('check if can elevate to admin : feature not implemented yet');
+		// backend will block if the user is not allowed
 		return true;
 	}
+
 
 	ngOnDestroy(): void {
 		if (this.subscription) {

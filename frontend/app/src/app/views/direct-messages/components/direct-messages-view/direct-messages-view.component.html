@@ -1,14 +1,25 @@
-<!-- <app-header></app-header> -->
-<div class="bg-black w-full text-white">
-	<div class="flex items-center flex-col justify-center text-white p-8">
-    	<div>
-      		<h1 class="text-5xl">DIRECT MESSAGES</h1>
-    	</div>
-    	<div>
-      		<button (click)="onClickOnCreateDMSession()">New Conversation</button>
-    	</div>
+<app-header></app-header>
+<div class="pt-28 text-white mt-12 flex flex-col items-center space-y-4">
+	<!-- direct messages title -->
+	<div class="max-w-3xl inline-flex items-center w-full">
+		<hr class="w-screen m-8" />
+		<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
+			  >DIRECT MESSAGES</span
+		>
   	</div>
-  	<div class="grid lg:grid-cols-2">
+	<!-- add new conversation -->
+	<div class="flex justify-center m-8 pb-8">
+		<button
+		  	type="button"
+		  	(click)="onClickOnCreateDMSession()"
+		  	class="rounded-full border-2 border-yellow-500 bg-yellow-500 text-2xl h-12 w-48 
+		  	hover:bg-white hover:text-yellow-500 ease-in duration-300"
+		>
+			New DM
+		</button>
+	</div>
+
+  	<div>
     	<app-direct-messages></app-direct-messages>
   	</div>
 
@@ -17,5 +28,6 @@
 		<app-direct-message-dropdown [users]="users"(userClicked)="fillForm($event)" ></app-direct-message-dropdown>
 	</app-modal>
 	
+	<!-- shadow component -->
 	<app-dm-handler></app-dm-handler>
 </div>

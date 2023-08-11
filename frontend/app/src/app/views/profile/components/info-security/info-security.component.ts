@@ -33,16 +33,23 @@ export class InfoSecurityComponent {
 		});
 	};
 	
-	onToggleTwoFactorAuth(event: Event): void {
+	async onToggleTwoFactorAuth(event: Event): Promise<void> {
 		const target = event.target as HTMLInputElement;
   		const isChecked = target.checked;
 
 		if (isChecked) {
-			this.twoFactorAuthQR = 'https://i.stack.imgur.com/kbOO8.png'; // placeholder, retrieve it from backend
-			this.auth.change2faStatus();
+			await this.auth.change2faStatus()
+				.then(value => {
+					if (!value.success)
+						return ;
+					if (value.qrCodeUrl)
+						this.twoFactorAuthQR = value.qrCodeUrl;
+					else
+						this.twoFactorAuthQR = "";
+				});
 			this.showModal2FA = true;
   		} else {
-    		this.auth.change2faStatus();
+			await this.auth.change2faStatus();
 			this.showModal2FA = false;
   		}
 	}
@@ -52,7 +59,6 @@ export class InfoSecurityComponent {
   	onClickEditUsername() : void {
 		const newUsername: string = this.usernameForm.get('newUsername')?.value;
 		
-		console.log('edit username : link not implemented');
 		this.closeModalUsername();
 
 		this.usersService.modifyUsernameToRegisteredUser(newUsername).subscribe(
@@ -64,7 +70,6 @@ export class InfoSecurityComponent {
 	onClickEditPic() : void {
 		const newProfilePicURL: string = this.picForm.get('newPicURL')?.value;
 		
-		console.log('edit profile pic : link implemented');
 		this.closeModalPic();
 
 		this.usersService.modifyProfilePictureToRegisteredUser(newProfilePicURL).subscribe(

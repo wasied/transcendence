@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Chatroom } from 'src/app/core/models/chatroom.model';
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
   	selector: 'app-chatroom-header',
@@ -38,7 +39,6 @@ export class ChatroomHeaderComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		//this.chatroom$ = this.chatroomsService.getHarcodedChatroomById(this.chatroomId);
 		this.chatroom$ = this.chatroomsService.getChatroomByID(this.chatroomId);
 		this.passwordProtected = false; // add some logic there
 	}
@@ -52,6 +52,7 @@ export class ChatroomHeaderComponent implements OnInit {
 	}
 
 	isUserAnOwner() : boolean {
+		// backend will block if the user is not allowed
 		return true; // implement logic later
 	}
 
@@ -60,17 +61,24 @@ export class ChatroomHeaderComponent implements OnInit {
 	addPassword() : void {
 		const password : string = this.setPasswordForm.get('password')?.value;
 		
-		// this.chatroomsService.modifyChatroomAccessRights(this.chatroomId, 'passwordProtected', password);
+		this.chatroomsService.modifyChatroomPassword(this.chatroomId, password).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 		this.passwordPresent = true;
 	}
 
 	changePassword() : void {
 		this.changePasswordFormDisplayStatus();
 
-		const oldPassword : string = this.modifyPasswordForm.get('oldPassword')?.value;
+		//const oldPassword : string = this.modifyPasswordForm.get('oldPassword')?.value;
 		const newPassword : string = this.modifyPasswordForm.get('newPassword')?.value;
 
-		// this.chatroomsService.modifyChatroomPassword(this.chatroomId,oldPassword, newPassword);
+		this.chatroomsService.modifyChatroomPassword(this.chatroomId, newPassword).subscribe(
+			data => {},
+			httpErrorHandler
+		);
+;
 	}
 
 	onTogglePasswordChange(event: Event) : void {
@@ -94,7 +102,10 @@ export class ChatroomHeaderComponent implements OnInit {
 	/* EXITING CHATROOM METHODS */
 
 	removeYourselfFromChatroom() : void {
-		// implement logic there
+		this.chatroomsService.delParticipantFromChatroom(this.chatroomId).subscribe(
+			data => {},
+			httpErrorHandler
+		);
 		this.onExitingChatroomSession();
 	}
 	

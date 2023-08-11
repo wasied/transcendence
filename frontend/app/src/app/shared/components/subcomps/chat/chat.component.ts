@@ -1,31 +1,50 @@
-import { Component, ViewChild, ElementRef, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Message } from 'src/app/core/models/message.model'; 
-import { MessagesService } from 'src/app/core/services/messages.service';
+import { MessagesWebsocketService } from 'src/app/core/services/messages-websocket.service';
+import { ActivatedRoute } from '@angular/router';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-chat',
 	templateUrl: './chat.component.html',
-	styleUrls: ['./chat.component.css']
+	styleUrls: ['./chat.component.css'],
+	providers: [MessagesWebsocketService]
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
 	
 	@ViewChild('messageList', { static: false }) messageList!: ElementRef;
  
-	messages$!: Observable<Message[]>;
+	chatroomId!: number;
+	messages: Message[] = [];
 	newMessageText: string = '';
 	sender!: string;
 
-	constructor (private messagesService: MessagesService) {}
+	constructor (
+		private route: ActivatedRoute,
+		public messagesWebsocketService: MessagesWebsocketService
+	) {}
 
 	ngOnInit(): void {
-		this.loadMessages();
-		// display with websocket
-	}
+		const id: string | null = this.route.snapshot.paramMap.get('id');
+		if (id)
+			this.chatroomId = +id;
+		else {
+			console.error("Invalid chatroom id");
+			return ;
+		}
 
-	private loadMessages() : void {
-		this.messages$ = this.messagesService.getAllHardcodedMessages();
+		this.messagesWebsocketService.listenToServerEvents();
+		this.messagesWebsocketService.connect(this.chatroomId);
+
+		this.messagesWebsocketService.updateMessages$.subscribe(
+			(data: any) => {
+				for (const message of data) {
+					message.created_at = new Date(message.created_at);
+				}
+				this.messages = data.reverse();
+			}
+		);
 	}
 	
 	addMessage(inputMessage: string) : void {
@@ -34,12 +53,9 @@ export class ChatComponent implements OnInit {
     	if (inputMessage.length === 0) {
     		return;
     	}
-    
-	// Get chatroomId
-		this.messagesService.sendMessageToDB(inputMessage, 1).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+
+		this.messagesWebsocketService.sendMessage(this.chatroomId, inputMessage);
+
 		this.newMessageText = '';
     	setTimeout(() => this.scrollToBottom(), 0);
 	}
@@ -52,4 +68,10 @@ export class ChatComponent implements OnInit {
       		console.log(error);
     	}
   	}
+
+	ngOnDestroy() {
+		console.log("DESTROYEDDDDD");
+		this.messagesWebsocketService.updateMessages$.unsubscribe();
+		this.messagesWebsocketService.disconnect(this.chatroomId);
+	}
 }

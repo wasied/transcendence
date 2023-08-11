@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Friend } from 'src/app/core/models/friend.model'; 
-import { FriendService } from 'src/app/core/services/friends.service'; 
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FriendsHandlerComponent } from '../friends-handler/friends-handler.component';
 import { User } from 'src/app/core/models/user.model';
 import { UsersService } from 'src/app/core/services/users.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
   selector: 'app-friends-view',
@@ -23,10 +22,13 @@ export class FriendsViewComponent implements OnInit, OnDestroy {
 
 	constructor(private usersService: UsersService) {};
 
-	ngOnInit(): void {
-		this.subscription = this.usersService.getHardcodedUsers().subscribe(data => { // change hardoded users
-			this.users = data;
-		});
+	ngOnInit(): void { // should returns all users, minus the friends of the player, using users service
+		
+		
+		// this.subscription = this.friendService.getMyFriends().subscribe(
+		// 	data => { this.users = data; },
+		// 	httpErrorHandler
+		// );
 	}
 
 	fillForm(user: User) { // triggers 

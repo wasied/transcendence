@@ -12,3 +12,15 @@ export class SendDto {
 	@Transform(({ value }) => sanitizeHtml(value))
 	content: string;
 }
+
+export class JoinDto {
+	@IsNotEmpty()
+	@IsNumber()
+	chatroom_id: number;
+}
+
+export class LeaveDto {
+	@IsNotEmpty()
+	@IsNumber()
+	chatroom_id: number;
+}

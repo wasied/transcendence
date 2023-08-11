@@ -18,7 +18,7 @@ export class ProfileBadgeComponent implements OnInit {
 	constructor (private usersService: UsersService) {};
 	
 	ngOnInit(): void {
-		this.user$ = this.usersService.retrieveHardcodedUser(); // change this
+		this.user$ = this.usersService.getUserById(this.userId);
 	}
 	
 	onButtonClick(): void {
