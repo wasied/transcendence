@@ -16,48 +16,6 @@ export class MatchHistoryService {
 	constructor (private usersService: UsersService,
 				 private sessionsService: SessionsService,
 				 private sessionsUsersService: SessionsUsersService) {};
-
-	private hardcodedGameHistory: MatchHistory[] = [
-		{
-		userId: 1,
-		opponentId: 2,
-		opponentPseudo: 'player 2',
-		opponentStatus: 'online',
-		yourScore: 7,
-		opponentScore: 3
-		},
-		{
-			userId: 1,
-			opponentId: 2,
-			opponentPseudo: 'player 2',
-			opponentStatus: 'online',
-			yourScore: 7,
-			opponentScore: 3
-		},
-		{
-			userId: 1,
-			opponentId: 2,
-			opponentPseudo: 'player 2',
-			opponentStatus: 'online',
-			yourScore: 7,
-			opponentScore: 3
-		},
-		{
-			userId: 1,
-			opponentId: 2,
-			opponentPseudo: 'player 2',
-			opponentStatus: 'online',
-			yourScore: 7,
-			opponentScore: 3
-		}
-	];
-
-	getHardcodedGameHistory(): Observable<MatchHistory[]> {
-		return of(this.hardcodedGameHistory);
-	}
-	
-	// with observables
-	
 	
 	getGameHistory(playerId: number): Observable<MatchHistory[]> {
 		
@@ -94,7 +52,7 @@ export class MatchHistoryService {
 		});
 
 		if (!usersInSession || usersInSession.length != 2)
-			throw new Error('user not found !'); // change the message
+			throw new Error('user not found !');
 		
 		return new MatchHistory(
 			usersInSession[0].id,

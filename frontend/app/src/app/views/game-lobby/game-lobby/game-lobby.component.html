@@ -5,17 +5,15 @@
     <div *ngIf="players" class="text-white flex-grow flex items-center justify-center">
         <div class="text-center">
             <div class="text-8xl mx-auto">
-                <p>hihiuhihiuh</p>
+                <p>{{this.players[0]}}</p>
             </div>
             <p class="text-6xl pt-8 pb-8 mx-auto">VS</p>
             <div class="text-8xl mx-auto">
-                <p>trewewe</p>
+                <p>{{this.players[1]}}</p>
             </div>
         </div>
     </div>
 </div>
-
-
 
 <!-- Display when matchmaking process is currently proceed -->
 <ng-template #standby>
@@ -23,6 +21,3 @@
 	  	<p class="text-6xl">{{ this.loadingMessage }}</p>
 	</div>
 </ng-template>
-
-<!-- <div *ngIf="players$ | async as players; else standby" class="text-white flex items-center justify-center h-screen">
-	<div *ngIf="players" class="text-center"> -->

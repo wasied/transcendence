@@ -30,11 +30,6 @@ export class ProfileOtherComponent implements OnInit, OnDestroy {
 			console.error("Invalid user id");
 			return ;
 		}
-
-		// this.isUserBlocked$ = this.usersService.isUserBlocked(this.idOfUserProfile);
-		// this.subscription = this.isUserBlocked$.subscribe((isBlocked) => {
-		// 	this.userBlocked = isBlocked;
-		// });
 	}
 
 	goToGameHistory() : void {
