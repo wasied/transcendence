@@ -1,11 +1,11 @@
 <div *ngIf="chatrooms">
   	<ul class="grid lg:grid-cols-2 grid-col-1 gap-4 lg:w-full w-5/6 mx-auto">
     	<div *ngFor="let chatroomCard of chatrooms">
-      		<app-chatroom
+			<app-my-chatroom
       			class="flex items-center space-x-4 rounded text-black bg-gray-200 cursor-pointer"
       			[chatroom]="chatroomCard"
       			(deleteRequest)="onDeleteRequest($event)"
-    		></app-chatroom>
+			></app-my-chatroom>
     	</div>
   	</ul>
 </div>
