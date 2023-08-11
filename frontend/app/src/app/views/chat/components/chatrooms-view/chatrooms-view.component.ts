@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChatWebsocketService } from 'src/app/core/services/chat-websocket.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 
@@ -8,13 +8,15 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 	templateUrl: './chatrooms-view.component.html',
 	styleUrls: ['./chatrooms-view.component.css']
 })
-export class ChatroomsViewComponent {
+export class ChatroomsViewComponent implements OnInit {
 
 	newChatroomForm!: FormGroup;
 	showModal: boolean = false;
 	
-	constructor (private chatroomsService: ChatroomsService,
-				 private formBuilder : FormBuilder) 
+	constructor (
+				 private formBuilder : FormBuilder,
+				 private chatWebsocketService: ChatWebsocketService
+	)
 	{
 		this.newChatroomForm = this.formBuilder.group({
 			chatroomName : [''],
@@ -22,6 +24,10 @@ export class ChatroomsViewComponent {
 			accessPassword : ['']
 		});
 	};
+
+	ngOnInit(): void {
+		this.chatWebsocketService.connect();
+	}
 	
 	onCreateChatroom() : void {
 		this.openModal();
@@ -34,10 +40,7 @@ export class ChatroomsViewComponent {
 		this.closeModal();
 		if (!password || password === "")
 			password = null;
-		this.chatroomsService.createChatroom(chatroomName, password).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+		this.chatWebsocketService.createRoom(chatroomName, password, false, 0);
 	}
 
 	openModal() : void {

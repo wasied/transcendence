@@ -19,7 +19,6 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	@Output() deleteRequest = new EventEmitter<Chatroom>();
 
 	isOwner$!: Observable<boolean>;
-	isOwner: boolean = false; // change that to use with Observable<boolean>
 	
 	private subscriptions: Subscription = new Subscription();
 	
@@ -39,10 +38,7 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	ngOnInit() : void {
-		// this.isOwner$ = this.usersService.isUserOwnChatroom(this.chatroom.id);
-		// this.subscription = this.isOwner$.subscribe(isOwner => {
-		// 	this.isOwner = isOwner;
-		// });
+		this.isOwner$ = this.chatroomsService.amIChatroomOwner(this.chatroom.id);
 	}
 	
 	ngAfterViewInit() : void {
@@ -122,7 +118,6 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 	
 	deleteChatroom() : void {
-		console.log('go there to emit');
 		this.deleteRequest.emit(this.chatroom);
 	}
 

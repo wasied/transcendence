@@ -28,6 +28,8 @@ export class ChatroomsService {
 
 	/* CREATE */
 	
+/*
+
 	createChatroom(newName: string, newPassword: string | null) : Observable<void> {
 		
 		const endpoint: string = `${this.apiURL}`;
@@ -40,7 +42,11 @@ export class ChatroomsService {
 		return this.authHttp.post<void>(endpoint, body);
 	}
 
+*/
+
 	/* READ */
+
+/*
 
 	getAllChatrooms() : Observable<Chatroom[]> {
 		const endpoint: string = `${this.apiURL}/chatrooms`;
@@ -54,10 +60,19 @@ export class ChatroomsService {
 		return this.authHttp.get<Chatroom[]>(endpoint);
 	}
 
+*/
+
+
 	getChatroomByID(id: number) : Observable<Chatroom> {
 		const endpoint: string = `${this.apiURL}/${id}`;
 		
 		return this.authHttp.get<Chatroom>(endpoint);
+	}
+
+	amIChatroomOwner(chatroomId: number): Observable<boolean> {
+		const endpoint: string = `${this.apiURL}/is-owner/${chatroomId}`;
+
+		return this.authHttp.get<boolean>(endpoint);
 	}
 
 	// canUserCoerce(participantsId: number[]) : Observable<number[]> {
@@ -80,11 +95,15 @@ export class ChatroomsService {
 
 	/* DELETE */
 
+/*
+
 	delChatroom(id: number) : Observable<void> {
 		const endpoint: string = `${this.apiURL}/${id}`;
 		
 		return this.authHttp.delete<void>(endpoint);
 	}
+
+*/
 
 	/**
 	*** Chatroom_users

@@ -23,11 +23,9 @@ export class MessagesGateway {
 	async connect(
 		@ConnectedSocket() client: SocketWithUser,
 		@MessageBody() body: JoinDto
-	): Promise<Message[]> {
-		if (!body.chatroom_id) {
-			console.error("No chatroom id specified");
-			return ;
-		}
+	): Promise<void> {
+		if (!body.chatroom_id)
+			throw new WsException("No chatroom id specified");
 		client.join(String(body.chatroom_id));
         const updatedMessages = await this.messagesService.findChatroomMessages(client.user.id, body.chatroom_id);
         client.emit('updateMessages', updatedMessages);

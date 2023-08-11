@@ -42,7 +42,7 @@
   	</button>
 	<!-- this is the suppress chatroom button -->
 	<div class="flex justify-end space-x-4 px-4">
-		<button *ngIf="isOwner" class="p-2" id="cross"><i class="fa-solid fa-x" (click)="deleteChatroom()"></i></button>	
+		<button *ngIf="isOwner$ | async as isOwner" class="p-2" id="cross"><i class="fa-solid fa-x" (click)="deleteChatroom()"></i></button>
 	</div>
 </div>
 
