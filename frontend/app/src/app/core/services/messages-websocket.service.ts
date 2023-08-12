@@ -8,7 +8,6 @@ export class MessagesWebsocketService {
   private socket: Socket;
 
 	public updateMessages$: Subject<any> = new Subject();
-	public newMessage$: Subject<any> = new Subject();
 
 	constructor(private readonly authService: AuthenticationService) {
 		const options = {
@@ -30,8 +29,10 @@ export class MessagesWebsocketService {
 			this.updateMessages$.next(data);
 		});
 
-		this.socket.on('newMessage', (data: any) => {
-			this.newMessage$.next(data);
+		this.socket.on('newMessages', chatroomId => {
+			this.socket.emit('getUpdateMessages', {
+				chatroom_id: chatroomId
+			});
 		});
 
 	}
@@ -44,9 +45,8 @@ export class MessagesWebsocketService {
 		this.socket.emit('disconnectMessage', { chatroom_id: chatroomId });
 	}
 
-	// Send a new message to the chatroom
 	public sendMessage(roomId: number, message: string): void {
-		this.socket.emit('newMessage', {
+		this.socket.emit('sendMessage', {
 			chatroom_id: roomId,
 			content: message
 		});

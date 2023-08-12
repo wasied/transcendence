@@ -24,3 +24,9 @@ export class LeaveDto {
 	@IsNumber()
 	chatroom_id: number;
 }
+
+export class GetMessagesDto {
+	@IsNotEmpty()
+	@IsNumber()
+	chatroom_id: number;
+}

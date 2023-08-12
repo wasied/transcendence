@@ -7,7 +7,7 @@ import { Message } from './message';
 import { MessagesService } from './messages.service';
 import { ChatService } from '../chat.service';
 import { SocketWithUser } from '../../utils/SocketWithUser';
-import { SendDto, JoinDto, LeaveDto } from './dto';
+import { SendDto, JoinDto, LeaveDto, GetMessagesDto } from './dto';
 
 @WebSocketGateway({ cors: true, namespace: "messages" })
 @UseGuards(MessagesWebsocketGuard)
@@ -40,7 +40,7 @@ export class MessagesGateway {
 		client.disconnect();
 	}
 
-    @SubscribeMessage('newMessage')
+    @SubscribeMessage('sendMessage')
     async send(
 		@ConnectedSocket() client: SocketWithUser,
 		@MessageBody() body: SendDto,
@@ -61,7 +61,15 @@ export class MessagesGateway {
 
 		await this.messagesService.send(chatroom_user_id, body.content);
 		
-        const updatedMessages = await this.messagesService.findChatroomMessages(client.user.id, body.chatroom_id);
-        this.server.to(String(body.chatroom_id)).emit('updateMessages', updatedMessages);
+		this.server.to(String(body.chatroom_id)).emit('newMessages', body.chatroom_id);
     }
+
+	@SubscribeMessage('getUpdateMessages')
+	async getMessages(
+		@ConnectedSocket() client: SocketWithUser,
+		@MessageBody() body: GetMessagesDto
+	): Promise<void> {
+		const updatedMessages = await this.messagesService.findChatroomMessages(client.user.id, body.chatroom_id);
+		client.emit('updateMessages', updatedMessages);
+	}
 }
