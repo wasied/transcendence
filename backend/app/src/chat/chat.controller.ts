@@ -72,12 +72,37 @@ export class ChatController {
 	}
 
 	@Get(':id')
-	async findOne(@Param('id') id: string): Promise<Chat> {
+	async findOne(@Request() request: RequestWithUser, @Param('id') id: string): Promise<Chat> {
 		const result = await this.chatService.findOne(+id);
 		if (!result.length)
 			throw new HttpException("Chatroom not found.", HttpStatus.NOT_FOUND);
+		var chat = result[0];
+		if (chat.direct_message) {
+			const participants_id = await this.chatService.findChatroomUsersId(chat.id);
+			if (participants_id.length !== 2)
+				throw new HttpException("Direct message does not have 2 members", HttpStatus.BAD_REQUEST);
+			chat.participants_id = [];
+			chat.participants_id.push(request.user.id);
+			chat.participants_id.push(participants_id[0] !== request.user.id ? participants_id[0] : participants_id[1]);
+			var participants = [];
+			for (const participant_id of chat.participants_id) {
+				const participant = (await this.usersService.findOneById(participant_id))[0];
+				participants.push(participant);
+			}
+			chat.participants = participants;
+		}
+		else {
+			const participants_id = await this.chatService.findChatroomUsersId(chat.id);
+			var participants = [];
+			for (const participant_id of participants_id) {
+				const participant = (await this.usersService.findOneById(participant_id))[0];
+				participants.push(participant);
+			}
+			chat.participants_id = participants_id;
+			chat.participants = participants;
+		}
 
-		return result[0];
+		return chat;
 	}
 
 	@Get('is-owner/:chatroom_id')
