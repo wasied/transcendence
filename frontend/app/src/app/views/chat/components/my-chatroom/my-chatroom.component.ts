@@ -101,7 +101,6 @@ export class MyChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 
 	enterChatroom(chatroomId: number) : void {
-		console.log('OKOK', chatroomId);
 		this.accessControlService.setAccess(true);
 		this.router.navigate(['main/chatrooms', chatroomId]);
 	}

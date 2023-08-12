@@ -28,7 +28,6 @@ export class ChatroomsComponent implements OnInit {
 		this.chatWebsocketService.connect();
 		this.chatWebsocketService.rooms$.subscribe(chatrooms => { 
 			this.chatrooms = chatrooms; 
-			console.log(chatrooms);
 		});
 	}
 
