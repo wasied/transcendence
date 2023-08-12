@@ -30,6 +30,7 @@ export class FriendComponent implements OnInit {
 	}
 
 	blockUserFromFriendsInterface(friendId: number) : void {
-		this.usersService.blockUser(friendId);
+		await this.usersService.blockUser(friendId).toPromise()
+			.catch(err => { httpErrorHandler(err); });
 	}
 }
