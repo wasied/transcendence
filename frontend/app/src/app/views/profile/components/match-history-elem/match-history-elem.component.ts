@@ -1,7 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatchHistory } from 'src/app/core/models/match-history.model';
 import { Router } from '@angular/router';
 import { AccessControlService } from 'src/app/core/services/access-control.service';
+import { UsersService } from '../../../../core/services/users.service';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-match-history-elem',
@@ -11,8 +13,15 @@ import { AccessControlService } from 'src/app/core/services/access-control.servi
 export class MatchHistoryElemComponent {
 
 	@Input() matchHistoryElem!: MatchHistory;
+	matchHistory$!: Observable<MatchHistory>;
 
-	constructor (private router: Router, private accessControlService: AccessControlService) {};
+	constructor (private router: Router, private usersService: UsersService, private accessControlService: AccessControlService) {};
+
+	// ngOnChanges(changes: SimpleChanges): void {
+	// 	if (changes['userId'] && changes['userId'].currentValue) {
+	// 		this.match$ = this.usersService.getUserById(changes['userId'].currentValue);
+	// 	}
+	// }
 
 	/* GUARD */
 

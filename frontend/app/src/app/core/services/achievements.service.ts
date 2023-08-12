@@ -9,27 +9,6 @@ import { Achievement } from "src/app/core/models/achievement.model";
 export class AchievementsService {
 
 	constructor (private http: HttpClient) {};
-
-	hardcodedAchievements: Achievement[] = [{
-		id: 1,
-		userId: 1,
-		date: new Date(),
-		achievementName: 'test',
-		description: 'description test0'
-	},
-	{
-		id: 2,
-		userId: 1,
-		date: new Date(),
-		achievementName: 'test',
-		description: 'description test1'
-	},];
-
-	getHarcodedAchievements() : Observable<Achievement[]> { // for testing only
-		return of(this.hardcodedAchievements);
-	}
-
-	// with DB
 	
 	private apiBaseURL: string = 'http://localhost:3000/achievements_lists'; // modify that
 

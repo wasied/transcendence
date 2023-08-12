@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, shareReplay } from 'rxjs';
 import { Chatroom } from 'src/app/core/models/chatroom.model';
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
 import { httpErrorHandler } from 'src/app/http-error-handler';
+import { ChatWebsocketService } from 'src/app/core/services/chat-websocket.service';
 
 @Component({
   	selector: 'app-chatroom-header',
@@ -14,7 +14,8 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 export class ChatroomHeaderComponent implements OnInit {
 
 	@Input() chatroomId!: number	
-	chatroom$!: Observable<Chatroom>;
+
+	chatroom!: Chatroom;
 	setPasswordForm!: FormGroup;
 	modifyPasswordForm!: FormGroup;
 	passwordProtected!: boolean;
@@ -24,7 +25,8 @@ export class ChatroomHeaderComponent implements OnInit {
 
 	constructor (private router: Router, 
 				 private chatroomsService: ChatroomsService, 
-				 private formBuilder: FormBuilder) 
+				 private formBuilder: FormBuilder,
+				 private chatWebsocketService: ChatWebsocketService) 
 	{
 		this.setPasswordForm = this.formBuilder.group({
 			password: ['']
@@ -36,17 +38,20 @@ export class ChatroomHeaderComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.chatroom$ = this.chatroomsService.getChatroomByID(this.chatroomId).pipe(
-			shareReplay(1)
-		);
-		
-		this.chatroom$.subscribe(data => {
-			if (data.password === null) {
+		this.chatWebsocketService.listenToServerEvents();
+		this.chatWebsocketService.connect();
+		this.chatWebsocketService.rooms$.subscribe(chatrooms => { 
+			for (let i = 0; i < chatrooms.length; i++) {
+				if (chatrooms[i].id === this.chatroomId)
+					this.chatroom = chatrooms[i];
+			}
+
+			if (this.chatroom.password === null || this.chatroom.password === undefined) {
 				this.passwordProtected = false;
 			} else {
 				this.passwordProtected = true;
 			}
-		});		
+		});
 	}
 
 	changePasswordFormDisplayStatus() : void {

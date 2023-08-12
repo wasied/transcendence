@@ -10,73 +10,8 @@ export class UsersService {
 
 	constructor(private authHttp: AuthHttpClient) {};
 
-	private harcodedUsers: User[]  = [
-		{
-			id: 1,
-			username: 'testUser',
-			status: "offline",
-			a2f_key: "",
-			profile_picture_url: '/Users/corentin/code/19/transcendence/front/src/assets/imgs/picture-profile-empty.jpg',
-			updated_at: "",
-			created_at: ""
-		},
-		{
-			id: 1,
-			username: 'testUser',
-			status: "offline",
-			a2f_key: "",
-			profile_picture_url: '/Users/corentin/code/19/transcendence/front/src/assets/imgs/picture-profile-empty.jpg',
-			updated_at: "",
-			created_at: ""
-		},
-		{
-			id: 1,
-			username: 'testUser',
-			status: "offline",
-			a2f_key: "",
-			profile_picture_url: '/Users/corentin/code/19/transcendence/front/src/assets/imgs/picture-profile-empty.jpg',
-			updated_at: "",
-			created_at: ""
-		},
-		{
-			id: 1,
-			username: 'testUser',
-			status: "offline",
-			a2f_key: "",
-			profile_picture_url: '/Users/corentin/code/19/transcendence/front/src/assets/imgs/picture-profile-empty.jpg',
-			updated_at: "",
-			created_at: ""
-		},
-		{
-			id: 1,
-			username: 'testUser',
-			status: "offline",
-			a2f_key: "",
-			profile_picture_url: '/Users/corentin/code/19/transcendence/front/src/assets/imgs/picture-profile-empty.jpg',
-			updated_at: "",
-			created_at: ""
-		},
-		{
-			id: 1,
-			username: 'testUser',
-			status: "offline",
-			a2f_key: "",
-			profile_picture_url: '/Users/corentin/code/19/transcendence/front/src/assets/imgs/picture-profile-empty.jpg',
-			updated_at: "",
-			created_at: ""
-		}
-
-	];
-
+	
 	private apiURL: string = 'http://localhost:8080/users';
-
-	getHardcodedUsers() : Observable<User[]> {
-		return of(this.harcodedUsers);
-	}
-
-	retrieveHardcodedUser() : Observable<User> { // change this after auth service is implemented
-		return of(this.harcodedUsers[0]);
-	}
 
 	/* READ */
 

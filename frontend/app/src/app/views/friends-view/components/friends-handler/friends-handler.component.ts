@@ -36,7 +36,10 @@ export class FriendsHandlerComponent implements OnInit, OnDestroy {
 	}
 
 	private createNewFriendship() : void {
-		this.subscription = this.friendsService.addAsFriend(this.newFriendForm.get('userId')?.value).subscribe(
+		const userId = this.newFriendForm.get('userId')?.value;
+		if (!userId)
+			return ;
+		this.subscription = this.friendsService.addAsFriend(+userId).subscribe(
 			data => {},
 			httpErrorHandler
 		);
