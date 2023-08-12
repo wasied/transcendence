@@ -17,13 +17,13 @@ export class FriendsController {
 	}
 
 	@Get(':id')
-	async findFriendsOfByUserId(@Param('id') id: number): Promise<User[]> {
-		return this.friendsService.findAll(id);
+	async findFriendsOfByUserId(@Param('id') id: string): Promise<User[]> {
+		return this.friendsService.findAll(+id);
 	}
 
 	@Get('friendship/:id')
-	async findOne(@Param('id') id: number): Promise<Friend> {
-		const result = await this.friendsService.findOne(id);
+	async findOne(@Param('id') id: string): Promise<Friend> {
+		const result = await this.friendsService.findOne(+id);
 		if (!result.length)
 			throw new HttpException("Friendship not found.", HttpStatus.NOT_FOUND);
 
@@ -36,7 +36,7 @@ export class FriendsController {
 	}
 
 	@Delete(':friendship_id')
-	delete(@Request() request: RequestWithUser, @Param('friendship_id') friendship_id: number): void {
-		this.friendsService.delete(request.user.id, friendship_id);
+	delete(@Request() request: RequestWithUser, @Param('friendship_id') friendship_id: string): void {
+		this.friendsService.delete(request.user.id, +friendship_id);
 	}
 }

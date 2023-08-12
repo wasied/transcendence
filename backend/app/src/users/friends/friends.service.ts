@@ -6,7 +6,7 @@ import { Friend } from './friend';
 
 @Injectable()
 export class FriendsService {
-	async findAll(user_id): Promise<User[]> {
+	async findAll(user_id: number): Promise<User[]> {
 		const result = dbClient.query(
 			`SELECT *	FROM friends
 						WHERE user_uid1 = $1;`,
