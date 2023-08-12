@@ -20,7 +20,7 @@ export interface GameData {
     ballAccelerationFactor: number;
     ballMaxSpeed: number;
     paddleHeight: number;
-    variant: 'standard' | 'chaos';
+    variant: 'standard' | 'mortSubite' | 'twoPoints' | 'chaos';
 }
 
 export class PongGame {

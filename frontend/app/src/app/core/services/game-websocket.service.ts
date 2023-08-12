@@ -22,9 +22,14 @@ export class GameWebsocketService {
 			}
 		};
 		this.socket = io('http://localhost:8080/game', options);
+		console.log(this.socket);
+
+		this.socket.on("connect", () => {
+			console.log("Socket connected", this.socket.id);
+		});
 	}
 
-    private listenToServerEvents(): void {
+    public listenToServerEvents(): void {
         this.socket.on('gameStarted', (data: any) => {
         	this.gameStarted$.next(data);
         });

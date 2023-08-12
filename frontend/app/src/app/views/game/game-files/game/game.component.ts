@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { PongData, Keys } from '../game-interface';
+import { Keys } from '../game-interface';
 import { Router } from '@angular/router';
 import { AccessControlService } from 'src/app/core/services/access-control.service';
 import { GameWebsocketService } from 'src/app/core/services/game-websocket.service';
@@ -21,13 +21,12 @@ import { GameWebsocketService } from 'src/app/core/services/game-websocket.servi
   	],
 	providers: [GameWebsocketService]
 })
-export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
+export class GameComponent implements OnInit, OnDestroy {
 	
 	@ViewChild('canvas', { static: true }) canvasRef!: ElementRef;
 
 	/* for communication between components */
 	keys!: Keys;
-	pongData!: PongData;
 
 	isMatched: boolean = false;
 	loadingMessage: string = 'Please stand by';
@@ -50,9 +49,11 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 	/* GAME DATA TRANSPORTATION */
 	ngOnInit(): void {
 		this.keys = new Keys();
-		this.pongData = new PongData();
 
+		console.log("wtf1")
+		this.gameSocket.listenToServerEvents();
 		this.gameSocket.joinMatchmaking('standard');
+		console.log("wtf2")
 		this.updateLoadingMessage();
 
 		this.gameSocket.gameStarted$.subscribe(this.onGameStartedFromSocket);
@@ -62,6 +63,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.gameSocket.disconnect();
+		console.log("stop")
 		clearTimeout(this.timeoutStandById);
 	}
 
@@ -75,13 +77,14 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		// data.gameState.player2Score: number;
 		// data.gameState.sessionId: number;
 		
+		console.log(data);
 		this.sendPaddleState();
-		this.draw(data.gameState);
+		// this.draw(data.gameState);
 	}
 	
 	private onGameStartedFromSocket(data: any): void {
-		// appel après avoir trouvé un partenaire
 		this.isMatched = true;
+		clearTimeout(this.timeoutStandById);
 
 		// retrive session id from there :
 		// this.exitSessionId = ;
@@ -107,76 +110,6 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.gameSocket.movePaddleDown();
 	}
 	
-	/* GAME INIT AND TRIGGER EVERY_FRAME LOOP */
-	ngAfterViewInit(): void {
-		this.pongData.ctx = this.canvasRef.nativeElement.getContext('2d') as CanvasRenderingContext2D;
-		this.resizeCanvas();
-		this.registerEventListeners();
-	}
-
-	private registerEventListeners(): void {
-		window.addEventListener('resize', this.onResize.bind(this));
-	}
-	
-	/* HANDLE RESIZE */
-	private onResize(): void {
-		this.resizeCanvas();
-	}
-	
-	private resizeCanvas(): void {
-		this.pongData.canvasWidth = window.innerWidth * 0.9;
-		this.pongData.canvasHeight = this.pongData.canvasWidth / this.pongData.aspectRatio;
-	
-		this.canvasRef.nativeElement.width = this.pongData.canvasWidth;
-		this.canvasRef.nativeElement.height = this.pongData.canvasHeight;
-	}
-	
-	private draw(gameState: any): void { // to test, but seems good
-		
-		if (!this.pongData.ctx || !gameState) {
-			return;
-		}
-		/* clear old canva */
-		this.pongData.ctx.clearRect(0, 0, this.pongData.canvasWidth, this.pongData.canvasHeight);
-	  
-		/* calculate new dimensions for the paddles */ 
-		const paddle1X = (1 / 100) * this.pongData.canvasWidth;
-		const paddle2X = (98 / 100) * this.pongData.canvasWidth;
-		const paddleHeight = (this.pongData.paddleHeightPercentage / 100) * this.pongData.canvasHeight;
-		const paddle1Y = (gameState.paddle1Y / 100) * this.pongData.canvasHeight - (paddleHeight / 2);
-		const paddle2Y = (gameState.paddle2Y / 100) * this.pongData.canvasHeight - (paddleHeight / 2);
-	  
-		/* Draw both paddles for all players, in white */
-		this.pongData.ctx.fillStyle = '#fff';
-		this.pongData.ctx.fillRect(paddle1X, paddle1Y, this.pongData.paddleWidth, paddleHeight);
-		this.pongData.ctx.fillRect(paddle2X, paddle2Y, this.pongData.paddleWidth, paddleHeight);
-	  
-		/* calculate new dimensions for the ball */
-		const ballRadius = (this.pongData.ballRadiusPercentage / 100) * this.pongData.canvasWidth;
-		const ballX = (gameState.ballX / 100) * this.pongData.canvasWidth;
-		const ballY = (gameState.ballY / 100) * this.pongData.canvasHeight;
-		
-		/* draw the ball */
-		this.pongData.ctx.beginPath();
-		this.pongData.ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-		this.pongData.ctx.fillStyle = '#fff';
-		this.pongData.ctx.fill();
-	
-		/* display the new score */
-		const scoreText = `${gameState.player1Score} - ${gameState.player2Score}`;
-		const scoreTextWidth = this.pongData.ctx.measureText(scoreText).width;
-
-		const scoreX = (this.pongData.canvasWidth / 2) - (scoreTextWidth / 2);
-		const scoreY = 30; 
-
-		/* display the new score */
-		this.pongData.ctx.font = '24px Arial';
-		this.pongData.ctx.fillStyle = '#fff';
-		this.pongData.ctx.fillText(scoreText, scoreX, scoreY);
-	
-		this.pongData.ctx.closePath();
-	}
-
 	/* CONTROLS */
 	@HostListener('window:keydown', ['$event'])
 	handleKeyDown(event: KeyboardEvent): void {

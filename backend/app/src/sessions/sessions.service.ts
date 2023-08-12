@@ -56,10 +56,11 @@ export class SessionsService {
 	create(automatching: boolean, customization: boolean): void {
 		const result = dbClient.query(
 			`INSERT	INTO sessions(automatching, customization, ended)
-					VALUES($1, $2, false);`,
+					VALUES($1, $2, false)
+					RETURNING id;`,
 			[automatching, customization]
 		)
-		.then(queryResult => { return queryResult; })
+		.then(queryResult => { return (queryResult.rows[0] as any).id; })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
