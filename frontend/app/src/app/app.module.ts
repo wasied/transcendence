@@ -18,6 +18,7 @@ import { AuthHttpClient } from './auth-http-client';
 import { AccessControlService } from './core/services/access-control.service';
 import { NotFoundModule } from './views/not-found/not-found.module';
 import { NotFoundComponent } from './views/not-found/not-found/not-found.component';
+import { GlobalWebsocketService } from 'src/app/core/services/global-websocket.service';
 
 @NgModule({
 	declarations: [
@@ -35,7 +36,7 @@ import { NotFoundComponent } from './views/not-found/not-found/not-found.compone
 		SharedModule,
 		NotFoundModule
 	],
-	providers: [AuthHttpClient, AccessControlService],
+	providers: [AuthHttpClient, AccessControlService, GlobalWebsocketService],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }
