@@ -64,8 +64,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   	scrollToBottom(): void {
     	try {
       		this.messageList.nativeElement.scrollTop = this.messageList.nativeElement.scrollHeight;
-    	} catch(error) { 
-      		console.log(error);
+		} catch(error) {
+			console.error(error);
     	}
   	}
 
