@@ -30,7 +30,16 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 				 private router: Router,
 				 private accessControlService: AccessControlService) {}
 
-	ngOnInit(): void {
+	async ngOnInit(): Promise<void> {
+		const me = await this.usersService.getMe().toPromise()
+			.catch(err => { httpErrorHandler(err); });
+		if (!me)
+			return ;
+		for (const index in this.participants) {
+			if (this.participants[index].id === me.id)
+				delete this.participants[index];
+		}
+		this.participants = this.participants.filter(participant => participant !== null && participant !== undefined);
 	}
 	
 	toggleDropdown(): void {
