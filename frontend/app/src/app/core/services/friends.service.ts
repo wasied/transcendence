@@ -44,6 +44,12 @@ export class FriendService
 		return this.authHttp.get<User[]>(endpoint);
 	}
 
+	getNonFriends(): Observable<User[]> {
+		const endpoint: string = `${this.apiURL}/non-friends`;
+
+		return this.authHttp.get<User[]>(endpoint);
+	}
+
 	/* DELETE */
 
 	delFriend(friendshipId: number) : Observable<void> {

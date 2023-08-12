@@ -3,9 +3,8 @@ import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FriendsHandlerComponent } from '../friends-handler/friends-handler.component';
 import { User } from 'src/app/core/models/user.model';
-import { UsersService } from 'src/app/core/services/users.service';
+import { FriendService } from 'src/app/core/services/friends.service';
 import { httpErrorHandler } from 'src/app/http-error-handler';
-import { FriendService } from '../../../../core/services/friends.service';
 
 @Component({
   selector: 'app-friends-view',
@@ -21,15 +20,15 @@ export class FriendsViewComponent implements OnInit, OnDestroy {
 	users: User[] = [];
 	private subscription!: Subscription;
 
-	constructor(private usersService: UsersService,
-				private friendService: FriendService) {};
+	constructor(
+		private friendService: FriendService
+	) {};
 
 	ngOnInit(): void {
-		this.subscription = this.friendService.getMyFriends().subscribe(
+		this.subscription = this.friendService.getNonFriends().subscribe(
 			data => { this.users = data; },
 			httpErrorHandler
 		);
-		console.log(this.users);
 	}
 
 	fillForm(user: User) {

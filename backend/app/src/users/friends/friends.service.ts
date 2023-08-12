@@ -6,7 +6,7 @@ import { Friend } from './friend';
 
 @Injectable()
 export class FriendsService {
-	async findAll(user_id): Promise<User[]> {
+	async findAll(user_id: number): Promise<User[]> {
 		const result = dbClient.query(
 			`SELECT *	FROM friends
 						WHERE user_uid1 = $1;`,
@@ -16,6 +16,23 @@ export class FriendsService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 
 		return result;
+	}
+
+	async findNonFriends(user_id: number): Promise<User[]> {
+		const result = dbClient.query(
+			`SELECT *	FROM users
+						WHERE id NOT IN (
+							SELECT user_uid2	FROM friends
+												WHERE user_uid1 = $1
+						)
+						AND id != $1;`,
+			[user_id]
+		)
+			.then(queryResult => { return treatDbResult(queryResult); })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+
+		return result;
+
 	}
 
 	async findOne(friendship_id: number): Promise<Friend[]> {

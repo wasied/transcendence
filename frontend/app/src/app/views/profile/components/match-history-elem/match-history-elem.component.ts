@@ -9,18 +9,18 @@ import { Observable } from 'rxjs';
 	templateUrl: './match-history-elem.component.html',
 	styleUrls: ['./match-history-elem.component.css']
 })
-export class MatchHistoryElemComponent implements OnChanges {
+export class MatchHistoryElemComponent {
 
 	@Input() matchHistoryElem!: MatchHistory;
 	matchHistory$!: Observable<MatchHistory>;
 
 	constructor (private router: Router, private usersService: UsersService) {};
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes['userId'] && changes['userId'].currentValue) {
-			this.user$ = this.usersService.getUserById(changes['userId'].currentValue);
-		}
-	}
+	// ngOnChanges(changes: SimpleChanges): void {
+	// 	if (changes['userId'] && changes['userId'].currentValue) {
+	// 		this.match$ = this.usersService.getUserById(changes['userId'].currentValue);
+	// 	}
+	// }
 
 	goToOpponentProfile(opponentId: number) : void {
 		this.router.navigate(['main', 'profile', opponentId]);

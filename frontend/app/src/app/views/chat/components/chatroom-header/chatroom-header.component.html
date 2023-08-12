@@ -7,12 +7,9 @@
         </app-chatroom-dropdown>
 
         <div class="text-4xl">
-            <div *ngIf="chatroom.password === null">
-                <h1>{{chatroom.name}} (Public)</h1>
-            </div>
-            <div *ngIf="chatroom.password !== null">
-                <h1>{{chatroom.name}} (Password Protected)</h1>
-            </div>
+			<div>
+				<h1>{{chatroom.name}}</h1>
+			</div>
         </div>
         
         <!-- open the modal -->
