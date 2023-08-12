@@ -6,6 +6,7 @@ import { Chatroom } from 'src/app/core/models/chatroom.model';
 import tippy from 'tippy.js';
 import { ChatroomsService } from '../../../../core/services/chatrooms.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-my-chatroom',
@@ -29,7 +30,8 @@ export class MyChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	constructor(private router: Router, 
 				private elementRef: ElementRef,
 				private chatroomsService: ChatroomsService,
-				private formBuilder : FormBuilder) 
+				private formBuilder : FormBuilder,
+				private accessControlService: AccessControlService) 
 	{
 		this.accessForm = this.formBuilder.group({
 			accessPassword : ['']
@@ -92,8 +94,15 @@ export class MyChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.initializeTooltips();
 	}
 
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+		}
+
 	enterChatroom(chatroomId: number) : void {
 		console.log('OKOK', chatroomId);
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main/chatrooms', chatroomId]);
 	}
 

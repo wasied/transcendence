@@ -7,6 +7,7 @@ import tippy from 'tippy.js';
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
 import { ChatWebsocketService } from 'src/app/core/services/chat-websocket.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-chatroom',
@@ -33,7 +34,8 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 		private elementRef: ElementRef,
 		private chatroomsService: ChatroomsService,
 		private formBuilder : FormBuilder,
-		private chatWebsocketService: ChatWebsocketService
+		private chatWebsocketService: ChatWebsocketService,
+		private accessControlService: AccessControlService
 	)
 	{
 		this.accessForm = this.formBuilder.group({
@@ -97,10 +99,18 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.initializeTooltips();
 	}
 
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+		}
+
 	accessChatroom(chatroomId: number) : void {
 		if (this.chatroom.password !== null) {
 			this.openModal();
 		} else {
+			this.accessControlService.setAccess(true);
+			//this.router.navigate(['main/chatrooms', chatroomId]);
 			this.chatWebsocketService.joinRoom(chatroomId, null);
 		}
 	}
@@ -116,6 +126,7 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	onSubmitPassword(chatroomId: number, password: string) : void {
+		this.accessControlService.setAccess(true);
 		this.chatWebsocketService.joinRoom(chatroomId, password);
 	}
 	

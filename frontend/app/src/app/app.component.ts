@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
+import { GlobalWebsocketService } from 'src/app/core/services/global-websocket.service';
 
 @Component({
 	selector: 'app-root',
@@ -7,4 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent {
 	title = 'Transcendence';
+
+	constructor(private readonly globalWebsocketService: GlobalWebsocketService) {}
+
+	@HostListener('window:unload', ['$event'])
+	unloadHandler(event: any) {
+		this.globalWebsocketService.updateFriends$.unsubscribe();
+		this.globalWebsocketService.disconnect();
+	}
 }

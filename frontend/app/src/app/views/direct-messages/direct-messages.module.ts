@@ -12,6 +12,8 @@ import { DirectMessagesHeaderComponent } from './components/direct-messages-head
 import { DirectMessageDropdownComponent } from './components/direct-message-dropdown/direct-message-dropdown.component';
 import { DmHandlerComponent } from './components/dm-handler/dm-handler.component';
 
+import { DirectMessagesWebsocketService } from 'src/app/core/services/direct-messages-websocket.service';
+
 @NgModule({
 	declarations: [
 		DirectMessagesViewComponent,
@@ -27,6 +29,7 @@ import { DmHandlerComponent } from './components/dm-handler/dm-handler.component
     	SharedModule,
 		DirectMessagesRoutingModule,
 		ReactiveFormsModule
-  	]
+	],
+	providers: [DirectMessagesWebsocketService]
 })
 export class DirectMessagesModule { }

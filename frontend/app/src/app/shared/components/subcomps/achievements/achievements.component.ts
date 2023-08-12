@@ -20,7 +20,7 @@ export class AchievementsComponent implements OnInit {
 	}
 
 	loadAchievements() : Observable<Achievement[]> {
-		return this.achievementsService.getHarcodedAchievements(); // change this
+		return this.achievementsService.getAllAchievements(); // change this
 	}
 
 	loadUserAchievements(userId: number) : Observable<Achievement[]> { // use this instead, with current user id

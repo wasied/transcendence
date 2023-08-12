@@ -5,6 +5,7 @@ import { UsersService } from 'src/app/core/services/users.service';
 import { Observable, Subscription } from 'rxjs';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 import { User } from 'src/app/core/models/user.model';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-chatroom-dropdown',
@@ -26,21 +27,19 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 
 	constructor (private usersService: UsersService,
 				 private chatroomsService: ChatroomsService,
-				 private router: Router) {}
+				 private router: Router,
+				 private accessControlService: AccessControlService) {}
 
 	ngOnInit(): void {
-		// this.subscription = this.chatroomsService. .subscribe(canCoerce => {
-		// 	this.canCoerce = canCoerce;
-		// });
+		
 	}
 	
 	toggleDropdown(): void {
 		this.isOpen = !this.isOpen;
 	}
 
-	// check if 1) user is a owner or administrator, 2) target is not
 	isAllowedToCoerce(participantId: number) : boolean {
-		return true; // implement logic later, using a websocket
+		return true; 
 	}
 
 	kickUser(participantId: number) : void {
@@ -51,17 +50,17 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 	}
 
 	banUser(participantId: number) : void {
-		// this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+		this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId, '5').subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	muteUser(participantId: number) : void {
-		// this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+		this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId, '5').subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	blockUser(participantId: number) : void {
@@ -71,7 +70,14 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	/* GUARD */
+
+	grantAccess(): void {
+	this.accessControlService.setAccess(true);
+	}
+
 	seeUserProfile(participantId: number) : void {
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main', 'profile', participantId]);
 	}
 
@@ -90,12 +96,13 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 		);
 	}
 
-
-	isAllowedToElevateToAdmin(participantId: number) : boolean {
-		// backend will block if the user is not allowed
-		return true;
+	invitePong(participantId: number) : void {
+		// do this
 	}
 
+	isAllowedToElevateToAdmin(participantId: number) : boolean {
+		return true;
+	}
 
 	ngOnDestroy(): void {
 		if (this.subscription) {

@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { PongData, Keys } from '../game-interface';
 import { Router } from '@angular/router';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 import { GameWebsocketService } from 'src/app/core/services/game-websocket.service';
 
 @Component({
@@ -34,7 +35,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
   	timeoutStandById!: any;
 	exitSessionId!: number; 
 
-	constructor(private gameSocket: GameWebsocketService, private router: Router) {};
+	constructor(private gameSocket: GameWebsocketService, private router: Router, private accessControlService: AccessControlService) {};
 
 	/* MATCHMAKING UTILS */
 	
@@ -86,7 +87,14 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		// this.exitSessionId = ;
 	}
 	
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+	}
+
 	private onGameEndedFromSocket(data: any): void {
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main', 'exit_game', this.exitSessionId]);
 	}
 

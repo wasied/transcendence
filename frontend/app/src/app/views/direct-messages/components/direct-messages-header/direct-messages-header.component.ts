@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { DirectMessagesService } from 'src/app/core/services/direct-messages.service';
 import { Chatroom } from 'src/app/core/models/chatroom.model';
 import { Observable } from 'rxjs';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-direct-messages-header',
@@ -18,13 +19,21 @@ export class DirectMessagesHeaderComponent implements OnInit {
 	isModalAcceptOpen: boolean = false;
 	
 	constructor (private router: Router,
-				 private dmService: DirectMessagesService) {};
+				 private dmService: DirectMessagesService,
+				 private accessControlService: AccessControlService) {};
 
 	ngOnInit(): void {
 		this.participants$ = this.dmService.getDirectMsgById(this.chatroomId);
 	}
 	
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+	}
+
 	onQuitDMSession() : void {
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main/direct_messages']);
 	}
 
