@@ -20,7 +20,9 @@ export class FriendsComponent implements OnInit {
 	) {};
   
 	ngOnInit(): void {
+		this.globalWebsocketService.listenToServerEvents();
 		this.globalWebsocketService.updateFriends$.subscribe(friends => { this.friends = friends; });
+		this.globalWebsocketService.updateFriends();
 	}
 
 	loadFriendsOfUser() : Observable<User[]> {

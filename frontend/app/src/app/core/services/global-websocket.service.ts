@@ -34,7 +34,13 @@ export class GlobalWebsocketService {
 		this.socket.disconnect();
 	}
 
+	updateFriends(): void {
+		this.socket.emit('getUpdateFriends');
+	}
+
 	public listenToServerEvents(): void {
+		if (!this.socket)
+			this.connect();
 		this.socket.on('updateConnections', (data: any) => {
 			this.socket.emit('getUpdateFriends');
 		});

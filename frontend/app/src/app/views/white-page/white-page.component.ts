@@ -25,6 +25,7 @@ export class WhitePageComponent implements OnInit {
 		}
 		this.authService.storeTokenOnLocalSession(accessToken);
 		this.globalWebsocketService.connect();
+		this.globalWebsocketService.listenToServerEvents();
 		const isNewUserStr = this.route.snapshot.queryParamMap.get('new_user');
 		var isNewUser;
 		if (!isNewUserStr || isNewUserStr === "")
