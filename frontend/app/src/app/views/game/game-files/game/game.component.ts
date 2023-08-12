@@ -1,8 +1,11 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Keys } from '../game-interface';
 import { Router } from '@angular/router';
 import { AccessControlService } from 'src/app/core/services/access-control.service';
 import { GameWebsocketService } from 'src/app/core/services/game-websocket.service';
+import { GameDataService } from '../../../../core/services/game-data.service';
+import { GameData } from 'src/app/core/services/game-data.service';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-game',
@@ -39,6 +42,9 @@ export class GameComponent implements OnInit, OnDestroy {
 	private keys!: Keys;
 	private canvas!: HTMLCanvasElement;
 	private ctx!: CanvasRenderingContext2D;
+	/* game variant */
+	private variant: string = 'standard'; // CJULIENN
+	gameData!: GameData | null;
 
 	isMatched: boolean = false;
 	loadingMessage: string = 'Please stand by';
@@ -46,7 +52,10 @@ export class GameComponent implements OnInit, OnDestroy {
   	timeoutStandById!: any;
 	exitSessionId!: number; 
 
-	constructor(private gameSocket: GameWebsocketService, private router: Router, private accessControlService: AccessControlService) {};
+	constructor(private gameSocket: GameWebsocketService, 
+				private router: Router, 
+				private accessControlService: AccessControlService,
+				private gameDataService: GameDataService) {};
 
 	/* MATCHMAKING UTILS */
 	
@@ -63,7 +72,15 @@ export class GameComponent implements OnInit, OnDestroy {
 		this.keys = new Keys();
 
 		this.gameSocket.listenToServerEvents();
-		this.gameSocket.joinMatchmaking('chaos'); // CJULIENN -> EDIT HERE
+		
+		this.gameDataService.getGameData().subscribe(data => {
+			this.gameData = data;
+
+			if (this.gameData !== null) {
+				this.variant = this.gameData.variant;
+			}
+			this.gameSocket.joinMatchmaking(this.variant); // CJULIENN -> EDIT HERE
+		});
 
 		this.updateLoadingMessage();
 
