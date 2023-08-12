@@ -10,7 +10,7 @@ import { hasAccessGuard } from "src/app/has-access-guard.guard";
 const routes: Routes = [
 	{path: 'match_history/:id', component: MatchHistoryViewComponent, canActivate: [isAuthenticatedGuard, hasAccessGuard]},
 	{path: 'match_history', component: MatchHistoryViewComponent, canActivate: [isAuthenticatedGuard]},
-	{path: ':id', component: ProfileOtherComponent, canActivate: [isAuthenticatedGuard, hasAccessGuard]},
+	{path: ':id', component: ProfileOtherComponent, canActivate: [isAuthenticatedGuard, /*hasAccessGuard*/]},
 	{path: '', component: ProfileSelfComponent, canActivate: [isAuthenticatedGuard]}
 ];
 
