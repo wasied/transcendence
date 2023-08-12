@@ -23,7 +23,7 @@ export interface GameData {
     variant: 'standard' | 'mortSubite' | 'twoPoints' | 'chaos';
 }
 
-export class PongGame {
+export class PongGameService {
     private gameState: GameState;
     private gameData: GameData;
 
@@ -83,13 +83,23 @@ export class PongGame {
     }
 
     public movePaddleUp(isPlayerOne: boolean): void {
-        // TODO: Check borders
-        this.gameState[`paddle${isPlayerOne ? 1 : 2}Y`] -= 10;
+        const paddleIdx = `paddle${isPlayerOne ? 1 : 2}Y`;
+        this.gameState[paddleIdx] -= 10;
+
+        if (this.gameState[paddleIdx] < 0)
+            this.gameState[paddleIdx] = 0;
+        else if (this.gameState[paddleIdx] > this.gameData.canvasHeight)
+            this.gameState[paddleIdx] = this.gameData.canvasHeight;
     }
 
     public movePaddleDown(isPlayerOne: boolean): void {
-        // TODO: Check borders
-        this.gameState[`paddle${isPlayerOne ? 1 : 2}Y`] += 10;
+        const paddleIdx = `paddle${isPlayerOne ? 1 : 2}Y`;
+        this.gameState[paddleIdx] += 10;
+
+        if (this.gameState[paddleIdx] < 0)
+            this.gameState[paddleIdx] = 0;
+        else if (this.gameState[paddleIdx] > this.gameData.canvasHeight)
+            this.gameState[paddleIdx] = this.gameData.canvasHeight;
     }
 
     private updateBallCoordinates(): void {

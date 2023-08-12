@@ -27,6 +27,27 @@ export class GameWebsocketService {
 		this.socket.on("connect", () => {
 			console.log("Socket connected", this.socket.id);
 		});
+
+		this.socket.on("connect_error", (error: Error) => {
+			console.log("Error connecting to server:", error.message);
+		});
+
+		this.socket.on("disconnect", (reason: string) => {
+			console.log("Socket disconnected due to:", reason);
+		});
+
+		this.socket.on("reconnecting", (attemptNumber: number) => {
+			console.log("Reconnecting attempt:", attemptNumber);
+		});
+		
+		this.socket.on("reconnect_error", (error: Error) => {
+			console.log("Reconnection attempt failed:", error.message);
+		});
+
+		this.socket.on("reconnect", (attemptNumber: number) => {
+			console.log("Successfully reconnected on attempt:", attemptNumber);
+		});
+		
 	}
 
     public listenToServerEvents(): void {
@@ -58,7 +79,7 @@ export class GameWebsocketService {
 	// This will make the player join the matchmaking queue (the public one) until he finds someone
 	// When he'll find someone, gameStarted will be called
 	public joinMatchmaking(matchType: string): void {
-        this.socket.emit('joinMatchmaking', matchType);
+        this.socket.emit('joinMatchmaking', { matchType: matchType });
     }
 
 	// This will make the player join the session without actually being a player

@@ -53,15 +53,19 @@ export class SessionsService {
 		return result;
 	}
 
-	create(automatching: boolean, customization: boolean): void {
-		const result = dbClient.query(
-			`INSERT	INTO sessions(automatching, customization, ended)
+	async create(automatching: boolean, customization: boolean): Promise<number> {
+		try {
+			const queryResult = await dbClient.query(
+				`INSERT INTO sessions(automatching, customization, ended)
 					VALUES($1, $2, false)
 					RETURNING id;`,
-			[automatching, customization]
-		)
-		.then(queryResult => { return (queryResult.rows[0] as any).id; })
-		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+				[automatching, customization]
+			);
+	
+			return (queryResult.rows[0][0] as number);
+		} catch (err) {
+			throw new HttpException(err, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	join(session_id: number, user_id: number, spectator: boolean): void {

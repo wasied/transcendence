@@ -3,7 +3,7 @@ import { Server, Socket } from 'socket.io';
 import { UseGuards } from '@nestjs/common';
 import { GameWebsocketGuard } from './game-websocket.guard';
 import { SocketWithUser } from '../utils/SocketWithUser';
-import { PongGame, GameData } from './game.service';
+import { PongGameService, GameData } from './game.service';
 import { SessionsService } from '../sessions/sessions.service';
 
 @WebSocketGateway({ cors: true, namespace: 'game' })
@@ -19,7 +19,7 @@ export class PongGameGateway {
     private spectators = {};
 
     // Pair these players in a game
-    private startGame(isPublic: boolean, playerOneId: string, playerTwoId: string, playerOneSocket: Socket, playerTwoSocket: Socket, matchType: GameData['variant']): void {
+    private async startGame(isPublic: boolean, playerOneId: string, playerTwoId: string, playerOneSocket: Socket, playerTwoSocket: Socket, matchType: GameData['variant']): Promise<void> {
         const gameSessionId = `${isPublic ? 'public' : 'private'}-${playerOneId}-${playerTwoId}`;
 
         const gameData: GameData = {
@@ -34,7 +34,8 @@ export class PongGameGateway {
             variant: matchType
         }        
 
-        const gameInstance = new PongGame(gameData);
+        const gameInstance = new PongGameService(gameData);
+
         const intervalId: any = setInterval(() => {
             gameInstance.updateGame();
             this.server.to(gameSessionId).emit('gameUpdate', gameInstance.getAllGameData(1));
@@ -48,9 +49,7 @@ export class PongGameGateway {
         playerTwoSocket.join(gameSessionId);
 
         // TODO: create session and return the id inside the data
-        console.log(this.sessionsService.create(isPublic, false));
-
-        console.log(4);
+        const sessionId = await this.sessionsService.create(isPublic, false)
         this.server.to(gameSessionId).emit('gameStarted', gameInstance.getAllGameData(1));
     }
 
@@ -73,29 +72,23 @@ export class PongGameGateway {
         @MessageBody() body: any
     ): Promise<void> {
 
-        console.log(1);
-        
         // Check if the user is already in a room
         const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
         if (theRoomTheUserIsIn) return;
-        console.log(2);
         
         const matchType = body.matchType;
         if (!matchType) return;
         if (matchType !== 'standard' && matchType !== 'mortSubite' && matchType !== 'chaos' && matchType !== 'twoPoints') return;
         
-        console.log(3);
-        this.startGame(true, String(client.user.id), String(client.user.id), client, client, matchType);
+        const waitingPlayerSocket = Array.from(this.waitingPlayers.values())[0][0];
+        if (waitingPlayerSocket) {
+            const waitingPlayer = Array.from(this.waitingPlayers.keys())[0];
+            this.waitingPlayers.delete(waitingPlayerSocket.id);
 
-        // const waitingPlayerSocket = Array.from(this.waitingPlayers.values())[0][0];
-        // if (waitingPlayerSocket) {
-        //     const waitingPlayer = Array.from(this.waitingPlayers.keys())[0];
-        //     this.waitingPlayers.delete(waitingPlayerSocket.id);
-
-        //     this.startGame(true, String(client.user.id), waitingPlayer, client, waitingPlayerSocket, matchType);
-        // } else {
-        //     this.waitingPlayers.set(String(client.user.id), [client, matchType]);
-        // }
+            this.startGame(true, String(client.user.id), waitingPlayer, client, waitingPlayerSocket, matchType);
+        } else {
+            this.waitingPlayers.set(String(client.user.id), [client, matchType]);
+        }
 
     }
 
@@ -186,6 +179,8 @@ export class PongGameGateway {
         @ConnectedSocket() client: SocketWithUser,
     ): Promise<void> {
 
+        console.log(`Paddle up at ${new Date()}`);
+
         const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
         if (!theRoomTheUserIsIn) return;
 
@@ -200,6 +195,8 @@ export class PongGameGateway {
     async handleMovePaddleDown(
         @ConnectedSocket() client: SocketWithUser,
     ): Promise<void> {
+
+        console.log(`Paddle down at ${new Date()}`);
 
         const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
         if (!theRoomTheUserIsIn) return;
