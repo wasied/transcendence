@@ -126,6 +126,7 @@ GET CHATROOMS
 		const id = await this.chatService.create(client.user.id, body.name, password, body.direct_message)
 			.catch(err => { throw new WsException(err); });
 		await this.chatService.join(client.user.id, id, password);
+		await this.chatService.setAdmin(true, id, client.user.id);
 		if (body.direct_message)
 			await this.chatService.join(body.other_user_id, id, password);
 

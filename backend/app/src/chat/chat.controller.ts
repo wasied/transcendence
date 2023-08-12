@@ -127,9 +127,10 @@ export class ChatController {
 		else
 			password = body.password;
 		const id = await this.chatService.create(request.user.id, body.name, password, body.direct_message);
-		this.chatService.join(request.user.id, id, password);
+		await this.chatService.join(request.user.id, id, password);
+		await this.chatService.setAdmin(true, id, request.user.id);
 		if (body.direct_message)
-			this.chatService.join(body.other_user_id, id, password);
+			await this.chatService.join(body.other_user_id, id, password);
 	}
 
 /*
