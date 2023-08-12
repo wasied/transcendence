@@ -25,6 +25,7 @@ export class UsersController {
 			if (users[index].id === request.user.id)
 				delete users[index];
 		}
+		users = users.filter(user => user !== null && user !== undefined);
 
 		return users;
 	}
