@@ -1,6 +1,5 @@
 import { Component, ElementRef, ViewChild, AfterViewInit, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { PongData, GameState, Keys } from '../game-interface';
-import { Subscription } from 'rxjs';
+import { PongData, Keys } from '../game-interface';
 import { Router } from '@angular/router';
 import { GameWebsocketService } from 'src/app/core/services/game-websocket.service';
 
@@ -29,15 +28,31 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 	keys!: Keys;
 	pongData!: PongData;
 
+	isMatched: boolean = false;
+	loadingMessage: string = 'Please stand by';
+	dotCount: number = 0;
+  	timeoutStandById!: any;
+	exitSessionId!: number; 
+
 	constructor(private gameSocket: GameWebsocketService, private router: Router) {};
+
+	/* MATCHMAKING UTILS */
+	
+	updateLoadingMessage() : void {
+		if (!this.isMatched) {
+			this.loadingMessage = 'Please stand by' + '.'.repeat(this.dotCount);
+			this.dotCount = (this.dotCount + 1) % 4;
+			this.timeoutStandById = setTimeout(() => this.updateLoadingMessage(), 500);
+		}
+	}
 
 	/* GAME DATA TRANSPORTATION */
 	ngOnInit(): void {
 		this.keys = new Keys();
-
 		this.pongData = new PongData();
 
 		this.gameSocket.joinMatchmaking('standard');
+		this.updateLoadingMessage();
 
 		this.gameSocket.gameStarted$.subscribe(this.onGameStartedFromSocket);
 		this.gameSocket.gameUpdate$.subscribe(this.onChangesFromSocket);
@@ -45,7 +60,8 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.gameSocket.disconnect()
+		this.gameSocket.disconnect();
+		clearTimeout(this.timeoutStandById);
 	}
 
 	private onChangesFromSocket(data: any): void {
@@ -60,17 +76,18 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		
 		this.sendPaddleState();
 		this.draw(data.gameState);
-		
 	}
 	
 	private onGameStartedFromSocket(data: any): void {
-
 		// appel après avoir trouvé un partenaire
+		this.isMatched = true;
 
+		// retrive session id from there :
+		// this.exitSessionId = ;
 	}
 	
 	private onGameEndedFromSocket(data: any): void {
-		this.router.navigate(['main', 'exit_game']);
+		this.router.navigate(['main', 'exit_game', this.exitSessionId]);
 	}
 
 	private sendPaddleState(): void {
@@ -158,11 +175,9 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 		switch (event.key) {
 			case 'ArrowUp':
 				this.keys.arrowUp = true;
-				event.preventDefault();
 				break;
 			case 'ArrowDown':
 				this.keys.arrowDown = true;
-				event.preventDefault();
 				break;
 		}
 	}
