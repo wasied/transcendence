@@ -26,7 +26,6 @@ export class ProfileOtherComponent implements OnInit, OnDestroy {
 		const id: string | null = this.route.snapshot.paramMap.get('id');
 
 		if (id) {
-			console.log(id);
 			this.idOfUserProfile = +id;
 		} else {
 			console.error("Invalid user id");

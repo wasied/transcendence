@@ -13,7 +13,7 @@
                 <span class="-mt-0.5" [ngClass]="{
                     'text-green-600': this.friend.status === 'online',
                     'text-red-600': this.friend.status === 'offline',
-                    'text-orange-600': this.friend.status === 'inAGame'
+                    'text-orange-600': this.friend.status === 'Playing a game'
                 }">●</span>
                 <span class="text-gray-800">{{ this.friend.status }} </span>
             </div>
@@ -33,7 +33,7 @@
 		duration-300 cursor-pointer"></i></button>
   	</div>
 
-	<div *ngIf="this.friend.status === 'inAGame'" class="flex justify-end space-x-4 px-4">
+	<div *ngIf="this.friend.status === 'Playing a game'" class="flex justify-end space-x-4 px-4">
 		<button (click)="triggerPongSpectator(this.friend.id)" title="Watch this player's game"
 		class="p-2" id="block">
 			<i class="fa fa-binoculars hover:scale-125 transition-transform duration-300 cursor-pointer"

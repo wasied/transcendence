@@ -22,7 +22,6 @@ export class FriendComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		//console.log(this.friend.id);
 	}
 
 	triggerPongSpectator(friendId: number) : void {
