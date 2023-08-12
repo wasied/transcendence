@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 import { Router } from '@angular/router';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 import QRCode from 'qrcode';
-import { environment } from "src/environments/environment";
 
 @Injectable({
 	providedIn: 'root'
@@ -13,7 +12,7 @@ import { environment } from "src/environments/environment";
 export class AuthenticationService {
 
 	private doubleAuthActivated: boolean = false;
-	private apiURL: string = `${environment.appUrl}:${environment.backendAPIPort}/auth`;
+	private apiURL: string = 'http://localhost:8080/auth';
 	authObs$!: Observable<any>;
 
 	constructor (

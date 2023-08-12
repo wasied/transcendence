@@ -1,19 +1,10 @@
 # Stage 1: Compile angular app
 FROM node:18.14
 
-ARG APP_URL
-ARG BACKEND_API_PORT
-
 WORKDIR /app
 COPY ./app/package*.json ./
 RUN npm ci
 COPY ./app ./
-
-RUN sed -i "s|appUrl: 'http://localhost',|appUrl: '${APP_URL}',|g" ./src/environments/environment.ts
-RUN sed -i "s|appUrl: 'http://localhost',|appUrl: '${APP_URL}',|g" ./src/environments/environment.prod.ts
-
-RUN sed -i "s|backendAPIPort: 8080,|backendAPIPort: ${BACKEND_API_PORT},|g" ./src/environments/environment.ts
-RUN sed -i "s|backendAPIPort: 8080,|backendAPIPort: ${BACKEND_API_PORT},|g" ./src/environments/environment.prod.ts
 
 RUN npm run build
 

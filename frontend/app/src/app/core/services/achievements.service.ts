@@ -2,7 +2,6 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { Achievement } from "src/app/core/models/achievement.model";
-import { environment } from "src/environments/environment";
 
 @Injectable({
 	providedIn: 'root'
@@ -10,29 +9,8 @@ import { environment } from "src/environments/environment";
 export class AchievementsService {
 
 	constructor (private http: HttpClient) {};
-
-	hardcodedAchievements: Achievement[] = [{
-		id: 1,
-		userId: 1,
-		date: new Date(),
-		achievementName: 'test',
-		description: 'description test0'
-	},
-	{
-		id: 2,
-		userId: 1,
-		date: new Date(),
-		achievementName: 'test',
-		description: 'description test1'
-	},];
-
-	getHarcodedAchievements() : Observable<Achievement[]> { // for testing only
-		return of(this.hardcodedAchievements);
-	}
-
-	// with DB
 	
-	private apiBaseURL: string = `${environment.appUrl}:${environment.backendAPIPort}/achievements_lists`;
+	private apiBaseURL: string = 'http://localhost:3000/achievements_lists'; // modify that
 
 	// get all chivements
 	getAllAchievements() : Observable<Achievement[]> {

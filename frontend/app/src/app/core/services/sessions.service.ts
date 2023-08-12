@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable, of } from "rxjs";
 import { Session } from "../models/session.model"; 
-import { environment } from "src/environments/environment";
 
 @Injectable ({
 	providedIn: 'root'
@@ -28,8 +27,22 @@ export class SessionsService {
 	
 	// with DB
 	
-	private apiURL = `${environment.appUrl}:${environment.backendAPIPort}/sessions`;
+	private apiURL = 'http://localhost:8080/sessions';
 
+	/* CREATE */
+
+	// do that after matchmaking, useful ???
+	createGameSession() : Observable<void> {
+		const endpoint: string = `${this.apiURL}`; // modify this
+		const body = {
+			action: 'createGameSession',
+		};
+		return this.authHttp.post<void>(endpoint, body);
+	}
+	
+
+	/* READ */
+	
 	// return all the game sessions
 	getAllSessions() : Observable<Session[]> {
 		const endpoint: string = `${this.apiURL}`;

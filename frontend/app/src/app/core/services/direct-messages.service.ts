@@ -3,8 +3,6 @@ import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { Chatroom } from "../models/chatroom.model";
 import { UsersService } from './users.service';
-import { httpErrorHandler } from 'src/app/http-error-handler';
-import { environment } from "src/environments/environment";
 
 @Injectable({
 	providedIn: 'root'
@@ -16,29 +14,7 @@ export class DirectMessagesService {
 		private usersService: UsersService
 	) {};
 
-	private hardcodedDirectMessages: Chatroom[] = [
-/*
-		{
-			id: 1,
-			otherPlayerId: 1,
-			otherPlayerPseudo: 'test other player',
-			otherPlayerStatus: 'online'
-		}
-*/
-	];
-
-	gethardcodedDirectMessages() : Observable<Chatroom[]> {
-		return of(this.hardcodedDirectMessages);
-	}
-
-	getHardcodedDirectMessageById(id: number) : Observable<Chatroom> {
-		return of(this.hardcodedDirectMessages[id - 1]);
-	}
-
-	// with observables
-
-	private apiURL : string = `${environment.appUrl}:${environment.backendAPIPort}/chat`;
-
+	private apiURL : string = 'http://localhost:8080/chat';
 
 	/* CREATE */
 

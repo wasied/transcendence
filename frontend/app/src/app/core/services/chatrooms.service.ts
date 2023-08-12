@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable, of } from "rxjs";
 import { Chatroom } from '../models/chatroom.model'; 
-import { environment } from "src/environments/environment";
+import { User } from "../models/user.model";
 
 @Injectable({
 	providedIn: 'root'
@@ -11,49 +11,16 @@ export class ChatroomsService {
 
 	constructor (private authHttp: AuthHttpClient) {};
 
-	private hardcodedChatrooms: Chatroom[] = [
-/*
-		{
-			id: 1,
-			name: 'test_1',
-			owner_uid: 1,
-			owner: 'random_guy',
-			password: null,
-			participants: ['test', 'player'],
-			participants_id: [1]
-		},
-		{
-			id: 2,
-			name: 'testChatroom',
-			owner_uid: 1,
-			owner: 'test2',
-			password: null,
-			participants: ['test', 'player'],
-			participants_id: [1]
-		},
-		{
-			id: 2,
-			name: 'testChatroom',
-			owner_uid: 1,
-			owner: 'test3',
-			password: null,
-			participants: ['test', 'player'],
-			participants_id: [1]
-		}
-*/
-	];
+	readonly id: number;
+	readonly username: string;
+	status: string;
+	a2f_key: string;
+	profile_picture_url: string;
+	readonly updated_at: string;
+	readonly created_at: string;
 
-	getHardcodedChatrooms() : Observable<Chatroom[]> {
-		return of(this.hardcodedChatrooms);
-	}
 
-	getHarcodedChatroomById(id: number) : Observable<Chatroom> {
-		return of(this.hardcodedChatrooms[id - 1]);
-	}
-
-	// with DB
-
-	private apiURL: string = `${environment.appUrl}:${environment.backendAPIPort}/chat`;
+	private apiURL: string = 'http://localhost:8080/chat';
 
 	/**
 	*** Chatrooms
@@ -61,6 +28,8 @@ export class ChatroomsService {
 
 	/* CREATE */
 	
+/*
+
 	createChatroom(newName: string, newPassword: string | null) : Observable<void> {
 		
 		const endpoint: string = `${this.apiURL}`;
@@ -73,7 +42,11 @@ export class ChatroomsService {
 		return this.authHttp.post<void>(endpoint, body);
 	}
 
+*/
+
 	/* READ */
+
+/*
 
 	getAllChatrooms() : Observable<Chatroom[]> {
 		const endpoint: string = `${this.apiURL}/chatrooms`;
@@ -87,10 +60,19 @@ export class ChatroomsService {
 		return this.authHttp.get<Chatroom[]>(endpoint);
 	}
 
-	getChatroomByID(id: number) : Observable<Chatroom> { // probably not that useful
+*/
+
+
+	getChatroomByID(id: number) : Observable<Chatroom> {
 		const endpoint: string = `${this.apiURL}/${id}`;
 		
 		return this.authHttp.get<Chatroom>(endpoint);
+	}
+
+	amIChatroomOwner(chatroomId: number): Observable<boolean> {
+		const endpoint: string = `${this.apiURL}/is-owner/${chatroomId}`;
+
+		return this.authHttp.get<boolean>(endpoint);
 	}
 
 	// canUserCoerce(participantsId: number[]) : Observable<number[]> {
@@ -113,11 +95,15 @@ export class ChatroomsService {
 
 	/* DELETE */
 
+/*
+
 	delChatroom(id: number) : Observable<void> {
 		const endpoint: string = `${this.apiURL}/${id}`;
 		
 		return this.authHttp.delete<void>(endpoint);
 	}
+
+*/
 
 	/**
 	*** Chatroom_users
@@ -156,25 +142,11 @@ export class ChatroomsService {
 		return this.authHttp.put<void>(endpoint, body);
 	}
 
-	/* DELETE */
-
 	delParticipantFromChatroom(chatroomId: number) : Observable<void> {
 		const endpoint: string = `${this.apiURL}/leave/${chatroomId}`;
 		
 		return this.authHttp.delete<void>(endpoint);
 	}
-
-/*
-	modifyChatroomName(chatroomId: number, newName: string) : Observable<void> {
-		const body = {
-			id: chatroomId,
-			name: newName
-		};
-		const endpoint: string = `${this.apiURL}/name`;
-		
-		return this.authHttp.put<void>(endpoint, body);
-	}
-*/
 
 	modifyChatroomPassword(chatroomId: number, newPassword: string | null) : Observable<void> {
 		const body = {
@@ -196,7 +168,6 @@ export class ChatroomsService {
 	*** Punishments
 	**/
 	
-	/* CREATE */
 
 	banUserFromChatroom(chatroomId: number, userId: number, endsAt: string) : Observable<void> {
 		const endpoint: string = `${this.apiURL}/punishment`;
@@ -218,5 +189,19 @@ export class ChatroomsService {
 			ends_at: endsAt
 		};
 		return this.authHttp.post<void>(endpoint, body);
+	}
+
+	/**
+	*** Access
+	**/
+
+	requestAccessToChatroom(chatroomId: number, password: string) : Observable<boolean> { // you can modify using a get, I don't know tbh
+		const endpoint: string = `${this.apiURL}`; // modify that
+		const body = {
+			type: 'askForAccess',
+			chatroomId: chatroomId,
+			password: password
+		}
+		return this.authHttp.put<boolean>(endpoint, body);
 	}
 }

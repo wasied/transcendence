@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { User } from "../models/user.model"; 
 import { Observable, of, forkJoin } from 'rxjs';
-import { environment } from "src/environments/environment";
 
 @Injectable ({
 	providedIn: 'root'
@@ -11,27 +10,8 @@ export class UsersService {
 
 	constructor(private authHttp: AuthHttpClient) {};
 
-	private harcodedUsers: User[]  = [{
-		id: 1,
-		username: 'testUser',
-		status: "offline",
-		a2f_key: "",
-		profile_picture_url: '/Users/corentin/code/19/transcendence/front/src/assets/imgs/picture-profile-empty.jpg',
-		updated_at: "",
-		created_at: ""
-	}];
-
-	private apiURL: string = `${environment.appUrl}:${environment.backendAPIPort}/users`
-
-	getHardcodedUsers() : Observable<User[]> {
-		return of(this.harcodedUsers);
-	}
-
-	retrieveHardcodedUser() : Observable<User> { // change this after auth service is implemented
-		return of(this.harcodedUsers[0]);
-	}
 	
-	// with observables
+	private apiURL: string = 'http://localhost:8080/users';
 
 	/* READ */
 
@@ -66,7 +46,6 @@ export class UsersService {
 		return forkJoin([user1$, user2$]);
 	}
 
-	// should be used for displaying users actually playing pong !
 	getUsersInActiveSession() : Observable<User[]> {
 		const endpoint: string = `${this.apiURL}/playing`;
 		
@@ -93,6 +72,12 @@ export class UsersService {
 		return this.authHttp.get<boolean>(endpoint);
 	}
 */
+
+	getPlayersAfterMatchmaking() : Observable<User[]> {
+		const endpoint: string = `${this.apiURL}`; // modify this
+
+		return this.authHttp.get<User[]>(endpoint);
+	}
 
 	/* UPDATE */
 

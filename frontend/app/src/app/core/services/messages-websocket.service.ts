@@ -2,13 +2,10 @@ import { Injectable } from '@angular/core';
 import { Socket, io } from 'socket.io-client';
 import { Subject } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
-import { environment } from 'src/environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MessagesWebsocketService {
-	private socket: Socket;
+  private socket: Socket;
 
 	public updateMessages$: Subject<any> = new Subject();
 	public newMessage$: Subject<any> = new Subject();
@@ -23,7 +20,8 @@ export class MessagesWebsocketService {
 				}
 			}
 		};
-		this.socket = io(`${environment.appUrl}:${environment.backendAPIPort}/messages`, options);
+
+		this.socket = io('http://localhost:8080/messages', options);
 	}
 
 	public listenToServerEvents(): void {
@@ -39,10 +37,18 @@ export class MessagesWebsocketService {
 	}
 
 	public connect(chatroomId: number): void {
-		this.socket.emit('connectMessages', { chatroom_id: chatroomId });
+		this.socket.emit('connectMessage', { chatroom_id: chatroomId });
 	}
 
 	public disconnect(chatroomId: number): void {
-		this.socket.emit('disconnectMessages', { chatroom_id: chatroomId });
+		this.socket.emit('disconnectMessage', { chatroom_id: chatroomId });
+	}
+
+	// Send a new message to the chatroom
+	public sendMessage(roomId: number, message: string): void {
+		this.socket.emit('newMessage', {
+			chatroom_id: roomId,
+			content: message
+		});
 	}
 }

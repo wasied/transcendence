@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
-import { Observable, of } from "rxjs";
-import { Friend } from "../models/friend.model";
+import { Observable } from "rxjs";
 import { User } from '../models/user.model';
-import { environment } from "src/environments/environment";
+
 
 @Injectable({
 	providedIn: 'root'
@@ -11,23 +10,8 @@ import { environment } from "src/environments/environment";
 export class FriendService
 {
 	constructor (private authHttp : AuthHttpClient) {};
-
-	private hardcodedFriends: Friend[] = [{
-		id: 1,
-		userId: 1,
-		friendId: 2,
-		friendName: 'test friend',
-		friendStatus: 'online',
-		createdAt: new Date()
-	}];
 	
-	getHardcodedFriends() : Observable<Friend[]> {
-		return of(this.hardcodedFriends);
-	}
-
-	// with DB
-	
-	private apiURL : string = `${environment.appUrl}:${environment.backendAPIPort}/friends`;
+	private apiURL : string = 'http://localhost:8080/friends';
 
 	/* CREATE */
 
@@ -48,7 +32,7 @@ export class FriendService
 		return this.authHttp.get<User[]>(endpoint);
 	}
 
-	getMyFriends() : Observable<User[]> {
+	getMyFriends() : Observable<User[]> { // faite ?
 		const endpoint: string = `${this.apiURL}`;
 
 		return this.authHttp.get<User[]>(endpoint);
@@ -60,10 +44,10 @@ export class FriendService
 		return this.authHttp.get<User[]>(endpoint);
 	}
 
-	getFriendshipById(id: number) : Observable<Friend> {
-		const endpoint: string = `${this.apiURL}/friendship/${id}`;
+	getNonFriends(): Observable<User[]> {
+		const endpoint: string = `${this.apiURL}/non-friends`;
 
-		return this.authHttp.get<Friend>(endpoint);
+		return this.authHttp.get<User[]>(endpoint);
 	}
 
 	/* DELETE */
