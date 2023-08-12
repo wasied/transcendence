@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Socket, io } from 'socket.io-client';
-import { Observable, Subject } from 'rxjs';
+import { io, Socket } from 'socket.io-client';
+import { Observable } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
-import { Chatroom } from 'src/app/core/models/chatroom.model';
+import { environment } from 'src/environments/environment';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ChatWebsocketService {
 	private socket: Socket;
-
-	public rooms$: Subject<Chatroom[]> = new Subject();
-	public myRooms$: Subject<Chatroom[]> = new Subject();
 
 	constructor(private readonly authService: AuthenticationService) {
 		const options = {
@@ -21,42 +20,21 @@ export class ChatWebsocketService {
 				}
 			}
 		};
-		this.socket = io('http://localhost:8080/chat', options);
+		this.socket = io(`${environment.appUrl}:${environment.backendAPIPort}/chat`, options);
 	}
 
-	public listenToServerEvents(): void {
-		this.socket.on('updateRooms', (chatrooms: Chatroom[]) => {
-			this.rooms$.next(chatrooms);
-		});
-
-		this.socket.on('updateMyRooms', (myChatrooms: Chatroom[]) => {
-			this.myRooms$.next(myChatrooms);
-		});
+	// Connect to a chatroom
+	connectRoom(roomId: number): void {
+		this.socket.emit('connectRoom', { chatroom_id: roomId });
 	}
 
-	connect(): void {
-		this.socket.emit('connectChatrooms');
+	// Disconnect from a chatroom
+	disconnectRoom(roomId: number): void {
+		this.socket.emit('disconnectRoom', { chatroom_id: roomId });
 	}
 
-	disconnect(): void {
-		this.socket.emit('disconnectChatrooms');
-	}
-
-	createRoom(chatroomName: string, password: string | null, direct_message: boolean, other_user_id: number): void {
-		this.socket.emit('createRoom', {
-			name: chatroomName,
-			password: password,
-			direct_message: direct_message,
-			other_user_id: other_user_id
-		});
-	}
-
-	deleteRoom(chatroomId: number): void {
-		this.socket.emit('deleteRoom', { chatroom_id: chatroomId });
-	}
-
-	joinRoom(roomId: number, password: string | null): void {
-		this.socket.emit('joinRoom', { chatroom_id: roomId, password: password });
+	joinRoom(roomId: number): void {
+		this.socket.emit('joinRoom', { chatroom_id: roomId });
 	}
 
 	leaveRoom(roomId: number): void {

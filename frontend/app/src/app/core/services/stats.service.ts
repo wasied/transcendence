@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { Stat } from "../models/stat.model"; 
 import { AuthHttpClient } from 'src/app/auth-http-client';
+import { environment } from "src/environments/environment";
 
 @Injectable ({
 	providedIn: 'root'
@@ -9,8 +10,25 @@ import { AuthHttpClient } from 'src/app/auth-http-client';
 export class StatsService {
 
 	constructor (private authHttp: AuthHttpClient) {}
+
+	private hardcodedStats: Stat[] = [{
+		wins: 13,
+		losses: 7,
+		games_played: 20,
+		win_ratio: '0.78'
+	}];
 	
-	private apiUrl : string = 'http://localhost:8080/stats';
+	getHardcodedStats() : Observable<Stat[]> {
+		return of(this.hardcodedStats);
+	}
+
+	getHardcodedStat() : Observable<Stat> { // placeholder
+		return of(this.hardcodedStats[0]);
+	}
+
+	// with DB
+	
+	private apiUrl : string = `${environment.appUrl}:${environment.backendAPIPort}/stats`;
 
 	/* READ */
 
