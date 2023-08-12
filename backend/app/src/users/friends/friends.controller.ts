@@ -13,12 +13,17 @@ export class FriendsController {
 
 	@Get()
 	async findAll(@Request() request: any): Promise<User[]> {
-		return this.friendsService.findAll(request.user.id);
+		return await this.friendsService.findAll(request.user.id);
+	}
+
+	@Get('non-friends')
+	async findNonFriends(@Request() request: any): Promise<User[]> {
+		return await this.friendsService.findNonFriends(request.user.id);
 	}
 
 	@Get(':id')
 	async findFriendsOfByUserId(@Param('id') id: string): Promise<User[]> {
-		return this.friendsService.findAll(+id);
+		return await this.friendsService.findAll(+id);
 	}
 
 	@Get('friendship/:id')
