@@ -31,7 +31,6 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 				 private accessControlService: AccessControlService) {}
 
 	ngOnInit(): void {
-		
 	}
 	
 	toggleDropdown(): void {
@@ -42,32 +41,20 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 		return true; 
 	}
 
-	kickUser(participantId: number) : void {
-		this.chatroomsService.kickUserFromChatroom(this.chatroomId, participantId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async kickUser(participantId: number) : Promise<void> {
+		await this.chatroomsService.kickUserFromChatroom(this.chatroomId, participantId).toPromise();
 	}
 
-	banUser(participantId: number) : void {
-		this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId, '5').subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async banUser(participantId: number) : Promise<void> {
+		await this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId, '5').toPromise();
 	}
 
-	muteUser(participantId: number) : void {
-		this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId, '5').subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async muteUser(participantId: number) : Promise<void> {
+		await this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId, '5').toPromise();
 	}
 
-	blockUser(participantId: number) : void {
-		this.usersService.blockUser(participantId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async blockUser(participantId: number) : Promise<void> {
+		await this.usersService.blockUser(participantId).toPromise();
 	}
 
 	/* GUARD */
@@ -82,18 +69,12 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 	}
 
 
-	makeAdmin(participantId: number) : void {
-		this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async makeAdmin(participantId: number) : Promise<void> {
+		await this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId).toPromise();
 	}
 
-	makeNonAdmin(participantId: number) : void {
-		this.chatroomsService.makeUserANonAdmin(this.chatroomId, participantId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async makeNonAdmin(participantId: number) : Promise<void> {
+		await this.chatroomsService.makeUserANonAdmin(this.chatroomId, participantId).toPromise();
 	}
 
 	invitePong(participantId: number) : void {
