@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/core/models/user.model';
 import { Router } from '@angular/router';
-import { UsersService } from '../../../../core/services/users.service';
-import { FriendService } from '../../../../core/services/friends.service';
+import { UsersService } from 'src/app/core/services/users.service';
+import { FriendService } from 'src/app/core/services/friends.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-friend',
@@ -29,7 +30,7 @@ export class FriendComponent implements OnInit {
 		 
 	}
 
-	blockUserFromFriendsInterface(friendId: number) : void {
+	async blockUserFromFriendsInterface(friendId: number) : Promise<void> {
 		await this.usersService.blockUser(friendId).toPromise()
 			.catch(err => { httpErrorHandler(err); });
 	}
