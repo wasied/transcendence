@@ -1,7 +1,13 @@
 <div class="text-white" *ngIf="participants$ | async as participants">
 	<div class="flex items-center justify-between h-16 bg-white text-black space-x-4">
-		<div class="text-4xl pl-8">
-			<h1>Messages with {{participants.participants[1].username}} </h1>
+		<div class="flex pl-8">
+			<button
+                  type="button"
+                  (click)="viewOtherUserProfile(participants.participants[1].id)"
+                  class="rounded-full border-2 border-yellow-500 bg-yellow-500 text-2xl h-12 w-48
+                  hover:bg-white hover:text-yellow-500 ease-in duration-300">
+				{{participants.participants[1].username}}
+			</button>
 		</div>
 		<!-- open the modal for invites -->
 		<div class="flex">

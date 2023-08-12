@@ -32,6 +32,11 @@ export class DirectMessagesHeaderComponent implements OnInit {
 		this.accessControlService.setAccess(true);
 	}
 
+	viewOtherUserProfile(otherUserId: number): void {
+		this.accessControlService.setAccess(true);
+		this.router.navigate(['main', 'profile', otherUserId]);
+	}
+
 	onQuitDMSession() : void {
 		this.accessControlService.setAccess(true);
 		this.router.navigate(['main/direct_messages']);
