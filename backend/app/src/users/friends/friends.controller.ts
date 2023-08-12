@@ -37,7 +37,7 @@ export class FriendsController {
 
 	@Post()
 	create(@Request() request: RequestWithUser, @Body() body: CreateDto): void {
-		this.friendsService.create(request.user.id, body.user_uid2);
+		this.friendsService.create(request.user.id, body.user_id);
 	}
 
 	@Delete(':friendship_id')
