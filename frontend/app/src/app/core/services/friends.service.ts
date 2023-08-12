@@ -32,7 +32,7 @@ export class FriendService
 		return this.authHttp.get<User[]>(endpoint);
 	}
 
-	getMyFriends() : Observable<User[]> {
+	getMyFriends() : Observable<User[]> { // faite ?
 		const endpoint: string = `${this.apiURL}`;
 
 		return this.authHttp.get<User[]>(endpoint);

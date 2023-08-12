@@ -3,7 +3,6 @@ import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FriendsHandlerComponent } from '../friends-handler/friends-handler.component';
 import { User } from 'src/app/core/models/user.model';
-import { UsersService } from 'src/app/core/services/users.service';
 import { FriendService } from 'src/app/core/services/friends.service';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 
@@ -22,7 +21,6 @@ export class FriendsViewComponent implements OnInit, OnDestroy {
 	private subscription!: Subscription;
 
 	constructor(
-		private usersService: UsersService,
 		private friendService: FriendService
 	) {};
 
@@ -33,7 +31,7 @@ export class FriendsViewComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	fillForm(user: User) { // triggers 
+	fillForm(user: User) {
 		this.friendHandler.setUser(user);
 		this.closeModal();
 	}
