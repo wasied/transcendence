@@ -21,11 +21,18 @@ export class ChatroomsComponent implements OnInit {
   
 	ngOnInit(): void {
 		this.chatWebsocketService.listenToServerEvents();
+		this.chatWebsocketService.rooms$.subscribe(
+			chatrooms => { this.chatrooms = chatrooms; },
+			httpErrorHandler
+		);
 		this.chatWebsocketService.connect();
-		this.chatWebsocketService.rooms$.subscribe(chatrooms => { this.chatrooms = chatrooms; });
 	}
 
 	onDeleteRequest(chatroom: Chatroom) {
 		this.chatWebsocketService.deleteRoom(chatroom.id);
+	}
+
+	ngOnDestroy(): void {
+//		this.chatWebsocketService.rooms$.unsubscribe();
 	}
 }

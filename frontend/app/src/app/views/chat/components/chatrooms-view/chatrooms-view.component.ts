@@ -26,7 +26,6 @@ export class ChatroomsViewComponent implements OnInit {
 	};
 
 	ngOnInit(): void {
-		this.chatWebsocketService.connect();
 	}
 	
 	onCreateChatroom() : void {
