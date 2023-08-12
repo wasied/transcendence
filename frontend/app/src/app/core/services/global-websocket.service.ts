@@ -15,7 +15,6 @@ export class GlobalWebsocketService {
 	constructor(private readonly authService: AuthenticationService) {}
 
 	connect(): void {
-		console.log('wtf?');
 		const options = {
 			transportOptions: {
 				polling: {

@@ -21,7 +21,6 @@ export class GlobalGateway {
 	async connect(
 		@ConnectedSocket() client: SocketWithUser
 	): Promise<void> {
-		console.log('hey1');
 		await this.usersService.logIn(client.user.id);
 		this.server.emit('updateConnections');
 	}
@@ -30,7 +29,6 @@ export class GlobalGateway {
 	async disconnect(
 		@ConnectedSocket() client: SocketWithUser
 	): Promise<void> {
-		console.log('hey');
 		await this.usersService.logOut(client.user.id);
 		this.server.emit('updateConnections');
 	}
