@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { User } from 'src/app/core/models/user.model';
 import { FriendService } from 'src/app/core/services/friends.service';
+import { GlobalWebsocketService } from 'src/app/core/services/global-websocket.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -11,12 +12,15 @@ import { Observable } from 'rxjs';
 export class FriendsComponent implements OnInit {
 
 	@Input() userId!: number;
-	friends$!: Observable<User[]>;
+	friends!: User[];
 
-	constructor (private friendsService: FriendService) {};
+	constructor (
+		private friendsService: FriendService,
+		private globalWebsocketService: GlobalWebsocketService
+	) {};
   
 	ngOnInit(): void {
-		this.friends$ = this.loadFriendsOfUser();
+		this.globalWebsocketService.updateFriends$.subscribe(friends => { this.friends = friends; });
 	}
 
 	loadFriendsOfUser() : Observable<User[]> {
