@@ -32,8 +32,8 @@ export class PongGameService {
         this.gameState = {
             ballX: gameData.canvasWidth / 2,
             ballY: gameData.canvasHeight / 2,
-            ballSpeedX: 1.92, // initial speed, can be adjusted
-            ballSpeedY: 1.08, // initial speed, can be adjusted
+            ballSpeedX: 10,
+            ballSpeedY: 8,
             paddle1Y: gameData.canvasHeight / 2,
             paddle2Y: gameData.canvasHeight / 2,
             player1Score: 0,
@@ -82,24 +82,54 @@ export class PongGameService {
         };
     }
 
-    public movePaddleUp(isPlayerOne: boolean): void {
-        const paddleIdx = `paddle${isPlayerOne ? 1 : 2}Y`;
-        this.gameState[paddleIdx] -= 10;
-
-        if (this.gameState[paddleIdx] < 0)
-            this.gameState[paddleIdx] = 0;
-        else if (this.gameState[paddleIdx] > this.gameData.canvasHeight)
-            this.gameState[paddleIdx] = this.gameData.canvasHeight;
+    public isGameEnded(): boolean {
+        const { player1Score, player2Score } = this.gameState;
+    
+        const hasTwoPointLead = (score1: number, score2: number) => {
+            return (score1 >= 11 && score1 - score2 >= 2) || (score2 >= 11 && score2 - score1 >= 2);
+        };
+    
+        switch (this.gameData.variant) {
+            case 'standard':
+            case 'chaos':
+                return hasTwoPointLead(player1Score, player2Score);
+            case 'mortSubite':
+                return player1Score >= 1 || player2Score >= 1;
+            case 'twoPoints':
+                return Math.abs(player1Score - player2Score) >= 2;
+            default:
+                return false;
+        }
     }
 
-    public movePaddleDown(isPlayerOne: boolean): void {
+    public movePaddleUp(playerId: string): void {
+        const isPlayerOne = (playerId === this.gameData.player1Id);
         const paddleIdx = `paddle${isPlayerOne ? 1 : 2}Y`;
-        this.gameState[paddleIdx] += 10;
 
-        if (this.gameState[paddleIdx] < 0)
-            this.gameState[paddleIdx] = 0;
-        else if (this.gameState[paddleIdx] > this.gameData.canvasHeight)
-            this.gameState[paddleIdx] = this.gameData.canvasHeight;
+        this.gameState[paddleIdx] -= 20;
+
+        const minY = this.gameData.paddleHeight / 2;
+        const maxY = this.gameData.canvasHeight - this.gameData.paddleHeight / 2;
+
+        if (this.gameState[paddleIdx] < minY)
+            this.gameState[paddleIdx] = minY;
+        else if (this.gameState[paddleIdx] > maxY)
+            this.gameState[paddleIdx] = maxY;
+    }
+
+    public movePaddleDown(playerId: string): void {
+        const isPlayerOne = (playerId === this.gameData.player1Id);
+        const paddleIdx = `paddle${isPlayerOne ? 1 : 2}Y`;
+
+        this.gameState[paddleIdx] += 20;
+
+        const minY = this.gameData.paddleHeight / 2;
+        const maxY = this.gameData.canvasHeight - this.gameData.paddleHeight / 2;
+
+        if (this.gameState[paddleIdx] < minY)
+            this.gameState[paddleIdx] = minY;
+        else if (this.gameState[paddleIdx] > maxY)
+            this.gameState[paddleIdx] = maxY;
     }
 
     private updateBallCoordinates(): void {
@@ -119,31 +149,30 @@ export class PongGameService {
     }
 
     private scoreAndReset(player: 'player1' | 'player2', resetX: number, resetY: number): void {
-        if (!this.gameState.delayedRestart) {
-            this.gameState.delayedRestart = true;
-            this.gameState[player + 'Score']++;
-
-            setTimeout(() => {
-                this.resetBall(resetX, resetY);
-                this.gameState.delayedRestart = false;
-            }, 500);
-        }
+        this.gameState[player + 'Score']++;
+        this.resetBall(resetX, resetY);
     }
 
     private resetBall(x: number, y: number): void {
         this.gameState.ballX = x;
         this.gameState.ballY = y;
-        this.gameState.ballSpeedX = 1.92;  // Assuming initial speed value
-        this.gameState.ballSpeedY = 1.08;  // Assuming initial speed value
+        this.gameState.ballSpeedX = 10;
+        this.gameState.ballSpeedY = 8;
     }
 
     private handleWallCollisions(): void {
-        const hitTopOrBottom = 
-            this.gameState.ballY - this.gameData.ballRadius <= 0 || 
-            this.gameState.ballY + this.gameData.ballRadius >= this.gameData.canvasHeight;
 
-        if (hitTopOrBottom) {
+        const hitTop = this.gameState.ballY - this.gameData.ballRadius <= 0;
+        const hitBottom = this.gameState.ballY + this.gameData.ballRadius >= this.gameData.canvasHeight;
+
+        if (hitTop || hitBottom) {
             this.gameState.ballSpeedY = -this.gameState.ballSpeedY;
+
+            if (hitTop) {
+                this.gameState.ballY = this.gameData.ballRadius;
+            } else {
+                this.gameState.ballY = this.gameData.canvasHeight - this.gameData.ballRadius;
+            }
         }
     }
 

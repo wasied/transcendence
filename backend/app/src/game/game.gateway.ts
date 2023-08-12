@@ -18,6 +18,23 @@ export class PongGameGateway {
     private gameSessions = {};
     private spectators = {};
 
+    // Convert data to a client-friendly format
+    private translateDataForClient(data: any): any {
+        return {
+            ballX: (data.gameState.ballX / data.gameData.canvasWidth),
+            ballY: (data.gameState.ballY / data.gameData.canvasHeight),
+            paddleLeftY: (data.gameState.paddle1Y / data.gameData.canvasHeight),
+            paddleRightY: (data.gameState.paddle2Y / data.gameData.canvasHeight),
+            paddleHeight: (data.gameData.paddleHeight / data.gameData.canvasHeight),
+            playerLeftScore: data.gameState.player1Score,
+            playerRightScore: data.gameState.player2Score,
+            playerLeftId: data.gameData.player1Id,
+            playerRightId: data.gameData.player2Id,
+            ballRadius: data.gameData.ballRadius,
+            variant: data.gameData.variant
+        }
+    }
+
     // Pair these players in a game
     private async startGame(isPublic: boolean, playerOneId: string, playerTwoId: string, playerOneSocket: Socket, playerTwoSocket: Socket, matchType: GameData['variant']): Promise<void> {
         const gameSessionId = `${isPublic ? 'public' : 'private'}-${playerOneId}-${playerTwoId}`;
@@ -28,18 +45,28 @@ export class PongGameGateway {
             canvasWidth: 1920,
             canvasHeight: 1080,
             ballRadius: 10,
-            ballAccelerationFactor: 1,
-            ballMaxSpeed: 1,
+            ballAccelerationFactor: 2,
+            ballMaxSpeed: 30,
             paddleHeight: 160,
             variant: matchType
         }        
 
         const gameInstance = new PongGameService(gameData);
+        const sessionId = await this.sessionsService.create(isPublic, false);
 
         const intervalId: any = setInterval(() => {
+
             gameInstance.updateGame();
-            this.server.to(gameSessionId).emit('gameUpdate', gameInstance.getAllGameData(1));
-        }, 1000 / 60)
+
+            const isEnded = gameInstance.isGameEnded();
+            if (isEnded) {
+                this.server.to(gameSessionId).emit('gameEnded', this.translateDataForClient(gameInstance.getAllGameData(sessionId)));
+                return clearInterval(intervalId);
+            }
+
+            this.server.to(gameSessionId).emit('gameUpdate', this.translateDataForClient(gameInstance.getAllGameData(sessionId)));
+
+        }, 1000 / 60);
 
         gameInstance.setTimerId(intervalId);
 
@@ -48,9 +75,7 @@ export class PongGameGateway {
         playerOneSocket.join(gameSessionId);
         playerTwoSocket.join(gameSessionId);
 
-        // TODO: create session and return the id inside the data
-        const sessionId = await this.sessionsService.create(isPublic, false)
-        this.server.to(gameSessionId).emit('gameStarted', gameInstance.getAllGameData(1));
+        this.server.to(gameSessionId).emit('gameStarted', this.translateDataForClient(gameInstance.getAllGameData(sessionId)));
     }
 
     // Explode game id
@@ -79,13 +104,22 @@ export class PongGameGateway {
         const matchType = body.matchType;
         if (!matchType) return;
         if (matchType !== 'standard' && matchType !== 'mortSubite' && matchType !== 'chaos' && matchType !== 'twoPoints') return;
-        
-        const waitingPlayerSocket = Array.from(this.waitingPlayers.values())[0][0];
-        if (waitingPlayerSocket) {
-            const waitingPlayer = Array.from(this.waitingPlayers.keys())[0];
-            this.waitingPlayers.delete(waitingPlayerSocket.id);
 
-            this.startGame(true, String(client.user.id), waitingPlayer, client, waitingPlayerSocket, matchType);
+        let matchedPlayerId: string | null = null;
+        let matchedPlayerSocket: Socket | null = null;
+        for (let [waitingPlayerId, [waitingSocket, waitingMatchType]] of this.waitingPlayers.entries()) {
+            if (waitingMatchType === matchType) {
+                matchedPlayerId = waitingPlayerId;
+                matchedPlayerSocket = waitingSocket;
+                break;
+            }
+        }
+
+        if (matchedPlayerId) {
+            const waitingPlayer = Array.from(this.waitingPlayers.keys())[0];
+            this.waitingPlayers.delete(matchedPlayerId);
+
+            this.startGame(true, String(client.user.id), waitingPlayer, client, matchedPlayerSocket, matchType);
         } else {
             this.waitingPlayers.set(String(client.user.id), [client, matchType]);
         }
@@ -126,6 +160,8 @@ export class PongGameGateway {
     async handleDisconnect(
         @ConnectedSocket() client: SocketWithUser,
     ): Promise<void> {
+
+        if (!client.user) return;
 
         const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
         if (theRoomTheUserIsIn) {
@@ -179,15 +215,13 @@ export class PongGameGateway {
         @ConnectedSocket() client: SocketWithUser,
     ): Promise<void> {
 
-        console.log(`Paddle up at ${new Date()}`);
-
-        const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
+        const theRoomTheUserIsIn = [...client.rooms].find(room => room !== client.id);
         if (!theRoomTheUserIsIn) return;
-
+        
         const gameSession = this.gameSessions[theRoomTheUserIsIn];
         if (!gameSession) return;
 
-        gameSession.movePaddleUp(client.user.id);
+        gameSession.movePaddleUp(String(client.user.id));
 
     }
 
@@ -196,15 +230,13 @@ export class PongGameGateway {
         @ConnectedSocket() client: SocketWithUser,
     ): Promise<void> {
 
-        console.log(`Paddle down at ${new Date()}`);
-
-        const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
+        const theRoomTheUserIsIn = [...client.rooms].find(room => room !== client.id);
         if (!theRoomTheUserIsIn) return;
 
         const gameSession = this.gameSessions[theRoomTheUserIsIn];
         if (!gameSession) return;
 
-        gameSession.movePaddleDown(client.user.id);
+        gameSession.movePaddleDown(String(client.user.id));
 
     }
 
