@@ -31,7 +31,7 @@ export class MessagesWebsocketGuard implements CanActivate {
 				if (!userList || !userList.length)
 					reject(false);
 				var user = userList[0];
-				user.chatroom_ids = await this.chatService.findUserChatrooms(user.id)
+				const chatroom_ids = await this.chatService.findUserChatrooms(user.id)
 					.then(chatrooms => {
 						var result = [];
 						chatrooms.forEach(chatroom => { result.push(chatroom.id); });
@@ -39,6 +39,15 @@ export class MessagesWebsocketGuard implements CanActivate {
 						return result;
 					})
 					.catch(err => { throw new WsException(err); });
+				const direct_messages_ids = await this.chatService.findUserDirectMessages(user.id)
+					.then(direct_messages => {
+						var result = [];
+						direct_messages.forEach(direct_message => { result.push(direct_message.id); });
+
+						return result;
+					})
+					.catch(err => { throw new WsException(err); });
+				user.chatroom_ids = chatroom_ids.concat(direct_messages_ids);
 				user.punishments = await this.chatService.findUserPunishments(user.id)
 					.catch(err => { throw new WsException(err); });
 				context.switchToWs().getClient().user = user;
