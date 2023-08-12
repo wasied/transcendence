@@ -126,7 +126,7 @@ export class ChatroomsService {
 		const endpoint: string = `${this.apiURL}/admin`;
 		const body = {
 			admin: true,
-			id: chatroomId,
+			chatroom_id: chatroomId,
 			user_id: userId
 		};
 		return this.authHttp.put<void>(endpoint, body);
@@ -136,7 +136,7 @@ export class ChatroomsService {
 		const endpoint: string = `${this.apiURL}/admin`;
 		const body = {
 			admin: false,
-			id: chatroomId,
+			chatroom_id: chatroomId,
 			user_id: userId
 		};
 		return this.authHttp.put<void>(endpoint, body);

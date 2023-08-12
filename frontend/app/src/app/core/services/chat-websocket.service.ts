@@ -63,6 +63,7 @@ export class ChatWebsocketService {
 		this.socket.emit('leaveRoom', { chatroom_id: roomId });
 	}
 
+/*
 	setAdminStatus(roomId: number, userId: number, admin: boolean): void {
 		this.socket.emit('setAdmin', {
 			admin: admin,
@@ -70,6 +71,7 @@ export class ChatWebsocketService {
 			user_id: userId
 		});
 	}
+*/
 
 /*
 	// Get list of chatrooms owned by user

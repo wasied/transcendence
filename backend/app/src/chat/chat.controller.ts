@@ -146,70 +146,70 @@ export class ChatController {
 */
 
 	@Put('name')
-	updateName(@Request() request: RequestWithUser, @Body() body: UpdateNameDto) {
+	async updateName(@Request() request: RequestWithUser, @Body() body: UpdateNameDto) {
 		if (request.user.owner.indexOf(body.id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
-		this.chatService.updateName(body.id, body.name);
+		await this.chatService.updateName(body.id, body.name);
 	}
 
 	@Put('password')
-	updatePassword(@Request() request: RequestWithUser, @Body() body: UpdatePasswordDto) {
+	async updatePassword(@Request() request: RequestWithUser, @Body() body: UpdatePasswordDto) {
 		if (request.user.owner.indexOf(body.id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
-		this.chatService.updatePassword(body.id, body.password);
+		await this.chatService.updatePassword(body.id, body.password);
 	}
 
 	@Delete(':id')
-	delete(@Request() request: RequestWithUser, @Param('id') id: string): void {
+	async delete(@Request() request: RequestWithUser, @Param('id') id: string): Promise<void> {
 		if (request.user.owner.indexOf(+id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
-		this.chatService.delete(+id);
+		await this.chatService.delete(+id);
 	}
 
 	/* Chat users */
 
 
 	@Post('join')
-	join(@Request() request: RequestWithUser, @Body() body: JoinDto): void {
+	async join(@Request() request: RequestWithUser, @Body() body: JoinDto): Promise<void> {
 		if (request.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
 			throw new HttpException("User is already a chatroom member", HttpStatus.BAD_REQUEST);
-		this.chatService.join(request.user.id, body.chatroom_id, body.password);
+		await this.chatService.join(request.user.id, body.chatroom_id, body.password);
 	}
 
 	@Put('admin')
-	setAdmin(
+	async setAdmin(
 		@Request() request: RequestWithUser,
 		@Body() body: SetAdminDto
-	): void {
+	): Promise<void> {
 		if (request.user.owner.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not the chatroom owner", HttpStatus.FORBIDDEN);
-		this.chatService.setAdmin(body.admin, body.chatroom_id, body.user_id);
+		await this.chatService.setAdmin(body.admin, body.chatroom_id, body.user_id);
 	}
 
 	@Delete('leave/:id')
-	leave(@Request() request: RequestWithUser, @Param('id') id: string): void {
+	async leave(@Request() request: RequestWithUser, @Param('id') id: string): Promise<void> {
 		if (request.user.chatroom_ids.indexOf(+id) === -1)
 			throw new HttpException("User is not a chatroom member", HttpStatus.BAD_REQUEST);
-		this.chatService.leave(request.user.id, +id);
+		await this.chatService.leave(request.user.id, +id);
 	}
 
 
 	/* Punishments */
 
 	@Post('punishment')
-	setPunishment(
+	async setPunishment(
 		@Request() request: RequestWithUser,
 		@Body() body: SetPunishmentDto
-	): void {
+	): Promise<void> {
 		if (request.user.admin.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not an admin", HttpStatus.FORBIDDEN);
-		this.chatService.setPunishment(request.user.id, body.target_id, body.chatroom_id, body.type, body.ends_at);
+		await this.chatService.setPunishment(request.user.id, body.target_id, body.chatroom_id, body.type, body.ends_at);
 	}
 
 	@Delete('kick/:id/:user_id')
-	kick(@Request() request: RequestWithUser, @Param('id') chatroom_id: string, @Param('user_id') user_id: string): void {
+	async kick(@Request() request: RequestWithUser, @Param('id') chatroom_id: string, @Param('user_id') user_id: string): Promise<void> {
 		if (request.user.admin.indexOf(+chatroom_id) === -1)
 			throw new HttpException("User is not an admin", HttpStatus.FORBIDDEN);
-		this.chatService.leave(+user_id, +chatroom_id);
+		await this.chatService.leave(+user_id, +chatroom_id);
 	}
 }
