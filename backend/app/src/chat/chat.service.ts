@@ -171,7 +171,7 @@ export class ChatService {
 			`UPDATE	chatrooms_users
 					SET admin = $1
 					WHERE chatroom_uid = $2
-					AND user_uid $3;`,
+					AND user_uid = $3;`,
 			[admin, chatroom_id, user_id]
 		)
 		.then(queryResult => { return queryResult; })
