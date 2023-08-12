@@ -3,6 +3,7 @@ import { Socket, io } from 'socket.io-client';
 import { Subject } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { User } from 'src/app/core/models/user.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -25,7 +26,7 @@ export class GlobalWebsocketService {
 			}
 		};
 
-		this.socket = io('http://localhost:8080/global', options);
+		this.socket = io(`${environment.appUrl}:${environment.backendAPIPort}/global`, options);
 		this.socket.emit('connectGlobal');
 	}
 

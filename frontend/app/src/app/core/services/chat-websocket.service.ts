@@ -3,6 +3,7 @@ import { Socket, io } from 'socket.io-client';
 import { Observable, Subject } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { Chatroom } from 'src/app/core/models/chatroom.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ChatWebsocketService {
@@ -21,7 +22,7 @@ export class ChatWebsocketService {
 				}
 			}
 		};
-		this.socket = io('http://localhost:8080/chat', options);
+		this.socket = io(`${environment.appUrl}:${environment.backendAPIPort}/chat`, options);
 	}
 
 	public listenToServerEvents(): void {

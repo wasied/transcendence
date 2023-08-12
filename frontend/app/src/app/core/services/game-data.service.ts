@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from "../models/user.model";
 import { AuthHttpClient } from 'src/app/auth-http-client';
+import { environment } from 'src/environments/environment';
 
 export interface GameData {
 	variant: 'standard' | 'mortSubite' | 'twoPoints' | 'chaos',
@@ -16,7 +17,7 @@ export class GameDataService {
 
 	private gameData = new BehaviorSubject<GameData | null>(null);
 
-	private apiURL = 'http://localhost:8080/'; // modify that shit
+	private apiURL = `${environment.appUrl}:${environment.backendAPIPort}/`;
 
 	constructor (private authHttp: AuthHttpClient) {};
 	

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Socket, io } from 'socket.io-client';
 import { Subject } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class MessagesWebsocketService {
@@ -21,7 +22,7 @@ export class MessagesWebsocketService {
 			}
 		};
 
-		this.socket = io('http://localhost:8080/messages', options);
+		this.socket = io(`${environment.appUrl}:${environment.backendAPIPort}/messages`, options);
 	}
 
 	public listenToServerEvents(): void {

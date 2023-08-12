@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable } from "rxjs";
 import { User } from '../models/user.model';
-
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -11,7 +11,7 @@ export class FriendService
 {
 	constructor (private authHttp : AuthHttpClient) {};
 	
-	private apiURL : string = 'http://localhost:8080/friends';
+	private apiURL : string = `${environment.appUrl}:${environment.backendAPIPort}/friends`;
 
 	/* CREATE */
 

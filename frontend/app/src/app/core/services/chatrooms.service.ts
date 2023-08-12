@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { Observable, of } from "rxjs";
 import { Chatroom } from '../models/chatroom.model'; 
-import { User } from "../models/user.model";
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -20,7 +20,7 @@ export class ChatroomsService {
 	readonly created_at: string;
 
 
-	private apiURL: string = 'http://localhost:8080/chat';
+	private apiURL: string = `${environment.appUrl}:${environment.backendAPIPort}/chat`;
 
 	/**
 	*** Chatrooms

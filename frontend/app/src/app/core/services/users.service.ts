@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { AuthHttpClient } from 'src/app/auth-http-client';
 import { User } from "../models/user.model"; 
 import { Observable, of, forkJoin } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable ({
 	providedIn: 'root'
@@ -11,7 +12,7 @@ export class UsersService {
 	constructor(private authHttp: AuthHttpClient) {};
 
 	
-	private apiURL: string = 'http://localhost:8080/users';
+	private apiURL: string = `${environment.appUrl}:${environment.backendAPIPort}/users`;
 
 	/* READ */
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { AuthenticationService } from './authentication.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class GameWebsocketService {
@@ -21,7 +22,7 @@ export class GameWebsocketService {
 				}
 			}
 		};
-		this.socket = io('http://localhost:8080/game', options);
+		this.socket = io(`${environment.appUrl}:${environment.backendAPIPort}/game`, options);
 		console.log(this.socket);
 
 		this.socket.on("connect", () => {
