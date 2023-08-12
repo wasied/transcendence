@@ -37,7 +37,7 @@ export class GlobalGateway {
 	async getFriends(
 		@ConnectedSocket() client: SocketWithUser
 	): Promise<void> {
-		const updatedFriends: User[] = await this.friendsService.findAll(client.user.id)
+		const updatedFriends: User[] = await this.friendsService.findUserFriends(client.user.id)
 			.catch(err => { throw new WsException(err); });
 
 		client.emit('updateFriends', updatedFriends);
