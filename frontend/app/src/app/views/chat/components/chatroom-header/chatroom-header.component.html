@@ -1,4 +1,4 @@
-<div class="text-white" *ngIf="chatroom$ | async as chatroom">
+<div class="text-white" *ngIf="chatroom">
     <div class="flex items-center justify-between h-16 bg-white text-black space-x-4">
         <app-chatroom-dropdown 
             [participants]="this.chatroom.participants"
@@ -87,6 +87,5 @@
 				</div>
 			</div>
 		</div>
-		<button (click)="removeYourselfFromChatroom()">Remove Yourself From Chatroom</button>
 	</div>
 </app-modal>

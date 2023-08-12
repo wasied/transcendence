@@ -29,18 +29,15 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 				 private router: Router) {}
 
 	ngOnInit(): void {
-		// this.subscription = this.chatroomsService. .subscribe(canCoerce => {
-		// 	this.canCoerce = canCoerce;
-		// });
+		
 	}
 	
 	toggleDropdown(): void {
 		this.isOpen = !this.isOpen;
 	}
 
-	// check if 1) user is a owner or administrator, 2) target is not
 	isAllowedToCoerce(participantId: number) : boolean {
-		return true; // implement logic later, using a websocket
+		return true; 
 	}
 
 	kickUser(participantId: number) : void {
@@ -51,17 +48,17 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 	}
 
 	banUser(participantId: number) : void {
-		// this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+		this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId, '5').subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	muteUser(participantId: number) : void {
-		// this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+		this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId, '5').subscribe(
+			data => {},
+			httpErrorHandler
+		);
 	}
 
 	blockUser(participantId: number) : void {
@@ -90,12 +87,13 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 		);
 	}
 
-
-	isAllowedToElevateToAdmin(participantId: number) : boolean {
-		// backend will block if the user is not allowed
-		return true;
+	invitePong(participantId: number) : void {
+		// do this
 	}
 
+	isAllowedToElevateToAdmin(participantId: number) : boolean {
+		return true;
+	}
 
 	ngOnDestroy(): void {
 		if (this.subscription) {

@@ -14,7 +14,7 @@
 				<p class="font-bold mb-2 text-center">{{ participant.username }}</p>
 				
 				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="seeUserProfile(participantsId[i])">See Profile</button>
-				
+				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="invitePong(participantsId[i])">Play Pong</button>
 				<div *ngIf="isAllowedToElevateToAdmin(participantsId[i])">
 					<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="makeAdmin(participantsId[i])">Make Administrator</button>
 				</div>
