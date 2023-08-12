@@ -14,13 +14,8 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 export class GameExitComponent implements OnInit, OnDestroy {
 
 	gameData: GameData | null = null;
-	private subscriptionUser: Subscription | undefined;
 	private subscriptionPlayers: Subscription | undefined;
-	user$!: Observable<User>;
 
-	idPlayer1!: number | null | undefined;
-	idPlayer2!: number | null | undefined;
-	currentId: number | null = null;
 	
 	constructor (private gameDataService: GameDataService,
 				 private router: Router,
@@ -28,16 +23,6 @@ export class GameExitComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.retrieveGameData();
-		this.user$ = this.usersService.getMe();
-		this.subscriptionUser = this.user$.subscribe(data => {
-			this.currentId = data.id;
-		})
-		this.loadPlayers();
-	}
-
-	private loadPlayers() : void {
-		this.idPlayer1 = this.gameData?.leftPlayerId;
-		this.idPlayer2 = this.gameData?.rightPlayerId;
 	}
 
 	private retrieveGameData() : void {
@@ -52,9 +37,6 @@ export class GameExitComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.subscriptionUser) {
-			this.subscriptionUser.unsubscribe();
-		}
 		if (this.subscriptionPlayers) {
 			this.subscriptionPlayers.unsubscribe();
 		}
