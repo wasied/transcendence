@@ -4,9 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { Chatroom } from 'src/app/core/models/chatroom.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ChatWebsocketService {
 	private socket: Socket;
 

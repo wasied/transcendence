@@ -13,6 +13,8 @@ import { ChatroomSessionComponent } from './components/chatroom-session/chatroom
 import { ChatroomHeaderComponent } from './components/chatroom-header/chatroom-header.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { ChatWebsocketService } from 'src/app/core/services/chat-websocket.service';
+
 @NgModule({
 	declarations: [
 		ChatroomsViewComponent,
@@ -29,6 +31,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 		ChatRoutingModule,
 		SharedModule,
 		ReactiveFormsModule
-	]
+	],
+	providers: [ChatWebsocketService]
 })
 export class ChatModule { }

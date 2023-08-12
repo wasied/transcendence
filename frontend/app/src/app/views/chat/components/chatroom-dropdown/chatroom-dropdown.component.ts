@@ -5,6 +5,7 @@ import { UsersService } from 'src/app/core/services/users.service';
 import { Observable, Subscription } from 'rxjs';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 import { User } from 'src/app/core/models/user.model';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-chatroom-dropdown',
@@ -26,7 +27,8 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 
 	constructor (private usersService: UsersService,
 				 private chatroomsService: ChatroomsService,
-				 private router: Router) {}
+				 private router: Router,
+				 private accessControlService: AccessControlService) {}
 
 	ngOnInit(): void {
 		
@@ -68,7 +70,14 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	/* GUARD */
+
+	grantAccess(): void {
+	this.accessControlService.setAccess(true);
+	}
+
 	seeUserProfile(participantId: number) : void {
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main', 'profile', participantId]);
 	}
 
