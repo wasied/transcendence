@@ -1,5 +1,5 @@
 export const environment = {
-	production: false,
+	production: true,
 	appUrl: 'http://localhost',
 	backendAPIPort: 8080,
 	// DO NOT EDIT ANYTHING ABOVE

@@ -253,8 +253,9 @@ export class PongGameGateway {
 
         } else if (this.waitingPlayers.has(String(client.user.id))) {
             this.waitingPlayers.delete(String(client.user.id));
-            console.log(`Player ${client.user.id} left the matchmaking queue. Queue is now:`, this.waitingPlayers);
         }
+
+        client.disconnect();
 
     }
 

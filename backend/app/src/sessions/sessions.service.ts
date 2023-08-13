@@ -33,12 +33,13 @@ export class SessionsService {
 				INNER JOIN users ON su.user_uid = users.id
 				INNER JOIN sessions ON su.session_uid = sessions.id
 				WHERE su.spectator = false
-				AND su.id != $1
+				AND su.user_uid != $1
 				AND su.session_uid IN (
 					SELECT session_uid	FROM sessions_users
 										WHERE user_uid = $1
 										AND spectator = false
-				);`,
+				)
+				ORDER BY sessions.created_at DESC;`,
 			[userId]
 		)
 			.then(queryResult => { return treatDbResult(queryResult); })
