@@ -203,6 +203,12 @@ export class ChatController {
 	): Promise<void> {
 		if (request.user.admin.indexOf(body.chatroom_id) === -1)
 			throw new HttpException("User is not an admin", HttpStatus.FORBIDDEN);
+		const chatroom = await this.chatService.findOne(body.chatroom_id)
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		if (chatroom.length !== 1)
+			throw new HttpException("Chatroom not found", HttpStatus.BAD_REQUEST);
+		if (body.target_id === chatroom[0].owner_uid)
+			throw new HttpException("Chatroom owner cannot be punished", HttpStatus.FORBIDDEN);
 		await this.chatService.setPunishment(request.user.id, body.target_id, body.chatroom_id, body.type, body.ends_at);
 	}
 
@@ -210,6 +216,12 @@ export class ChatController {
 	async kick(@Request() request: RequestWithUser, @Param('id') chatroom_id: string, @Param('user_id') user_id: string): Promise<void> {
 		if (request.user.admin.indexOf(+chatroom_id) === -1)
 			throw new HttpException("User is not an admin", HttpStatus.FORBIDDEN);
+		const chatroom = await this.chatService.findOne(+chatroom_id)
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		if (chatroom.length !== 1)
+			throw new HttpException("Chatroom not found", HttpStatus.BAD_REQUEST);
+		if (+user_id === chatroom[0].owner_uid)
+			throw new HttpException("Chatroom owner cannot be punished", HttpStatus.FORBIDDEN);
 		await this.chatService.leave(+user_id, +chatroom_id);
 	}
 }
