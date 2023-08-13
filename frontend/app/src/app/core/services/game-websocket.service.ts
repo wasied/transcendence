@@ -23,32 +23,6 @@ export class GameWebsocketService {
 			}
 		};
 		this.socket = io(`${environment.appUrl}:${environment.backendAPIPort}/game`, options);
-		console.log(this.socket);
-
-		this.socket.on("connect", () => {
-			console.log("Socket connected", this.socket.id);
-		});
-
-		this.socket.on("connect_error", (error: Error) => {
-			console.log("Error connecting to server:", error.message);
-		});
-
-		this.socket.on("disconnect", (reason: string) => {
-			console.log("Socket disconnected due to:", reason);
-		});
-
-		this.socket.on("reconnecting", (attemptNumber: number) => {
-			console.log("Reconnecting attempt:", attemptNumber);
-		});
-		
-		this.socket.on("reconnect_error", (error: Error) => {
-			console.log("Reconnection attempt failed:", error.message);
-		});
-
-		this.socket.on("reconnect", (attemptNumber: number) => {
-			console.log("Successfully reconnected on attempt:", attemptNumber);
-		});
-		
 	}
 
     public listenToServerEvents(): void {
@@ -56,20 +30,8 @@ export class GameWebsocketService {
         	this.gameStarted$.next(data);
         });
         
-		// Get update about the game (data is a structure with all informations needed)
-		// WARNING: EVERYTHING IS IN % (0-1) !!! So x=0.5 means the ball is in the middle of the screen
         this.socket.on('gameUpdate', (data: any) => {
-
-			// WARNING: Every position is in % (between 0 and 1) !
-			// data.paddleLeft.y: left paddle position y (in %)
-			// data.paddleRight.y: right paddle position y (in %)
-			// data.ball.x: ball position x (in %) 
-			// data.ball.y: ball position y (in %)
-			// data.playerLeftScore: score of the left player
-			// data.playerRightScore: score of the right player
-
         	this.gameUpdate$.next(data);
-			
         });
     
         this.socket.on('gameEnded', (data: any) => {
@@ -91,7 +53,7 @@ export class GameWebsocketService {
 	// This will make the player join the session without actually being a player
 	// So he'll just receive game updates for the match
     public startSpectating(spectatingUserId: string): void {
-        this.socket.emit('startSpectating', spectatingUserId);
+        this.socket.emit('startSpectating', { spectatingUserId: spectatingUserId });
     }
 
 	// This will disconnect and stop the party for everyone

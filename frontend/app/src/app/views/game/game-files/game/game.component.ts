@@ -94,10 +94,14 @@ export class GameComponent implements OnInit, OnDestroy {
 				this.variant = this.gameData.variant;
 			}
 
-			if (this.chatroomId !== null)
-				this.gameSocket.joinPrivateGame(String(this.chatroomId));
-			else
-				this.gameSocket.joinMatchmaking(this.variant);
+			if (!this.spectator) {
+				if (this.chatroomId !== null)
+					this.gameSocket.joinPrivateGame(String(this.chatroomId));
+				else
+					this.gameSocket.joinMatchmaking(this.variant);
+			} else {
+				this.gameSocket.startSpectating(this.userToSpectateId!);
+			}
 		});
 
 		this.updateLoadingMessage();
@@ -120,6 +124,9 @@ export class GameComponent implements OnInit, OnDestroy {
 	}
 
 	private onChangesFromSocket(data: any): void {
+		if (!this.isMatched)
+			this.isMatched = true;
+
 		this.draw(data);
 		this.sendPaddleState();
 	}
