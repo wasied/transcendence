@@ -20,6 +20,7 @@ export class PongGameGateway {
     // Convert data to a client-friendly format
     private translateDataForClient(data: any): any {
         return {
+            sessionId: data.sessionId,
             ballX: (data.gameState.ballX / data.gameData.canvasWidth),
             ballY: (data.gameState.ballY / data.gameData.canvasHeight),
             paddleLeftY: (data.gameState.paddle1Y / data.gameData.canvasHeight),

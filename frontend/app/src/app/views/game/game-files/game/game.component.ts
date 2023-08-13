@@ -52,7 +52,6 @@ export class GameComponent implements OnInit, OnDestroy {
 	loadingMessage: string = 'Please wait for an opponent';
 	dotCount: number = 0;
   	timeoutStandById!: any;
-	exitSessionId!: number; 
 
 	constructor(
 		private gameSocket: GameWebsocketService,
@@ -110,15 +109,6 @@ export class GameComponent implements OnInit, OnDestroy {
 	}
 
 	private onChangesFromSocket(data: any): void {
-
-		// data.ballX: number;
-		// data.ballY: number;
-		// data.paddleLeftY: number;
-		// data.paddleRightY: number;
-		// data.playerLeftScore: number;
-		// data.playerRightScore: number;
-		// data.sessionId: number;
-		
 		this.draw(data);
 		this.sendPaddleState();
 	}
@@ -126,15 +116,11 @@ export class GameComponent implements OnInit, OnDestroy {
 	private onGameStartedFromSocket(data: any): void {
 		this.isMatched = true;
 		clearTimeout(this.timeoutStandById);
-
-		// retrive session id from there :
-		// this.exitSessionId = ;
 	}
 
 	private onGameEndedFromSocket(data: any): void {
 		this.accessControlService.setAccess(true);
-		// this.router.navigate(['main', 'exit_game', this.exitSessionId]);
-		this.router.navigate(['/main']); // Temporary
+		this.router.navigate(['main', 'exit_game', data.sessionId]);
 	}
 
 	private sendPaddleState(): void {
