@@ -118,7 +118,7 @@ async function createTables() {
             chatroom_user_admin_uid INTEGER NOT NULL,
             chatroom_user_target_uid INTEGER NOT NULL,
             type VARCHAR(50) NOT NULL,
-            ends_at TIMESTAMP NOT NULL DEFAULT NOW(),
+            ends_at TIMESTAMP NOT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
         );
     `);
