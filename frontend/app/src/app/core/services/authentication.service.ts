@@ -64,8 +64,6 @@ export class AuthenticationService {
 			}
 			const qrCodeUrl = await QRCode.toDataURL(response.otpAuthUrl)
 				.catch((err: any) => { return undefined; });
-			console.log(response.secret);
-			console.log(qrCodeUrl);
 
 			return {
 				success: response.success,
