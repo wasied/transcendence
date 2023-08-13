@@ -19,7 +19,7 @@ export class MatchHistoryService {
 	constructor (private authHttp: AuthHttpClient) {}
 
 	getUserHistory(userId: number): Observable<MatchHistory[]> {
-		const endpoint = `http://localhost:8080/sessions/history/${userId}`;
+		const endpoint = `http://localhost:8080/sessions/history/${userId}`; // TODO: DO NOT FORGET TO USE ENVIRONMENT
 
 		return this.authHttp.get<MatchHistory[]>(endpoint);
 	}
