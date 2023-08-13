@@ -87,7 +87,7 @@ export class GameComponent implements OnInit, OnDestroy {
 		this.keys = new Keys();
 
 		this.gameSocket.listenToServerEvents();
-		this.gameDataService.getGameData().subscribe(data => {
+		this.gameDataService.getGameData().subscribe((data: any) => {
 			this.gameData = data;
 			
 			if (this.gameData !== null) {
@@ -106,20 +106,22 @@ export class GameComponent implements OnInit, OnDestroy {
 
 		this.updateLoadingMessage();
 
-		this.gameSocket.gameStarted$.subscribe(data => this.onGameStartedFromSocket(data));
-		this.gameSocket.gameUpdate$.subscribe(data => this.onChangesFromSocket(data));
-		this.gameSocket.gameEnded$.subscribe(data => this.onGameEndedFromSocket(data));
+		this.gameSocket.gameStarted$.subscribe((data: any) => this.onGameStartedFromSocket(data));
+		this.gameSocket.gameUpdate$.subscribe((data: any) => this.onChangesFromSocket(data));
+		this.gameSocket.gameEnded$.subscribe((data: any) => this.onGameEndedFromSocket(data));
 	}
 
 	ngOnDestroy(): void {
+		console.log("Destroying...");
 		if (this.destroyed) return;
 		this.destroyed = true;
 
 		this.gameSocket.gameStarted$.unsubscribe();
 		this.gameSocket.gameUpdate$.unsubscribe();
 		this.gameSocket.gameEnded$.unsubscribe();
-
+		
 		this.gameSocket.disconnect();
+		console.log("Destroyed!");
 		clearTimeout(this.timeoutStandById);
 	}
 

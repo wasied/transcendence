@@ -142,7 +142,7 @@ export class PongGameGateway {
         let matchedPlayerId: string | null = null;
         let matchedPlayerSocket: Socket | null = null;
         for (let [waitingPlayerId, [waitingSocket, waitingMatchType]] of this.waitingPlayers.entries()) {
-            if (waitingMatchType === matchType) {
+            if (waitingMatchType === matchType && waitingPlayerId !== String(client.user.id)) {
                 matchedPlayerId = waitingPlayerId;
                 matchedPlayerSocket = waitingSocket;
                 break;
@@ -178,7 +178,7 @@ export class PongGameGateway {
         
         // Search for another player waiting in the same chatroom
         for (let [waitingPlayerId, [waitingSocket, waitingChatroomId]] of this.privateGames.entries()) {
-            if (waitingChatroomId === chatroomId) {
+            if (waitingChatroomId === chatroomId && client.id !== waitingSocket.id) {
                 matchedPlayerId = waitingPlayerId;
                 matchedPlayerSocket = waitingSocket;
                 break;
@@ -253,6 +253,7 @@ export class PongGameGateway {
 
         } else if (this.waitingPlayers.has(String(client.user.id))) {
             this.waitingPlayers.delete(String(client.user.id));
+            console.log(`Player ${client.user.id} left the matchmaking queue. Queue is now:`, this.waitingPlayers);
         }
 
     }
