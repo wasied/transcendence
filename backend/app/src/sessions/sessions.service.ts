@@ -2,7 +2,6 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Session } from './session';
 import { dbClient } from '../db';
 import { treatDbResult } from '../utils/treatDbResult';
-
 @Injectable()
 export class SessionsService {
 	async findAll(): Promise<Session[]> {
@@ -68,58 +67,46 @@ export class SessionsService {
 		}
 	}
 
-	join(session_id: number, user_id: number, spectator: boolean): void {
-		var status: string;
-		if (spectator)
-			status = "Spectating a game";
-		else
-			status = "Playing a game";
-	
-		dbClient.query(
+	async join(session_id: number, user_id: number, spectator: boolean): Promise<void> {
+		await dbClient.query(
 			`INSERT INTO sessions_users(user_uid, session_uid, spectator)
 				VALUES($1, $2, $3);`,
 			[user_id, session_id, spectator]
 		)
-		.then(() => {
-			return dbClient.query(
-				`UPDATE users
-					SET status = $1
-					WHERE id = $2;`,
-				[status, user_id]
-			);
-		})
-		.then(queryResult => {
-			return queryResult;
-		})
-		.catch(err => {
-			throw new HttpException(err, HttpStatus.BAD_REQUEST);
-		});
+			.then(queryResult => { return queryResult; })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		if (spectator)
+			return ;
+		await dbClient.query(
+			`UPDATE users
+				SET status = $1
+				WHERE id = $2;`,
+			["Playing a game", user_id]
+		)
+			.then(queryResult => { return queryResult; })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
-	end(session_id: number, winner_uid: number): void {
-		dbClient.query(
+	async end(session_id: number, winner_uid: number): Promise<void> {
+		await dbClient.query(
 			`UPDATE sessions
 			SET ended = true,
 				winner_uid = $1
 			WHERE id=$2;`,
 			[winner_uid, session_id]
 		)
-		.then(() => {
-			return dbClient.query(
-				`UPDATE users
-				SET status = 'online'
-				WHERE id IN (
-					SELECT user_uid FROM sessions_users
-					WHERE session_uid = $1 AND spectator = false
-				);`,
-				[session_id]
-			);
-		})
-		.then(queryResult => {
-			return queryResult;
-		})
-		.catch(err => {
-			throw new HttpException(err, HttpStatus.BAD_REQUEST);
-		});
+			.then(queryResult => { return queryResult; })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		await dbClient.query(
+			`UPDATE users
+			SET status = 'online'
+			WHERE id IN (
+				SELECT user_uid FROM sessions_users
+				WHERE session_uid = $1 AND spectator = false
+			);`,
+			[session_id]
+		)
+			.then(queryResult => { return queryResult; })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 }
