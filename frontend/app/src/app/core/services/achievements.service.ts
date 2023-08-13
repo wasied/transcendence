@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { Achievement } from "src/app/core/models/achievement.model";
+import { environment } from "src/environments/environment";
 
 @Injectable({
 	providedIn: 'root'
@@ -10,7 +11,7 @@ export class AchievementsService {
 
 	constructor (private http: HttpClient) {};
 	
-	private apiBaseURL: string = 'http://localhost:3000/achievements_lists'; // modify that
+	private apiBaseURL: string = `${environment.appUrl}:${environment.backendAPIPort}/achievements_lists`; // modify that
 
 	// get all chivements
 	getAllAchievements() : Observable<Achievement[]> {

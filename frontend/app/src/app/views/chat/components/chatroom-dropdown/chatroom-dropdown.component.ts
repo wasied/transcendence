@@ -88,7 +88,7 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 	}
 
 	invitePong(participantId: number) : void {
-		// do this
+		this.router.navigateByUrl(`main/game&chatroom_id=${this.chatroomId}`);
 	}
 
 	isAllowedToElevateToAdmin(participantId: number) : boolean {

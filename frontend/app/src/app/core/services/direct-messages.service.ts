@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { Chatroom } from "../models/chatroom.model";
 import { UsersService } from './users.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,7 +15,7 @@ export class DirectMessagesService {
 		private usersService: UsersService
 	) {};
 
-	private apiURL : string = 'http://localhost:8080/chat';
+	private apiURL : string = `${environment.appUrl}:${environment.backendAPIPort}/chat`;
 
 	/* CREATE */
 

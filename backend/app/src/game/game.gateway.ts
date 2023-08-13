@@ -3,21 +3,68 @@ import { Server, Socket } from 'socket.io';
 import { UseGuards } from '@nestjs/common';
 import { GameWebsocketGuard } from './game-websocket.guard';
 import { SocketWithUser } from '../utils/SocketWithUser';
-import { PongGame, GameData } from './game.service';
+import { PongGameService, GameData } from './game.service';
+import { SessionsService } from '../sessions/sessions.service';
 
 @WebSocketGateway({ cors: true, namespace: 'game' })
 @UseGuards(GameWebsocketGuard)
 export class PongGameGateway {
     @WebSocketServer() server: Server;
 
-    private waitingPlayers: Map<string, Socket> = new Map();
-    private playersInvitations = new Map<string, Map<string, Socket>>();
+    constructor(private sessionsService: SessionsService) {}
+
+    private waitingPlayers: Map<string, [Socket, string]> = new Map();
     private gameSessions = {};
     private spectators = {};
 
+    // Convert data to a client-friendly format
+    private translateDataForClient(data: any): any {
+        return {
+            ballX: (data.gameState.ballX / data.gameData.canvasWidth),
+            ballY: (data.gameState.ballY / data.gameData.canvasHeight),
+            paddleLeftY: (data.gameState.paddle1Y / data.gameData.canvasHeight),
+            paddleRightY: (data.gameState.paddle2Y / data.gameData.canvasHeight),
+            paddleHeight: (data.gameData.paddleHeight / data.gameData.canvasHeight),
+            playerLeftScore: data.gameState.player1Score,
+            playerRightScore: data.gameState.player2Score,
+            playerLeftId: data.gameData.player1Id,
+            playerRightId: data.gameData.player2Id,
+            ballRadius: data.gameData.ballRadius,
+            variant: data.gameData.variant
+        }
+    }
+
+    // Stop a game
+    private async stopGame(gameSessionId: string, playerWinnerId: number): Promise<void> {
+        const gameInstance = this.gameSessions[gameSessionId];
+        if (!gameInstance) return;
+
+        const explodedGameId = this.explodeGameId(gameSessionId);
+        if (!explodedGameId) return;
+
+        const playerOneId = parseInt(explodedGameId.playerOneId);
+        const playerTwoId = parseInt(explodedGameId.playerTwoId);
+
+        this.sessionsService.end(explodedGameId.sessionId, playerWinnerId === playerOneId ? playerOneId : playerTwoId);
+        this.server.to(gameSessionId).emit('gameEnded', this.translateDataForClient(gameInstance.getAllGameData(explodedGameId.sessionId)));
+
+        // Remove all spectators linked to this room
+        for (const [spectatorKey, spectatorData] of Object.entries(this.spectators)) {
+            if (spectatorData[0] === gameSessionId) {
+                spectatorData[1].leave(gameSessionId);
+                delete this.spectators[spectatorKey];
+            }
+        }
+
+        if (gameInstance.getTimerId() !== -1)
+            clearInterval(gameInstance.getTimerId());
+
+        this.server.to(gameSessionId).disconnectSockets(true);
+        delete this.gameSessions[gameSessionId];
+    }
+
     // Pair these players in a game
-    private startGame(isPublic: boolean, playerOneId: string, playerTwoId: string, playerOneSocket: Socket, playerTwoSocket: Socket, matchType: GameData['variant']): void {
-        const gameSessionId = `${isPublic ? 'public' : 'private'}-${playerOneId}-${playerTwoId}`;
+    private async startGame(isPublic: boolean, playerOneId: string, playerTwoId: string, playerOneSocket: Socket, playerTwoSocket: Socket, matchType: GameData['variant']): Promise<void> {
 
         const gameData: GameData = {
             player1Id: playerOneId,
@@ -25,39 +72,51 @@ export class PongGameGateway {
             canvasWidth: 1920,
             canvasHeight: 1080,
             ballRadius: 10,
-            ballAccelerationFactor: 1,
-            ballMaxSpeed: 1,
+            ballAccelerationFactor: 2,
+            ballMaxSpeed: 30,
             paddleHeight: 160,
             variant: matchType
-        }        
+        }
 
-        const gameInstance = new PongGame(gameData);
+        const gameInstance = new PongGameService(gameData);
+        const sessionId = await this.sessionsService.create(isPublic, false);
+        const gameSessionId = `${isPublic ? 'public' : 'private'}-${playerOneId}-${playerTwoId}-${sessionId}`;
+
         const intervalId: any = setInterval(() => {
+
             gameInstance.updateGame();
-            this.server.to(gameSessionId).emit('gameUpdate', gameInstance.getAllGameData(1));
-        }, 1000 / 60)
+
+            const isEnded = gameInstance.isGameEnded();
+            if (isEnded)
+                return this.stopGame(gameSessionId, gameInstance.getCurrentWinnerId());
+
+            this.server.to(gameSessionId).emit('gameUpdate', this.translateDataForClient(gameInstance.getAllGameData(sessionId)));
+
+        }, 1000 / 60);
 
         gameInstance.setTimerId(intervalId);
-
         this.gameSessions[gameSessionId] = gameInstance;
+
+        this.sessionsService.join(sessionId, parseInt(playerOneId), false);
+        this.sessionsService.join(sessionId, parseInt(playerTwoId), false);
 
         playerOneSocket.join(gameSessionId);
         playerTwoSocket.join(gameSessionId);
 
-        // TODO: create session and return the id inside the data
+        this.server.to(gameSessionId).emit('gameStarted', this.translateDataForClient(gameInstance.getAllGameData(sessionId)));
 
-        this.server.to(gameSessionId).emit('gameStarted', gameInstance.getAllGameData(1));
     }
 
     // Explode game id
     private explodeGameId(gameId: string): any {
         const explodedGameId = gameId.split('-');
-        if (explodedGameId.length !== 3) return (null);
+        if (explodedGameId.length !== 4) return (null);
 
         return ({
             isPublic: explodedGameId[0] === 'public',
             playerOneId: explodedGameId[1],
-            playerTwoId: explodedGameId[2]
+            playerTwoId: explodedGameId[2],
+            sessionId: explodedGameId[3]
         });
     }
 
@@ -69,21 +128,30 @@ export class PongGameGateway {
     ): Promise<void> {
 
         // Check if the user is already in a room
-        const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
+        const theRoomTheUserIsIn = [...client.rooms].find(room => room !== client.id);
         if (theRoomTheUserIsIn) return;
 
         const matchType = body.matchType;
         if (!matchType) return;
-        if (matchType !== 'standard' && matchType !== 'chaos') return;
+        if (matchType !== 'standard' && matchType !== 'mortSubite' && matchType !== 'chaos' && matchType !== 'twoPoints') return;
 
-        const waitingPlayerSocket = Array.from(this.waitingPlayers.values())[0];
-        if (waitingPlayerSocket) {
+        let matchedPlayerId: string | null = null;
+        let matchedPlayerSocket: Socket | null = null;
+        for (let [waitingPlayerId, [waitingSocket, waitingMatchType]] of this.waitingPlayers.entries()) {
+            if (waitingMatchType === matchType) {
+                matchedPlayerId = waitingPlayerId;
+                matchedPlayerSocket = waitingSocket;
+                break;
+            }
+        }
+
+        if (matchedPlayerId) {
             const waitingPlayer = Array.from(this.waitingPlayers.keys())[0];
-            this.waitingPlayers.delete(waitingPlayerSocket.id);
+            this.waitingPlayers.delete(matchedPlayerId);
 
-            this.startGame(true, String(client.user.id), waitingPlayer, client, waitingPlayerSocket, matchType);
+            this.startGame(true, String(client.user.id), waitingPlayer, client, matchedPlayerSocket, matchType);
         } else {
-            this.waitingPlayers.set(String(client.user.id), client);
+            this.waitingPlayers.set(String(client.user.id), [client, matchType]);
         }
 
     }
@@ -95,79 +163,61 @@ export class PongGameGateway {
         @MessageBody() body: any
     ): Promise<void> {
 
+        const theRoomTheUserIsIn = [...client.rooms].find(room => room !== client.id);
+        if (theRoomTheUserIsIn) return;
+
         const spectatedUserId = body.spectatingUserId;
         if (!spectatedUserId) return;
 
         let gameSessionId = null;
+        let dataFetched = null;
         for (const gameId of Object.keys(this.gameSessions)) {
-            
+
             const extractedData = this.explodeGameId(gameId);
             if (!extractedData) continue;
 
             if (extractedData.playerOneId === spectatedUserId || extractedData.playerTwoId === spectatedUserId) {
                 gameSessionId = gameId;
+                dataFetched = extractedData;
                 break;
             }
+
         }
-        if (!gameSessionId) return;
-        
+        if (!gameSessionId || !dataFetched) return;
+
         this.spectators[client.user.id] = this.spectators[client.user.id] || {};
         this.spectators[client.user.id] = [gameSessionId, client]
 
+        this.sessionsService.join(dataFetched.sessionId, client.user.id, true);
         client.join(gameSessionId);
 
     }
 
-    @SubscribeMessage('disconnect')
-    async handleDisconnect(
+    @SubscribeMessage('leaveGame')
+    async handleLeaveGame(
         @ConnectedSocket() client: SocketWithUser,
     ): Promise<void> {
 
-        const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
+        const theRoomTheUserIsIn = [...client.rooms].find(room => room !== client.id);
         if (theRoomTheUserIsIn) {
-            
-            const gameSession = this.gameSessions[theRoomTheUserIsIn];
-            if (gameSession) {
 
-                if (this.spectators[client.user.id] && this.spectators[client.user.id][0] === theRoomTheUserIsIn) {
+            const gameInstance = this.gameSessions[theRoomTheUserIsIn];
+            if (gameInstance) {
+
+                if (gameInstance.isIdInGame(String(client.user.id))) {
+                    const opponentUserId = gameInstance.getOpponentId(String(client.user.id));
+                    this.stopGame(theRoomTheUserIsIn, opponentUserId);
+                } else {
                     client.leave(theRoomTheUserIsIn);
-                    delete this.spectators[client.user.id];
-                    return;
+                    delete this.spectators[String(client.user.id)];
                 }
 
-                // TODO: Pass the data here AND when the score is finished
-
-                this.server.to(theRoomTheUserIsIn).emit('gameEnded', gameSession.getAllGameData(1));
-                client.leave(theRoomTheUserIsIn);
-
-                if (gameSession.getTimerId() !== -1)
-                    clearInterval(gameSession.getTimerId());
-
-                delete this.gameSessions[theRoomTheUserIsIn];
-            }
-
-            for (const spectatorData of Object.values(this.spectators)) {
-                if (spectatorData[0] === theRoomTheUserIsIn) {
-                    spectatorData[1].leave(spectatorData[0]);
-                    delete this.spectators[client.user.id];
-                }
             }
 
         } else if (this.waitingPlayers.has(String(client.user.id))) {
             this.waitingPlayers.delete(String(client.user.id));
         }
 
-        // Delete all invitations to this player
-        if (this.playersInvitations[String(client.user.id)]) {
-            delete this.playersInvitations[String(client.user.id)];
-        }
-
-        // Delete all invitations sent to another players
-        for (const inviterMap of Object.values(this.playersInvitations)) {
-            if (inviterMap.has(String(client.user.id))) {
-                inviterMap.delete(String(client.user.id));
-            }
-        }
     }
 
     @SubscribeMessage('movePaddleUp')
@@ -175,13 +225,14 @@ export class PongGameGateway {
         @ConnectedSocket() client: SocketWithUser,
     ): Promise<void> {
 
-        const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
+        const theRoomTheUserIsIn = [...client.rooms].find(room => room !== client.id);
         if (!theRoomTheUserIsIn) return;
 
-        const gameSession = this.gameSessions[theRoomTheUserIsIn];
-        if (!gameSession) return;
+        const gameInstance = this.gameSessions[theRoomTheUserIsIn];
+        if (!gameInstance) return;
+        if (!gameInstance.isIdInGame(String(client.user.id))) return;
 
-        gameSession.movePaddleUp(client.user.id);
+        gameInstance.movePaddleUp(String(client.user.id));
 
     }
 
@@ -190,51 +241,14 @@ export class PongGameGateway {
         @ConnectedSocket() client: SocketWithUser,
     ): Promise<void> {
 
-        const theRoomTheUserIsIn = Object.keys(client.rooms).filter(room => room !== client.id)[0];
+        const theRoomTheUserIsIn = [...client.rooms].find(room => room !== client.id);
         if (!theRoomTheUserIsIn) return;
 
-        const gameSession = this.gameSessions[theRoomTheUserIsIn];
-        if (!gameSession) return;
+        const gameInstance = this.gameSessions[theRoomTheUserIsIn];
+        if (!gameInstance) return;
+        if (!gameInstance.isIdInGame(String(client.user.id))) return;
 
-        gameSession.movePaddleDown(client.user.id);
-
-    }
-
-    // Invite a player to a game
-    @SubscribeMessage('invitePlayer')
-    async handleInvitePlayer(
-        @ConnectedSocket() client: SocketWithUser,
-        @MessageBody() body: any
-    ): Promise<void> {
-
-        const opponentId = String(body.opponentId);
-        if (!opponentId) return;
-
-        this.playersInvitations[opponentId] = this.playersInvitations[opponentId] || (new Map());
-        this.playersInvitations[opponentId].set(String(client.user.id), client);
-
-    }
-
-    // Accept an invitation
-    @SubscribeMessage('acceptInvitation')
-    async handleAcceptInvitation(
-        @ConnectedSocket() client: SocketWithUser,
-        @MessageBody() body: any
-    ): Promise<void> {
-
-        const opponentId = String(body.opponentId);
-        if (!opponentId) return;
-
-        if (this.playersInvitations[String(client.user.id)].has(opponentId)) {
-            const opponentSocket = this.playersInvitations[String(client.user.id)].get(opponentId);
-
-            this.playersInvitations[String(client.user.id)].delete(opponentId);
-            if (this.playersInvitations[String(client.user.id)].size === 0) {
-                delete this.playersInvitations[String(client.user.id)];
-            }
-
-            this.startGame(false, String(client.user.id), opponentId, client, opponentSocket, 'standard');
-        }
+        gameInstance.movePaddleDown(String(client.user.id));
 
     }
 

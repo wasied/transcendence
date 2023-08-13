@@ -29,7 +29,7 @@ export class GameParamsComponent implements OnDestroy {
 		},
 		{
 			name: 'Two Points Appart Mode',
-			description: 'Reach the score of twelve + Have a two-point difference with your opponent.',
+			description: 'Reach the score of eleven + Have a two-point difference with your opponent.',
 			iconClass: 'fa-solid fa-star'
 		}
   	];

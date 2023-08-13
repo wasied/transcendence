@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { AuthenticationService } from './authentication.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class GameWebsocketService {
@@ -21,10 +22,36 @@ export class GameWebsocketService {
 				}
 			}
 		};
-		this.socket = io('http://localhost:8080/game', options);
+		this.socket = io(`${environment.appUrl}:${environment.backendAPIPort}/game`, options);
+		console.log(this.socket);
+
+		this.socket.on("connect", () => {
+			console.log("Socket connected", this.socket.id);
+		});
+
+		this.socket.on("connect_error", (error: Error) => {
+			console.log("Error connecting to server:", error.message);
+		});
+
+		this.socket.on("disconnect", (reason: string) => {
+			console.log("Socket disconnected due to:", reason);
+		});
+
+		this.socket.on("reconnecting", (attemptNumber: number) => {
+			console.log("Reconnecting attempt:", attemptNumber);
+		});
+		
+		this.socket.on("reconnect_error", (error: Error) => {
+			console.log("Reconnection attempt failed:", error.message);
+		});
+
+		this.socket.on("reconnect", (attemptNumber: number) => {
+			console.log("Successfully reconnected on attempt:", attemptNumber);
+		});
+		
 	}
 
-    private listenToServerEvents(): void {
+    public listenToServerEvents(): void {
         this.socket.on('gameStarted', (data: any) => {
         	this.gameStarted$.next(data);
         });
@@ -53,7 +80,7 @@ export class GameWebsocketService {
 	// This will make the player join the matchmaking queue (the public one) until he finds someone
 	// When he'll find someone, gameStarted will be called
 	public joinMatchmaking(matchType: string): void {
-        this.socket.emit('joinMatchmaking', matchType);
+        this.socket.emit('joinMatchmaking', { matchType: matchType });
     }
 
 	// This will make the player join the session without actually being a player
@@ -65,7 +92,7 @@ export class GameWebsocketService {
 	// This will disconnect and stop the party for everyone
 	// gameEnded will be called
     public disconnect(): void {
-        this.socket.disconnect();
+        this.socket.emit('leaveGame');
     }
 
 	// This will make the player invite someone to play with him
