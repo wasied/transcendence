@@ -26,9 +26,6 @@ export class ChatroomsComponent implements OnInit {
 			httpErrorHandler
 		);
 		this.chatWebsocketService.connect();
-		this.chatWebsocketService.rooms$.subscribe(chatrooms => { 
-			this.chatrooms = chatrooms; 
-		});
 	}
 
 	onDeleteRequest(chatroom: Chatroom) {

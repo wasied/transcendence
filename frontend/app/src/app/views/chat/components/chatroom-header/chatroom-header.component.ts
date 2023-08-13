@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Chatroom } from 'src/app/core/models/chatroom.model';
@@ -11,7 +11,7 @@ import { ChatWebsocketService } from 'src/app/core/services/chat-websocket.servi
   	templateUrl: './chatroom-header.component.html',
   	styleUrls: ['./chatroom-header.component.css']
 })
-export class ChatroomHeaderComponent implements OnInit {
+export class ChatroomHeaderComponent implements OnInit, OnDestroy {
 
 	@Input() chatroomId!: number	
 
@@ -54,6 +54,10 @@ export class ChatroomHeaderComponent implements OnInit {
 		});
 	}
 
+	ngOnDestroy(): void {
+		//this.chatWebsocketService.rooms$.unsubscribe();
+	}
+
 	changePasswordFormDisplayStatus() : void {
 		this.showChangePasswordForm = !this.showChangePasswordForm;
 	}
@@ -69,25 +73,21 @@ export class ChatroomHeaderComponent implements OnInit {
 
 	/* PRIVACY/PASSWORD MODIFCATION */
 
-	addPassword() : void {
+	async addPassword() : Promise<void> {
 		const password : string = this.setPasswordForm.get('password')?.value;
 		
-		this.chatroomsService.modifyChatroomPassword(this.chatroomId, password).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+		await this.chatroomsService.modifyChatroomPassword(this.chatroomId, password).toPromise()
+			.catch(err => { httpErrorHandler(err); });
 		this.passwordPresent = true;
 	}
 
-	changePassword() : void {
+	async changePassword() : Promise<void> {
 		this.changePasswordFormDisplayStatus();
 
 		const newPassword : string = this.modifyPasswordForm.get('newPassword')?.value;
 
-		this.chatroomsService.modifyChatroomPassword(this.chatroomId, newPassword).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+		await this.chatroomsService.modifyChatroomPassword(this.chatroomId, newPassword).toPromise()
+			.catch(err => { httpErrorHandler(err); });
 	}
 
 	onTogglePasswordChange(event: Event) : void {
@@ -110,11 +110,9 @@ export class ChatroomHeaderComponent implements OnInit {
 
 	/* EXITING CHATROOM METHODS */
 
-	removeYourselfFromChatroom() : void {
-		this.chatroomsService.delParticipantFromChatroom(this.chatroomId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async removeYourselfFromChatroom() : Promise<void> {
+		await this.chatroomsService.delParticipantFromChatroom(this.chatroomId).toPromise()
+			.catch(err => { httpErrorHandler(err); });
 		this.onExitingChatroomSession();
 	}
 	

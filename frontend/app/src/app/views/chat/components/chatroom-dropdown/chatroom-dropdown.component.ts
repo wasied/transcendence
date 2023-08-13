@@ -51,7 +51,8 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 	}
 
 	async kickUser(participantId: number) : Promise<void> {
-		await this.chatroomsService.kickUserFromChatroom(this.chatroomId, participantId).toPromise();
+		await this.chatroomsService.kickUserFromChatroom(this.chatroomId, participantId).toPromise()
+			.catch(err => { httpErrorHandler(err); });
 	}
 
 	async banUser(participantId: number) : Promise<void> {
