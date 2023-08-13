@@ -46,7 +46,7 @@ export class SessionsService {
 
 		var match_history: MatchHistory[] = [];
 		for (const opponent of result) {
-			var match: MatchHistory;
+			var match: { [key: string]: any };
 			match.my_username = my_username;
 			match.opponent_username = opponent.username;
 			if (opponent.winner_uid === userId)
