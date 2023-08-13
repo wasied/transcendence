@@ -14,7 +14,6 @@ export class MatchHistoryComponent implements OnInit {
 	@Input() isProfileOfUser!: boolean;
 	@Input() userId!: number;
 	
-//	realUserId!: number;
 	matchHistory$!: Observable<MatchHistory[]>;
 	
 	constructor (private matchHistService: MatchHistoryService) {};

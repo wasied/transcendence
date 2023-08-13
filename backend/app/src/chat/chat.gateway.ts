@@ -86,7 +86,6 @@ GET CHATROOMS
     async connectChatrooms(
 		@ConnectedSocket() client: SocketWithUser
 	): Promise<void> {
-//        client.join(String(client.user.id));
 		this.updateAllRooms(client);
     }
 
@@ -94,7 +93,6 @@ GET CHATROOMS
     async disconnectChatrooms(
 		@ConnectedSocket() client: SocketWithUser
 	): Promise<void> {
-//        client.leave(String(client.user.id));
 		client.disconnect();
     }
 
