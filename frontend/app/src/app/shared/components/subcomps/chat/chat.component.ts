@@ -1,9 +1,7 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Input } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Message } from 'src/app/core/models/message.model'; 
 import { MessagesWebsocketService } from 'src/app/core/services/messages-websocket.service';
 import { ActivatedRoute } from '@angular/router';
-import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-chat',

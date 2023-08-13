@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Chatroom } from 'src/app/core/models/chatroom.model';
 import { DirectMessagesService } from 'src/app/core/services/direct-messages.service'
 import { DirectMessagesWebsocketService } from 'src/app/core/services/direct-messages-websocket.service'
-import { Observable } from 'rxjs';
 import { UsersService } from 'src/app/core/services/users.service'; 
 import { httpErrorHandler } from 'src/app/http-error-handler';
 
@@ -11,7 +10,7 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 	templateUrl: './direct-messages.component.html',
 	styleUrls: ['./direct-messages.component.css']
 })
-export class DirectMessagesComponent implements OnInit, OnDestroy {
+export class DirectMessagesComponent implements OnInit {
 
 	private destroyed: boolean = false;
 	directMessages!: Chatroom[];
@@ -31,17 +30,4 @@ export class DirectMessagesComponent implements OnInit, OnDestroy {
 		this.directMessagesWebsocketService.connect();
 	}
 
-	ngOnDestroy(): void {
-		if (this.destroyed) return;
-		this.destroyed = true;
-		
-		this.directMessagesWebsocketService.directMessages$.unsubscribe();
-		this.directMessagesWebsocketService.disconnect();
-	}
-
-	/* CONTROLS */
-	@HostListener('window:beforeunload', ['$event'])
-	beforeunloadHandler(event: any) {
-		this.ngOnDestroy();
-	}
 }
