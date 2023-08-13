@@ -38,7 +38,8 @@ export class DirectMessagesHeaderComponent implements OnInit {
 	}
 
 	onOpenInviteMenu() : void {
-		this.openInviteModal();
+//		this.openInviteModal();
+		this.router.navigateByUrl(`main/game&chatroom_id=${this.chatroomId}`);
 	}
 
 	/* HANDLING ACCEPTATION REQUEST */

@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Keys } from '../game-interface';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccessControlService } from 'src/app/core/services/access-control.service';
 import { GameWebsocketService } from 'src/app/core/services/game-websocket.service';
 import { GameDataService } from '../../../../core/services/game-data.service';
@@ -46,16 +46,20 @@ export class GameComponent implements OnInit, OnDestroy {
 	private variant: string = 'standard';
 	gameData!: GameData | null;
 
+	chatroomId!: string | null;
 	isMatched: boolean = false;
 	loadingMessage: string = 'Please wait for an opponent';
 	dotCount: number = 0;
   	timeoutStandById!: any;
 	exitSessionId!: number; 
 
-	constructor(private gameSocket: GameWebsocketService, 
-				private router: Router, 
-				private accessControlService: AccessControlService,
-				private gameDataService: GameDataService) {};
+	constructor(
+		private gameSocket: GameWebsocketService,
+		private router: Router,
+		private accessControlService: AccessControlService,
+		private gameDataService: GameDataService,
+		private route: ActivatedRoute
+	) {};
 
 	/* MATCHMAKING UTILS */
 	
@@ -69,6 +73,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
 	/* GAME DATA TRANSPORTATION */
 	ngOnInit(): void {
+		this.chatroomId = this.route.snapshot.paramMap.get('chatroom_id');
+
 		this.keys = new Keys();
 
 		this.gameSocket.listenToServerEvents();
