@@ -39,6 +39,7 @@ export class GameComponent implements OnInit, OnDestroy {
 	}
 
 	/* for communication between components */
+	private destroyed: boolean = false;
 	private keys!: Keys;
 	private canvas!: HTMLCanvasElement;
 	private ctx!: CanvasRenderingContext2D;
@@ -97,6 +98,9 @@ export class GameComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		if (this.destroyed) return;
+		this.destroyed = true;
+
 		this.gameSocket.gameStarted$.unsubscribe();
 		this.gameSocket.gameUpdate$.unsubscribe();
 		this.gameSocket.gameEnded$.unsubscribe();
@@ -180,6 +184,11 @@ export class GameComponent implements OnInit, OnDestroy {
 	}
 	
 	/* CONTROLS */
+	@HostListener('window:beforeunload', ['$event'])
+	unloadHandler(event: any) {
+		this.ngOnDestroy();
+	}
+
 	@HostListener('window:resize', ['$event'])
 	handleResize(event: Event): void {
 		if (!this.isMatched || !this.canvas) return;

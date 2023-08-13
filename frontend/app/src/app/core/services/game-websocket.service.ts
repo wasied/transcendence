@@ -93,7 +93,6 @@ export class GameWebsocketService {
 	// gameEnded will be called
     public disconnect(): void {
         this.socket.emit('leaveGame');
-		this.socket.disconnect();
     }
 
 	// This will make the player invite someone to play with him

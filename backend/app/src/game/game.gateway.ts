@@ -14,7 +14,6 @@ export class PongGameGateway {
     constructor(private sessionsService: SessionsService) {}
 
     private waitingPlayers: Map<string, [Socket, string]> = new Map();
-    private playersInvitations = new Map<string, Map<string, Socket>>();
     private gameSessions = {};
     private spectators = {};
 
@@ -60,6 +59,7 @@ export class PongGameGateway {
         if (gameInstance.getTimerId() !== -1)
             clearInterval(gameInstance.getTimerId());
 
+        this.server.to(gameSessionId).disconnectSockets(true);
         delete this.gameSessions[gameSessionId];
     }
 

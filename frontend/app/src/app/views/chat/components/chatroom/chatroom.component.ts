@@ -1,5 +1,5 @@
 import { Component, Input, Output, ViewEncapsulation, EventEmitter, 
-	AfterViewInit, ElementRef, OnInit, OnDestroy } from '@angular/core';
+	AfterViewInit, ElementRef, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Chatroom } from 'src/app/core/models/chatroom.model'; 
@@ -22,6 +22,7 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	isOwner$!: Observable<boolean>;
 	
+	private destroyed: boolean = false;
 	private subscriptions: Subscription = new Subscription();
 	
 	showParticipants: boolean = false;
@@ -135,6 +136,9 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	ngOnDestroy(): void {
+		if (this.destroyed) return;
+		this.destroyed = true;
+
 		if (this.subscriptions) {
 			this.subscriptions.unsubscribe();
 		}
@@ -149,4 +153,11 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	closeModal() : void {
 		this.isModalOpen = false;
 	}
+
+	/* CONTROLS */
+	@HostListener('window:beforeunload', ['$event'])
+	unloadHandler(event: any) {
+		this.ngOnDestroy();
+	}
+
 }
