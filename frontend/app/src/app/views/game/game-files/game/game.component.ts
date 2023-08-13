@@ -5,7 +5,6 @@ import { AccessControlService } from 'src/app/core/services/access-control.servi
 import { GameWebsocketService } from 'src/app/core/services/game-websocket.service';
 import { GameDataService } from '../../../../core/services/game-data.service';
 import { GameData } from 'src/app/core/services/game-data.service';
-import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-game',
@@ -112,16 +111,10 @@ export class GameComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		console.log("Destroying...");
 		if (this.destroyed) return;
 		this.destroyed = true;
-
-		this.gameSocket.gameStarted$.unsubscribe();
-		this.gameSocket.gameUpdate$.unsubscribe();
-		this.gameSocket.gameEnded$.unsubscribe();
 		
 		this.gameSocket.disconnect();
-		console.log("Destroyed!");
 		clearTimeout(this.timeoutStandById);
 	}
 

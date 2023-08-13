@@ -10,10 +10,7 @@ RUN npm ci
 COPY ./app ./
 
 RUN sed -i "s|appUrl: 'http://localhost',|appUrl: '${APP_URL}',|g" ./src/environments/environment.ts
-RUN sed -i "s|appUrl: 'http://localhost',|appUrl: '${APP_URL}',|g" ./src/environments/environment.prod.ts
-
 RUN sed -i "s|backendAPIPort: 8080,|backendAPIPort: ${BACKEND_API_PORT},|g" ./src/environments/environment.ts
-RUN sed -i "s|backendAPIPort: 8080,|backendAPIPort: ${BACKEND_API_PORT},|g" ./src/environments/environment.prod.ts
 
 RUN npm run build
 
