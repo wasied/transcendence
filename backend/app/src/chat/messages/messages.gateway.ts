@@ -53,14 +53,9 @@ export class MessagesGateway {
 		else
 			chatroom_user_id = await this.chatService.findChatroomUserId(client.user.id, body.chatroom_id);
 
-		client.user.punishments.forEach(punishment => {
-			if (punishment.chatroom_user_target_uid === chatroom_user_id) {
-				// TODO: Check if punishment is valid and throw error if the user cannot send message
-			}
-		});
+		if (await this.chatService.isUserMutedInChatroom(client.user.id, body.chatroom_id)) return;
 
 		await this.messagesService.send(chatroom_user_id, body.content);
-		
 		this.server.to(String(body.chatroom_id)).emit('newMessages', body.chatroom_id);
     }
 

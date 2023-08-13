@@ -239,6 +239,34 @@ export class ChatService {
 		return result;
 	}
 
+	async isUserMutedInChatroom(user_id: number, chatroom_id: number): Promise<boolean> {
+		const punishments = await this.findUserPunishments(user_id);
+	
+		for (const punishment of punishments) {
+			const now = new Date();
+			const ends_at = new Date(punishment.ends_at);
+			if (punishment.type === 'mute' && punishment.chatroom_uid === chatroom_id && ends_at > now) {
+				return true;
+			}
+		}
+	
+		return false;
+	}
+
+	async isUserBannedFromChatroom(user_id: number, chatroom_id: number): Promise<boolean> {
+		const punishments = await this.findUserPunishments(user_id);
+
+		for (const punishment of punishments) {
+			const now = new Date();
+			const ends_at = new Date(punishment.ends_at);
+			if (punishment.type === 'ban' && punishment.chatroom_uid === chatroom_id && ends_at > now) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	async setPunishment(admin_id: number, target_id: number, chatroom_id: number, type: string, ends_at: string) {
 		const result = await dbClient.query(
 			`INSERT INTO	chatrooms_punishments(

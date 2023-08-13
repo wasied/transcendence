@@ -158,6 +158,9 @@ GET CHATROOMS
 	): Promise<void> {
 		if (client.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
 			throw new WsException("User is already a chatroom member");
+
+		if (await this.chatService.isUserBannedFromChatroom(client.user.id, body.chatroom_id)) return;
+
 		await this.chatService.join(client.user.id, body.chatroom_id, body.password)
 			.catch(err => { throw new WsException(err); });
 

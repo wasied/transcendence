@@ -20,20 +20,4 @@ export class MessagesController {
 			throw new HttpException("User is not a chatroom member", HttpStatus.FORBIDDEN);
 		return this.messagesService.findChatroomMessages(request.user.id, chatroom_id);
 	}
-
-	@Post()
-	async send(@Request() request: RequestWithUser, @Body() body: SendDto): Promise<void> {
-		const chatroom_index = request.user.chatroom_ids.indexOf(body.chatroom_id);
-		var chatroom_user_id: number;
-		if (chatroom_index === -1)
-			throw new HttpException("User is not a chatroom member", HttpStatus.FORBIDDEN);
-		else
-			chatroom_user_id = await this.chatService.findChatroomUserId(request.user.id, body.chatroom_id);
-		request.user.punishments.forEach(punishment => {
-			if (punishment.chatroom_user_target_uid === chatroom_user_id) {
-				// Check if punishment is valid and throw error if the user cannot send message
-			}
-		});
-		this.messagesService.send(chatroom_user_id, body.content)
-	}
 }
