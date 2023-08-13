@@ -1,15 +1,18 @@
 <li
-    class="flex flex-row justify-between items-center w-4/5 mx-auto bg-zinc-900 
-	hover:bg-zinc-800 transform duration-200 p-5 rounded m-5"
+	class="flex flex-row justify-between items-center bg-zinc-900 
+				hover:bg-zinc-800 transform duration-200 p-5 rounded w-full"
 >	
-	<div class="flex flex-col">
+	<div class="w-full text-xl">
 		<p>{{ matchHistoryElem.my_username }}</p>
 	</div>
-	<div>
+	<div class="w-full text-2xl">
+		<p>VS</p>
+	</div>
+	<div class="w-full text-xl">
 		<p>{{ matchHistoryElem.opponent_username }}</p>
 	</div>
-	<div class="">
-		<p>You are the : </p>
+	<div class="w-full text-xl">
+		<p>You are : </p>
 		<div *ngIf="matchHistoryElem.winner_username === matchHistoryElem.my_username">
 			<p>The winner</p>
 		</div>

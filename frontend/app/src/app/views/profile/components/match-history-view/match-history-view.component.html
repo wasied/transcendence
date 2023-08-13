@@ -1,5 +1,5 @@
 <app-header class=""></app-header>
-<div class="mt-12 pt-20 flex flex-col items-center space-y-4 text-white">
+<div class="flex flex-col justify-center items-center text-center text-gray-200 bg-black mx-auto max-w-5xl pt-32 w-full">
 	<app-profile-badge
 		[userId]="idOfUserProfile" 
 		[buttonText]="'Back To Profile'" 
@@ -12,7 +12,7 @@
 		>
   	</div>
 
-	<div *ngIf="isIdSet">
+	<div *ngIf="isIdSet" class="w-full">
 		<app-match-history
 			class="w-full flex justify-center align-items"
 			[isProfileOfUser]="isProfileOfUser"
