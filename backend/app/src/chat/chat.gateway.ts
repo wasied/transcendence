@@ -125,10 +125,13 @@ GET CHATROOMS
 			password = body.password;
 		const id = await this.chatService.create(client.user.id, body.name, password, body.direct_message)
 			.catch(err => { throw new WsException(err); });
-		await this.chatService.join(client.user.id, id, password);
+		await this.chatService.join(client.user.id, id, password)
+			.catch(err => { throw new WsException(err); });
 		await this.chatService.setAdmin(true, id, client.user.id);
-		if (body.direct_message)
-			await this.chatService.join(body.other_user_id, id, password);
+		if (body.direct_message) {
+			await this.chatService.join(body.other_user_id, id, password)
+				.catch(err => { throw new WsException(err); });
+		}
 
 		if (body.direct_message)
 			this.updateDms(client);
@@ -155,7 +158,8 @@ GET CHATROOMS
 	): Promise<void> {
 		if (client.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
 			throw new WsException("User is already a chatroom member");
-		await this.chatService.join(client.user.id, body.chatroom_id, body.password);
+		await this.chatService.join(client.user.id, body.chatroom_id, body.password)
+			.catch(err => { throw new WsException(err); });
 
 		this.updateMyRooms(client);
 	}

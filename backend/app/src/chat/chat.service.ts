@@ -2,6 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Chat } from './chat';
 import { dbClient } from '../db';
 import { treatDbResult } from '../utils/treatDbResult';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class ChatService {
@@ -81,11 +82,17 @@ export class ChatService {
 	}
 
 	async create(owner_uid: number, name: string, password: string | null, direct_message: boolean): Promise<number> {
+		var passwordHash: string | null;
+		if (password)
+			passwordHash = await bcrypt.hash(password, +process.env.HASH_ROUNDS)
+				.catch(err => { throw new HttpException("Error hashing the password", HttpStatus.BAD_REQUEST); });
+		else
+			passwordHash = null;
 		const result = await dbClient.query(
 			`INSERT	INTO chatrooms(name, owner_uid, password, direct_message)
 					VALUES($1, $2, $3, $4)
 					RETURNING chatrooms.id;`,
-			[name, owner_uid, password, direct_message]
+			[name, owner_uid, passwordHash, direct_message]
 		)
 		.then(queryResult => { return treatDbResult(queryResult); })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
@@ -118,11 +125,13 @@ export class ChatService {
 	}
 
 	async updatePassword(chatroom_id: number, password: string | null): Promise<void> {
+		const passwordHash = await bcrypt.hash(password, +process.env.HASH_ROUNDS)
+			.catch(err => { throw new HttpException("Error hashing the password", HttpStatus.BAD_REQUEST); });
 		const result = await dbClient.query(
 			`UPDATE	chatrooms
 					SET password = $1
 					WHERE id = $2;`,
-			[password, chatroom_id]
+			[passwordHash, chatroom_id]
 		)
 		.then(queryResult => { return queryResult; })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
@@ -156,7 +165,21 @@ export class ChatService {
 	/* Chat users */
 
 	async join(user_id: number, chatroom_id: number, password: string | null): Promise<void> {
-		// TODO: Check if password is the same
+		const passwordHash = await dbClient.query(
+			`SELECT password	FROM chatrooms
+								WHERE id = $1;`,
+			[chatroom_id]
+		)
+			.then(queryResult => { return treatDbResult(queryResult); })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		if (passwordHash.length != 1)
+			throw new HttpException("Chatroom not found", HttpStatus.BAD_REQUEST);
+		if (passwordHash[0].password) {
+			const match = await bcrypt.compare(password, passwordHash[0].password)
+				.catch(err => { throw new HttpException("Error comparing the password with the password hash", HttpStatus.BAD_REQUEST); });
+			if (!match)
+				throw new HttpException("Bad password", HttpStatus.UNAUTHORIZED);
+		}
 		const result = await dbClient.query(
 			`INSERT INTO	chatrooms_users(chatroom_uid, user_uid, admin)
 							VALUES($2, $1, false);`,
