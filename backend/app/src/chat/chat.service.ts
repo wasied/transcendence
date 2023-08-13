@@ -239,7 +239,7 @@ export class ChatService {
 		return result;
 	}
 
-	async setPunishment(admin_id: number, target_id: number, chatroom_id: number, type: string, ends_at: string) {
+	async setPunishment(admin_id: number, target_id: number, chatroom_id: number, type: string, ends_at: number) {
 		const result = await dbClient.query(
 			`INSERT INTO	chatrooms_punishments(
 								chatroom_uid,
