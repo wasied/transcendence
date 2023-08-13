@@ -5,7 +5,7 @@ import { isAuthenticatedGuard } from "src/app/is-authenticated.guard";
 import { GameLobbyGuard } from "src/app/game-lobby-guard.guard";
 
 const routes: Routes = [
-	{path: '', component: GameViewComponent, canActivate: [isAuthenticatedGuard, GameLobbyGuard]}
+	{path: '', component: GameViewComponent, canActivate: [isAuthenticatedGuard, /*GameLobbyGuard*/]}
 ];
 
 @NgModule ({

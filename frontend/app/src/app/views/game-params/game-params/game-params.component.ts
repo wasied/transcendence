@@ -99,6 +99,7 @@ export class GameParamsComponent implements OnDestroy {
 	}
 
 	onClickSpectator() : void {
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main', 'game']);
 	}
 

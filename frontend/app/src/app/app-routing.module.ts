@@ -24,9 +24,9 @@ const routes: Routes = [
 	// game menus
 	{ path: 'main/game_params', canActivate: [isAuthenticatedGuard], loadChildren:
 	() => import('./views/game-params/game-params.module').then(m => m.GameParamsModule)},
-	{ path: 'main/exit_game', canActivate: [isAuthenticatedGuard, GameLobbyGuard], loadChildren:
+	{ path: 'main/exit_game', canActivate: [isAuthenticatedGuard, /*GameLobbyGuard*/], loadChildren:
 	() => import('./views/game-exit/game-exit.module').then(m => m.GameExitModule)},
-	{ path: 'main/game', canActivate: [isAuthenticatedGuard, GameLobbyGuard], loadChildren:
+	{ path: 'main/game', canActivate: [isAuthenticatedGuard, /*GameLobbyGuard*/], loadChildren:
 	() => import('./views/game/game.module').then(m => m.GameModule)},
 	// core features of the game (chatroom, pong game, direct messages)
 	{path: 'main/chatrooms', canActivate: [isAuthenticatedGuard], loadChildren:

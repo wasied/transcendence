@@ -144,7 +144,7 @@ export class GameComponent implements OnInit, OnDestroy {
 			scoreLeftPlayer: data.playerLeftScore,
 			scoreRightPlayer: data.playerRightScore
 		});
-
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main', 'exit_game', data.sessionId]);
 	}
 
