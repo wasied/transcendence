@@ -11,8 +11,8 @@ export class AppComponent {
 
 	constructor(private readonly globalWebsocketService: GlobalWebsocketService) {}
 
-	@HostListener('window:unload', ['$event'])
-	unloadHandler(event: any) {
+	@HostListener('window:beforeunload', ['$event'])
+	beforeunloadHandler(event: any) {
 		this.globalWebsocketService.updateFriends$.unsubscribe();
 		this.globalWebsocketService.disconnect();
 	}

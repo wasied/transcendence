@@ -32,7 +32,7 @@ export class GlobalWebsocketService {
 
 	disconnect(): void {
 		this.socket.emit('disconnectGlobal');
-		this.socket.disconnect();
+		// this.socket.disconnect();
 	}
 
 	updateFriends(): void {
