@@ -23,7 +23,7 @@ export class MatchHistoryViewComponent implements OnInit, OnDestroy {
 				 private accessControlService: AccessControlService,
 				 private usersService: UsersService) {};
 	
-	ngOnInit(): void {		
+	async ngOnInit(): Promise<void> {		
 		if (this.isIdInURL() === true) {
 			const id: string | null = this.route.snapshot.paramMap.get('id');
 

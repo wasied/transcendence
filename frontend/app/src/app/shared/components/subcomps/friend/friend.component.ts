@@ -26,7 +26,7 @@ export class FriendComponent implements OnInit {
 	}
 
 	triggerPongSpectator(friendId: number) : void {
-		this.router.navigateByUrl(`main/game?spectator=true&user_id=${this.friendId}`);
+		this.router.navigateByUrl(`main/game?spectator=true&user_id=${friendId}`);
 	}
 
 	async blockUserFromFriendsInterface(friendId: number) : Promise<void> {
