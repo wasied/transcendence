@@ -178,7 +178,7 @@ export class PongGameGateway {
         
         // Search for another player waiting in the same chatroom
         for (let [waitingPlayerId, [waitingSocket, waitingChatroomId]] of this.privateGames.entries()) {
-            if (waitingChatroomId === chatroomId && client.id !== waitingSocket.id) {
+            if (waitingChatroomId === chatroomId && waitingPlayerId !== String(client.user.id)) {
                 matchedPlayerId = waitingPlayerId;
                 matchedPlayerSocket = waitingSocket;
                 break;
