@@ -74,18 +74,20 @@ export class GameComponent implements OnInit, OnDestroy {
 	/* GAME DATA TRANSPORTATION */
 	ngOnInit(): void {
 		this.chatroomId = this.route.snapshot.paramMap.get('chatroom_id');
-
 		this.keys = new Keys();
 
 		this.gameSocket.listenToServerEvents();
 		this.gameDataService.getGameData().subscribe(data => {
 			this.gameData = data;
-
+			
 			if (this.gameData !== null) {
 				this.variant = this.gameData.variant;
 			}
 
-			this.gameSocket.joinMatchmaking(this.variant);
+			if (this.chatroomId !== null)
+				this.gameSocket.joinPrivateGame(String(this.chatroomId));
+			else
+				this.gameSocket.joinMatchmaking(this.variant);
 		});
 
 		this.updateLoadingMessage();

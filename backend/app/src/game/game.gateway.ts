@@ -13,7 +13,10 @@ export class PongGameGateway {
 
     constructor(private sessionsService: SessionsService) {}
 
+    // Map<playerId, [socket, matchType]>
     private waitingPlayers: Map<string, [Socket, string]> = new Map();
+    // Map<playerId, [socket, chatroomId]>
+    private privateGames: Map<string, [Socket, string]> = new Map();
     private gameSessions = {};
     private spectators = {};
 
@@ -155,6 +158,39 @@ export class PongGameGateway {
             this.waitingPlayers.set(String(client.user.id), [client, matchType]);
         }
 
+    }
+
+    // When a player joins a private game
+    @SubscribeMessage('joinPrivateGame')
+    async handleJoinPrivateGame(
+        @ConnectedSocket() client: SocketWithUser,
+        @MessageBody() body: any
+    ): Promise<void> {
+
+        const theRoomTheUserIsIn = [...client.rooms].find(room => room !== client.id);
+        if (theRoomTheUserIsIn) return;
+    
+        const chatroomId = body.chatroomId;
+        if (!chatroomId) return;
+    
+        let matchedPlayerId: string | null = null;
+        let matchedPlayerSocket: Socket | null = null;
+        
+        // Search for another player waiting in the same chatroom
+        for (let [waitingPlayerId, [waitingSocket, waitingChatroomId]] of this.privateGames.entries()) {
+            if (waitingChatroomId === chatroomId) {
+                matchedPlayerId = waitingPlayerId;
+                matchedPlayerSocket = waitingSocket;
+                break;
+            }
+        }
+    
+        if (matchedPlayerId) {
+            this.privateGames.delete(matchedPlayerId);
+            this.startGame(false, String(client.user.id), matchedPlayerId, client, matchedPlayerSocket, "standard");
+        } else {
+            this.privateGames.set(String(client.user.id), [client, chatroomId]);
+        }
     }
 
     // When a player joins a game as a spectator

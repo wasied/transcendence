@@ -83,10 +83,15 @@ export class GameWebsocketService {
         this.socket.emit('joinMatchmaking', { matchType: matchType });
     }
 
+	// This is used for private matchmaking (from a chatroom)
+	public joinPrivateGame(chatroomId: string): void {
+		this.socket.emit('joinPrivateGame', { chatroomId: chatroomId });
+	}
+
 	// This will make the player join the session without actually being a player
 	// So he'll just receive game updates for the match
-    public spectateGame(spectatingUserId: string): void {
-        this.socket.emit('spectateGame', spectatingUserId);
+    public startSpectating(spectatingUserId: string): void {
+        this.socket.emit('startSpectating', spectatingUserId);
     }
 
 	// This will disconnect and stop the party for everyone
