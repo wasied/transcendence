@@ -114,7 +114,7 @@ async function createTables() {
     await dbClient.query(`
         CREATE TABLE IF NOT EXISTS chatrooms_punishments (
             id SERIAL PRIMARY KEY,
-			chatroom_uid INTEGER NOT NULL,
+						chatroom_uid INTEGER NOT NULL,
             chatroom_user_admin_uid INTEGER NOT NULL,
             chatroom_user_target_uid INTEGER NOT NULL,
             type VARCHAR(50) NOT NULL,
@@ -145,8 +145,6 @@ async function createTables() {
     await dbClient.query("ALTER TABLE chatrooms_users ADD FOREIGN KEY (chatroom_uid) REFERENCES chatrooms (id);");
     await dbClient.query("ALTER TABLE chatrooms_users ADD FOREIGN KEY (user_uid) REFERENCES users (id);");
     await dbClient.query("ALTER TABLE chatrooms_messages ADD FOREIGN KEY (chatroom_user_uid) REFERENCES chatrooms_users (id);");
-    await dbClient.query("ALTER TABLE chatrooms_punishments ADD FOREIGN KEY (chatroom_user_admin_uid) REFERENCES chatrooms_users (id);");
-    await dbClient.query("ALTER TABLE chatrooms_punishments ADD FOREIGN KEY (chatroom_user_target_uid) REFERENCES chatrooms_users (id);");
     await dbClient.query("ALTER TABLE chatrooms_invitations ADD FOREIGN KEY (chatroom_user_uid) REFERENCES chatrooms_users (id);");
     await dbClient.query("ALTER TABLE chatrooms_invitations ADD FOREIGN KEY (session_user_uid) REFERENCES sessions_users (id);");
 

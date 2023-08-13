@@ -162,8 +162,8 @@ export class ChatroomsService {
 	*** Punishments
 	**/
 	
-	banUserFromChatroom(chatroomId: number, userId: number, duration: number) : Observable<void> {
-		const endsAt = (new Date()).getTime() + (duration * 1000);
+	banUserFromChatroom(chatroomId: number, userId: number, durationInSec: number) : Observable<void> {
+		const endsAt = (new Date()).getTime() + (durationInSec * 1000);
 		const endpoint: string = `${this.apiURL}/punishment`;
 		const body = {
 			type: 'ban',
@@ -174,8 +174,8 @@ export class ChatroomsService {
 		return this.authHttp.post<void>(endpoint, body);
 	}
 
-	muteUserFromChatroom(chatroomId: number, userId: number, duration: number) : Observable<void> {
-		const endsAt = (new Date()).getTime() + (duration * 1000);
+	muteUserFromChatroom(chatroomId: number, userId: number, durationInSec: number) : Observable<void> {
+		const endsAt = (new Date()).getTime() + (durationInSec * 1000);
 		const endpoint: string = `${this.apiURL}/punishment`;
 		const body = {
 			type: 'mute',

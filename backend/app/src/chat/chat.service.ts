@@ -244,7 +244,7 @@ export class ChatService {
 	
 		for (const punishment of punishments) {
 			const now = new Date();
-			const ends_at = new Date(punishment.ends_at);
+			const ends_at = new Date(Number(punishment.ends_at));
 			if (punishment.type === 'mute' && punishment.chatroom_uid === chatroom_id && ends_at > now) {
 				return true;
 			}
@@ -258,7 +258,7 @@ export class ChatService {
 
 		for (const punishment of punishments) {
 			const now = new Date();
-			const ends_at = new Date(punishment.ends_at);
+			const ends_at = new Date(Number(punishment.ends_at));
 			if (punishment.type === 'ban' && punishment.chatroom_uid === chatroom_id && ends_at > now) {
 				return true;
 			}
