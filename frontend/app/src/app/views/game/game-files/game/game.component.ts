@@ -124,6 +124,9 @@ export class GameComponent implements OnInit, OnDestroy {
 	}
 
 	private onChangesFromSocket(data: any): void {
+		if (!this.isMatched)
+			this.isMatched = true;
+
 		this.draw(data);
 		this.sendPaddleState();
 	}
