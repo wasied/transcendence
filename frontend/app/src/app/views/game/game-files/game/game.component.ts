@@ -43,11 +43,11 @@ export class GameComponent implements OnInit, OnDestroy {
 	private canvas!: HTMLCanvasElement;
 	private ctx!: CanvasRenderingContext2D;
 	/* game variant */
-	private variant: string = 'standard'; // CJULIENN
+	private variant: string = 'standard';
 	gameData!: GameData | null;
 
 	isMatched: boolean = false;
-	loadingMessage: string = 'Please stand by';
+	loadingMessage: string = 'Please wait for an opponent';
 	dotCount: number = 0;
   	timeoutStandById!: any;
 	exitSessionId!: number; 
@@ -61,7 +61,7 @@ export class GameComponent implements OnInit, OnDestroy {
 	
 	updateLoadingMessage() : void {
 		if (!this.isMatched) {
-			this.loadingMessage = 'Please stand by' + '.'.repeat(this.dotCount);
+			this.loadingMessage = 'Please wait for an opponent' + '.'.repeat(this.dotCount);
 			this.dotCount = (this.dotCount + 1) % 4;
 			this.timeoutStandById = setTimeout(() => this.updateLoadingMessage(), 500);
 		}
@@ -79,7 +79,8 @@ export class GameComponent implements OnInit, OnDestroy {
 			if (this.gameData !== null) {
 				this.variant = this.gameData.variant;
 			}
-			this.gameSocket.joinMatchmaking(this.variant); // CJULIENN -> EDIT HERE
+
+			this.gameSocket.joinMatchmaking(this.variant);
 		});
 
 		this.updateLoadingMessage();

@@ -92,14 +92,34 @@ export class PongGameService {
         switch (this.gameData.variant) {
             case 'standard':
             case 'chaos':
-                return hasTwoPointLead(player1Score, player2Score);
+                return player1Score >= 11 || player2Score >= 11;
             case 'mortSubite':
                 return player1Score >= 1 || player2Score >= 1;
             case 'twoPoints':
-                return Math.abs(player1Score - player2Score) >= 2;
+                return hasTwoPointLead(player1Score, player2Score);
             default:
                 return false;
         }
+    }
+
+    public getCurrentWinnerId(): number {
+        const { player1Id, player2Id } = this.gameData;
+        const { player1Score, player2Score } = this.gameState;
+
+        if (player1Score > player2Score)
+            return parseInt(player1Id);
+        else if (player2Score > player1Score)
+            return parseInt(player2Id);
+
+        return -1;
+    }
+
+    public getOpponentId(playerId: string): number {
+        return parseInt((playerId === this.gameData.player1Id) ? this.gameData.player2Id : this.gameData.player1Id);
+    }
+
+    public isIdInGame(playerId: string): boolean {
+        return (playerId === this.gameData.player1Id || playerId === this.gameData.player2Id);
     }
 
     public movePaddleUp(playerId: string): void {
