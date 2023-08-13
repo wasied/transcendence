@@ -56,11 +56,11 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 	}
 
 	async banUser(participantId: number) : Promise<void> {
-		await this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId, '5').toPromise();
+		await this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId, 10).toPromise();
 	}
 
 	async muteUser(participantId: number) : Promise<void> {
-		await this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId, '5').toPromise();
+		await this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId, 10).toPromise();
 	}
 
 	async blockUser(participantId: number) : Promise<void> {

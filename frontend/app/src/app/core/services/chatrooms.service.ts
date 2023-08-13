@@ -75,12 +75,6 @@ export class ChatroomsService {
 		return this.authHttp.get<boolean>(endpoint);
 	}
 
-	// canUserCoerce(participantsId: number[]) : Observable<number[]> {
-	// 	const endpoint: string = `${this.apiURL}`; // modify this
-
-	// 	return this.http.post<number[]>(endpoint, body);
-	// } 
-
 	/* UPDATE */
 
 	modifyChatroomAccessRights(chatroomId: number, hidden: boolean) : Observable<Chatroom> {
@@ -168,8 +162,8 @@ export class ChatroomsService {
 	*** Punishments
 	**/
 	
-
-	banUserFromChatroom(chatroomId: number, userId: number, endsAt: string) : Observable<void> {
+	banUserFromChatroom(chatroomId: number, userId: number, duration: number) : Observable<void> {
+		const endsAt = (new Date()).getTime() + (duration * 1000);
 		const endpoint: string = `${this.apiURL}/punishment`;
 		const body = {
 			type: 'ban',
@@ -180,7 +174,8 @@ export class ChatroomsService {
 		return this.authHttp.post<void>(endpoint, body);
 	}
 
-	muteUserFromChatroom(chatroomId: number, userId: number, endsAt: string) : Observable<void> {
+	muteUserFromChatroom(chatroomId: number, userId: number, duration: number) : Observable<void> {
+		const endsAt = (new Date()).getTime() + (duration * 1000);
 		const endpoint: string = `${this.apiURL}/punishment`;
 		const body = {
 			type: 'mute',
