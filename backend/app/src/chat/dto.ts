@@ -102,7 +102,6 @@ export class SetPunishmentDto {
 	target_id: number;
 
 	@IsNotEmpty()
-	@IsDateString()
-	@Transform(({ value }) => sanitizeHtml(value))
-	ends_at: string;
+	@IsNumber()
+	ends_at: number;
 }
