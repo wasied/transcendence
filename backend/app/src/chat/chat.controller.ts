@@ -212,8 +212,9 @@ export class ChatController {
 		const admin_id = await this.chatService.findChatroomUserId(request.user.id, body.chatroom_id);
 		const target_id = await this.chatService.findChatroomUserId(body.target_id, body.chatroom_id);
 		await this.chatService.setPunishment(admin_id, target_id, body.chatroom_id, body.type, body.ends_at);
-		if (body.type === 'ban')
-			await this.chatService.leave(target_id, +body.chatroom_id);
+		if (body.type === 'ban') {
+			await this.chatService.leave(body.target_id, body.chatroom_id);
+		}
 	}
 
 	@Delete('kick/:id/:user_id')
