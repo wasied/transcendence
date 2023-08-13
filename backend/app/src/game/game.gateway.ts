@@ -176,7 +176,7 @@ export class PongGameGateway {
             const extractedData = this.explodeGameId(gameId);
             if (!extractedData) continue;
 
-            if (extractedData.playerOneId === spectatedUserId || extractedData.playerTwoId === spectatedUserId) {
+            if (parseInt(extractedData.playerOneId) === parseInt(spectatedUserId) || parseInt(extractedData.playerTwoId) === parseInt(spectatedUserId)) {
                 gameSessionId = gameId;
                 dataFetched = extractedData;
                 break;
