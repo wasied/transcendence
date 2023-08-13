@@ -239,6 +239,18 @@ export class ChatService {
 		return result;
 	}
 
+	async findUserBans(user_id: number) {
+		const result = await dbClient.query(
+			`SELECT *	FROM chatrooms_punishments
+								WHERE chatroom_user_target_uid = $1;`,
+			[user_id]
+		)
+		.then(queryResult => { return treatDbResult(queryResult); })
+		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+
+		return result;
+	}
+
 	async isUserMutedInChatroom(user_id: number, chatroom_id: number): Promise<boolean> {
 		const punishments = await this.findUserPunishments(user_id);
 	
@@ -254,7 +266,7 @@ export class ChatService {
 	}
 
 	async isUserBannedFromChatroom(user_id: number, chatroom_id: number): Promise<boolean> {
-		const punishments = await this.findUserPunishments(user_id);
+		const punishments = await this.findUserBans(user_id);
 
 		for (const punishment of punishments) {
 			const now = new Date();
