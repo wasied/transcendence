@@ -276,8 +276,8 @@ export class ChatService {
 								type,
 								ends_at
 							)
-							VALUES($1, $2, $3, $4, $5)`,
-			[chatroom_id, admin_id, target_id, chatroom_id, type, ends_at]
+							VALUES($1, $2, $3, $4, $5);`,
+			[chatroom_id, admin_id, target_id, type, ends_at]
 		)
 		.then(queryResult => { return queryResult; })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
