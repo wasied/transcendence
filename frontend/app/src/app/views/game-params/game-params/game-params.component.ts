@@ -29,7 +29,7 @@ export class GameParamsComponent implements OnDestroy {
 		},
 		{
 			name: 'Two Points Appart Mode',
-			description: 'Reach the score of twelve + Have a two-point difference with your opponent.',
+			description: 'Reach the score of eleven + Have a two-point difference with your opponent.',
 			iconClass: 'fa-solid fa-star'
 		}
   	];
@@ -38,7 +38,7 @@ export class GameParamsComponent implements OnDestroy {
 
 	/* CHECKBOX MANAGEMENT */
 	
-	onLiClick(index: number) {} // is that useful ?
+	onLiClick(index: number) {}
 
 	onApplyMode(index: number) {
 		if (index === this.selectedMode) {
@@ -49,7 +49,6 @@ export class GameParamsComponent implements OnDestroy {
 	}
 
 	/* GAME DATA MANAGEMENT */
-
 	private setGameMode() : void {
 		switch (this.selectedMode) {
 			case (0): 
@@ -79,14 +78,8 @@ export class GameParamsComponent implements OnDestroy {
 
 		const gameData: GameData = {
 			variant: this.gameMode,
-			leftPlayerId: null,
-			rightPlayerId: null,
 			scoreLeftPlayer: 0,
 			scoreRightPlayer: 0,
-			durationInSec: 0,
-			isActive: false,
-			user1: null,
-			user2: null
 		}
 		this.gameDataService.updateGameData(gameData);
 	}
@@ -102,12 +95,11 @@ export class GameParamsComponent implements OnDestroy {
 	onClickStart() : void {
 		this.initGameData();
 		this.accessControlService.setAccess(true);
-		//this.router.navigate(['main/game_lobby']); return this
 		this.router.navigate(['main', 'game']);
 	}
 
 	onClickSpectator() : void {
-		this.router.navigate(['main/games']);
+		this.router.navigate(['main', 'game']);
 	}
 
 	/* AVOID MEMORY LEAKS */

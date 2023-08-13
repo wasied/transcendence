@@ -3,7 +3,6 @@ import { Session } from './session';
 import { MatchHistory } from './match-history';
 import { dbClient } from '../db';
 import { treatDbResult } from '../utils/treatDbResult';
-
 @Injectable()
 export class SessionsService {
 	async findAll(): Promise<Session[]> {
@@ -84,50 +83,61 @@ export class SessionsService {
 		return result;
 	}
 
-	create(automatching: boolean, customization: boolean): void {
-		const result = dbClient.query(
-			`INSERT	INTO sessions(automatching, customization, ended)
-					VALUES($1, $2, false);`,
-			[automatching, customization]
-		)
-		.then(queryResult => { return queryResult; })
-		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+	async create(automatching: boolean, customization: boolean): Promise<number> {
+		try {
+			const queryResult = await dbClient.query(
+				`INSERT INTO sessions(automatching, customization, ended)
+					VALUES($1, $2, false)
+					RETURNING id;`,
+				[automatching, customization]
+			);
+	
+			return (queryResult.rows[0][0] as number);
+		} catch (err) {
+			throw new HttpException(err, HttpStatus.BAD_REQUEST);
+		}
 	}
 
-	join(session_id: number, user_id: number, spectator: boolean): void {
-		var status: string;
+	async join(session_id: number, user_id: number, spectator: boolean): Promise<void> {
+		await dbClient.query(
+			`INSERT INTO sessions_users(user_uid, session_uid, spectator)
+				VALUES($1, $2, $3);`,
+			[user_id, session_id, spectator]
+		)
+			.then(queryResult => { return queryResult; })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 		if (spectator)
-			status = "Spectating a game";
-		else
-			status = "Playing a game";
-		const result = dbClient.query(
-			`INSERT	INTO sessions_users(user_uid, session_uid, spectator)
-					VALUES($1, $2, $3);
-			UPDATE	users
-					SET status = $4
-					WHERE id = $1;`,
-			[user_id, session_id, spectator, status]
+			return ;
+		await dbClient.query(
+			`UPDATE users
+				SET status = $1
+				WHERE id = $2;`,
+			["Playing a game", user_id]
 		)
-		.then(queryResult => { return queryResult; })
-		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+			.then(queryResult => { return queryResult; })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
-	end(session_id: number, winner_uid: number): void {
-		const result = dbClient.query(
-			`UPDATE	sessions
-					SET		ended = true,
-							winner_uid = $1
-					WHERE	id=$2;
-			UPDATE	users
-					SET		status = 'online'
-					WHERE	id IN(
-						SELECT user_uid	FROM sessions_users
-										WHERE session_uid = $2
-										AND spectator = false;
-					);`,
+	async end(session_id: number, winner_uid: number): Promise<void> {
+		await dbClient.query(
+			`UPDATE sessions
+			SET ended = true,
+				winner_uid = $1
+			WHERE id=$2;`,
 			[winner_uid, session_id]
 		)
-		.then(queryResult => { return queryResult; })
-		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+			.then(queryResult => { return queryResult; })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		await dbClient.query(
+			`UPDATE users
+			SET status = 'online'
+			WHERE id IN (
+				SELECT user_uid FROM sessions_users
+				WHERE session_uid = $1 AND spectator = false
+			);`,
+			[session_id]
+		)
+			.then(queryResult => { return queryResult; })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 }

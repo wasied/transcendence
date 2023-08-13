@@ -1,20 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, shareReplay } from 'rxjs';
 import { Chatroom } from 'src/app/core/models/chatroom.model';
 import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
 import { httpErrorHandler } from 'src/app/http-error-handler';
+import { ChatWebsocketService } from 'src/app/core/services/chat-websocket.service';
 
 @Component({
   	selector: 'app-chatroom-header',
   	templateUrl: './chatroom-header.component.html',
   	styleUrls: ['./chatroom-header.component.css']
 })
-export class ChatroomHeaderComponent implements OnInit {
+export class ChatroomHeaderComponent implements OnInit, OnDestroy {
 
 	@Input() chatroomId!: number	
-	chatroom$!: Observable<Chatroom>;
+
+	chatroom!: Chatroom;
 	setPasswordForm!: FormGroup;
 	modifyPasswordForm!: FormGroup;
 	passwordProtected!: boolean;
@@ -24,7 +25,8 @@ export class ChatroomHeaderComponent implements OnInit {
 
 	constructor (private router: Router, 
 				 private chatroomsService: ChatroomsService, 
-				 private formBuilder: FormBuilder) 
+				 private formBuilder: FormBuilder,
+				 private chatWebsocketService: ChatWebsocketService) 
 	{
 		this.setPasswordForm = this.formBuilder.group({
 			password: ['']
@@ -36,17 +38,24 @@ export class ChatroomHeaderComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.chatroom$ = this.chatroomsService.getChatroomByID(this.chatroomId).pipe(
-			shareReplay(1)
-		);
-		
-		this.chatroom$.subscribe(data => {
-			if (data.password === null) {
+		this.chatWebsocketService.listenToServerEvents();
+		this.chatWebsocketService.connect();
+		this.chatWebsocketService.rooms$.subscribe(chatrooms => { 
+			for (let i = 0; i < chatrooms.length; i++) {
+				if (chatrooms[i].id === this.chatroomId)
+					this.chatroom = chatrooms[i];
+			}
+
+			if (this.chatroom.password === null || this.chatroom.password === undefined) {
 				this.passwordProtected = false;
 			} else {
 				this.passwordProtected = true;
 			}
-		});		
+		});
+	}
+
+	ngOnDestroy(): void {
+		//this.chatWebsocketService.rooms$.unsubscribe();
 	}
 
 	changePasswordFormDisplayStatus() : void {
@@ -64,25 +73,21 @@ export class ChatroomHeaderComponent implements OnInit {
 
 	/* PRIVACY/PASSWORD MODIFCATION */
 
-	addPassword() : void {
+	async addPassword() : Promise<void> {
 		const password : string = this.setPasswordForm.get('password')?.value;
 		
-		this.chatroomsService.modifyChatroomPassword(this.chatroomId, password).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+		await this.chatroomsService.modifyChatroomPassword(this.chatroomId, password).toPromise()
+			.catch(err => { httpErrorHandler(err); });
 		this.passwordPresent = true;
 	}
 
-	changePassword() : void {
+	async changePassword() : Promise<void> {
 		this.changePasswordFormDisplayStatus();
 
 		const newPassword : string = this.modifyPasswordForm.get('newPassword')?.value;
 
-		this.chatroomsService.modifyChatroomPassword(this.chatroomId, newPassword).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+		await this.chatroomsService.modifyChatroomPassword(this.chatroomId, newPassword).toPromise()
+			.catch(err => { httpErrorHandler(err); });
 	}
 
 	onTogglePasswordChange(event: Event) : void {
@@ -105,11 +110,9 @@ export class ChatroomHeaderComponent implements OnInit {
 
 	/* EXITING CHATROOM METHODS */
 
-	removeYourselfFromChatroom() : void {
-		this.chatroomsService.delParticipantFromChatroom(this.chatroomId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async removeYourselfFromChatroom() : Promise<void> {
+		await this.chatroomsService.delParticipantFromChatroom(this.chatroomId).toPromise()
+			.catch(err => { httpErrorHandler(err); });
 		this.onExitingChatroomSession();
 	}
 	

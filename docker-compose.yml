@@ -7,6 +7,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - APP_URL=${APP_URL}
+        - BACKEND_API_PORT=${BACKEND_API_PORT}
     ports:
       - ${WEBSITE_EXPOSED_PORT}:${NGINX_FRONT_PORT}
     environment:
@@ -23,6 +26,7 @@ services:
     ports:
       - ${BACKEND_API_PORT}:${BACKEND_API_PORT}
     environment:
+      - HASH_ROUNDS=${HASH_ROUNDS}
       - APP_NAME=${APP_NAME}
       - APP_URL=${APP_URL}
       - BACKEND_API_PORT=${BACKEND_API_PORT}

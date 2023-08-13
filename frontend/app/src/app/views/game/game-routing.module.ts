@@ -1,9 +1,11 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { GameViewComponent } from './game-files/game-view/game-view.component';
+import { isAuthenticatedGuard } from "src/app/is-authenticated.guard";
+import { GameLobbyGuard } from "src/app/game-lobby-guard.guard";
 
 const routes: Routes = [
-	{path: ':id', component: GameViewComponent}
+	{path: '', component: GameViewComponent, canActivate: [isAuthenticatedGuard, GameLobbyGuard]}
 ];
 
 @NgModule ({

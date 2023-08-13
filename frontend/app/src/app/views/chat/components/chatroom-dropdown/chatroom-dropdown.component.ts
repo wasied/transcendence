@@ -5,6 +5,7 @@ import { UsersService } from 'src/app/core/services/users.service';
 import { Observable, Subscription } from 'rxjs';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 import { User } from 'src/app/core/models/user.model';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-chatroom-dropdown',
@@ -26,76 +27,73 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 
 	constructor (private usersService: UsersService,
 				 private chatroomsService: ChatroomsService,
-				 private router: Router) {}
+				 private router: Router,
+				 private accessControlService: AccessControlService) {}
 
-	ngOnInit(): void {
-		// this.subscription = this.chatroomsService. .subscribe(canCoerce => {
-		// 	this.canCoerce = canCoerce;
-		// });
+	async ngOnInit(): Promise<void> {
+		const me = await this.usersService.getMe().toPromise()
+			.catch(err => { httpErrorHandler(err); });
+		if (!me)
+			return ;
+		for (const index in this.participants) {
+			if (this.participants[index].id === me.id)
+				delete this.participants[index];
+		}
+		this.participants = this.participants.filter(participant => participant !== null && participant !== undefined);
 	}
 	
 	toggleDropdown(): void {
 		this.isOpen = !this.isOpen;
 	}
 
-	// check if 1) user is a owner or administrator, 2) target is not
 	isAllowedToCoerce(participantId: number) : boolean {
-		return true; // implement logic later, using a websocket
+		return true; 
 	}
 
-	kickUser(participantId: number) : void {
-		this.chatroomsService.kickUserFromChatroom(this.chatroomId, participantId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async kickUser(participantId: number) : Promise<void> {
+		await this.chatroomsService.kickUserFromChatroom(this.chatroomId, participantId).toPromise()
+			.catch(err => { httpErrorHandler(err); });
 	}
 
-	banUser(participantId: number) : void {
-		// this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+	async banUser(participantId: number) : Promise<void> {
+		await this.chatroomsService.banUserFromChatroom(this.chatroomId, participantId, '5').toPromise();
 	}
 
-	muteUser(participantId: number) : void {
-		// this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId).subscribe(
-		//	data => {},
-		//	httpErrorHandler
-		//);
+	async muteUser(participantId: number) : Promise<void> {
+		await this.chatroomsService.muteUserFromChatroom(this.chatroomId, participantId, '5').toPromise();
 	}
 
-	blockUser(participantId: number) : void {
-		this.usersService.blockUser(participantId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async blockUser(participantId: number) : Promise<void> {
+		await this.usersService.blockUser(participantId).toPromise();
+	}
+
+	/* GUARD */
+
+	grantAccess(): void {
+	this.accessControlService.setAccess(true);
 	}
 
 	seeUserProfile(participantId: number) : void {
+		this.accessControlService.setAccess(true);
 		this.router.navigate(['main', 'profile', participantId]);
 	}
 
 
-	makeAdmin(participantId: number) : void {
-		this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async makeAdmin(participantId: number) : Promise<void> {
+		await this.chatroomsService.makeUserAnAdmin(this.chatroomId, participantId).toPromise();
 	}
 
-	makeNonAdmin(participantId: number) : void {
-		this.chatroomsService.makeUserANonAdmin(this.chatroomId, participantId).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+	async makeNonAdmin(participantId: number) : Promise<void> {
+		await this.chatroomsService.makeUserANonAdmin(this.chatroomId, participantId).toPromise();
 	}
 
+	invitePong(participantId: number) : void {
+		this.router.navigateByUrl(`main/game?chatroom_id=${this.chatroomId}`);
+	}
 
 	isAllowedToElevateToAdmin(participantId: number) : boolean {
-		// backend will block if the user is not allowed
 		return true;
 	}
-
 
 	ngOnDestroy(): void {
 		if (this.subscription) {

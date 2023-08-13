@@ -1,4 +1,6 @@
 export const environment = {
 	production: false,
-	// you can add more environment specific properties here
+	appUrl: 'http://localhost',
+	backendAPIPort: 8080,
+	// DO NOT EDIT ANYTHING ABOVE
 };

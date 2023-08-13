@@ -1,3 +1,13 @@
-<div class="bg-black flex justify-center items-center h-screen">
-	<canvas #canvas class="bg-black"></canvas>
+<!-- the game istelf -->
+<div *ngIf="isMatched; else standby" class="flex flex-col h-screen" style="overflow: hidden">
+	<div class="bg-black flex justify-center items-center h-screen">
+		<canvas #canvas class="bg-black"></canvas>
+	</div>
 </div>
+
+<!-- The matchmaking process -->
+<ng-template #standby>
+	<div class="bg-black flex justify-center items-center h-screen w-screen text-white">
+		<p class="text-6xl">{{ this.loadingMessage }}</p>
+  	</div>
+</ng-template>

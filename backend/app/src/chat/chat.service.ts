@@ -2,13 +2,14 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Chat } from './chat';
 import { dbClient } from '../db';
 import { treatDbResult } from '../utils/treatDbResult';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class ChatService {
 	/* Chat */
 
 	async findAllChatrooms(): Promise<Chat[]> {
-		const result = dbClient.query(
+		const result = await dbClient.query(
 			`SELECT *	FROM chatrooms
 						WHERE direct_message = false;`
 		)
@@ -19,7 +20,7 @@ export class ChatService {
 	}
 
 	async findUserChatrooms(user_id: number): Promise<Chat[]> {
-		const result = dbClient.query(
+		const result = await dbClient.query(
 			`SELECT *	FROM chatrooms
 						WHERE direct_message = false
 						AND id IN (
@@ -35,7 +36,7 @@ export class ChatService {
 	}
 
 	async findUserDirectMessages(user_id: number): Promise<Chat[]> {
-		const result = dbClient.query(
+		const result = await dbClient.query(
 			`SELECT *	FROM chatrooms
 						WHERE direct_message = true
 						AND id IN (
@@ -51,7 +52,7 @@ export class ChatService {
 	}
 
 	async findOne(id: number): Promise<Chat[]> {
-		const result = dbClient.query(
+		const result = await dbClient.query(
 			`SELECT *	FROM chatrooms
 						WHERE id = $1;`,
 			[id]
@@ -81,11 +82,17 @@ export class ChatService {
 	}
 
 	async create(owner_uid: number, name: string, password: string | null, direct_message: boolean): Promise<number> {
+		var passwordHash: string | null;
+		if (password)
+			passwordHash = await bcrypt.hash(password, +process.env.HASH_ROUNDS)
+				.catch(err => { throw new HttpException("Error hashing the password", HttpStatus.BAD_REQUEST); });
+		else
+			passwordHash = null;
 		const result = await dbClient.query(
 			`INSERT	INTO chatrooms(name, owner_uid, password, direct_message)
 					VALUES($1, $2, $3, $4)
 					RETURNING chatrooms.id;`,
-			[name, owner_uid, password, direct_message]
+			[name, owner_uid, passwordHash, direct_message]
 		)
 		.then(queryResult => { return treatDbResult(queryResult); })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
@@ -95,8 +102,8 @@ export class ChatService {
 		return result[0].id;
 	}
 
-	setHidden(chatroom_id: number, hidden: boolean): void {
-		const result = dbClient.query(
+	async setHidden(chatroom_id: number, hidden: boolean): Promise<void> {
+		const result = await dbClient.query(
 			`UPDATE	chatrooms
 					SET hidden = $1
 					WHERE id = $2;`,
@@ -106,8 +113,8 @@ export class ChatService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
-	updateName(chatroom_id: number, name: string): void {
-		const result = dbClient.query(
+	async updateName(chatroom_id: number, name: string): Promise<void> {
+		const result = await dbClient.query(
 			`UPDATE	chatrooms
 					SET name = $1
 					WHERE id = $2;`,
@@ -117,12 +124,14 @@ export class ChatService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
-	updatePassword(chatroom_id: number, password: string | null): void {
-		const result = dbClient.query(
+	async updatePassword(chatroom_id: number, password: string | null): Promise<void> {
+		const passwordHash = await bcrypt.hash(password, +process.env.HASH_ROUNDS)
+			.catch(err => { throw new HttpException("Error hashing the password", HttpStatus.BAD_REQUEST); });
+		const result = await dbClient.query(
 			`UPDATE	chatrooms
 					SET password = $1
 					WHERE id = $2;`,
-			[password, chatroom_id]
+			[passwordHash, chatroom_id]
 		)
 		.then(queryResult => { return queryResult; })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
@@ -155,8 +164,23 @@ export class ChatService {
 
 	/* Chat users */
 
-	join(user_id: number, chatroom_id: number): void {
-		const result = dbClient.query(
+	async join(user_id: number, chatroom_id: number, password: string | null): Promise<void> {
+		const passwordHash = await dbClient.query(
+			`SELECT password	FROM chatrooms
+								WHERE id = $1;`,
+			[chatroom_id]
+		)
+			.then(queryResult => { return treatDbResult(queryResult); })
+			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
+		if (passwordHash.length != 1)
+			throw new HttpException("Chatroom not found", HttpStatus.BAD_REQUEST);
+		if (passwordHash[0].password) {
+			const match = await bcrypt.compare(password, passwordHash[0].password)
+				.catch(err => { throw new HttpException("Error comparing the password with the password hash", HttpStatus.BAD_REQUEST); });
+			if (!match)
+				throw new HttpException("Bad password", HttpStatus.UNAUTHORIZED);
+		}
+		const result = await dbClient.query(
 			`INSERT INTO	chatrooms_users(chatroom_uid, user_uid, admin)
 							VALUES($2, $1, false);`,
 			[user_id, chatroom_id]
@@ -165,12 +189,12 @@ export class ChatService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
-	setAdmin(admin: boolean, chatroom_id: number, user_id: number) {
-		const result = dbClient.query(
+	async setAdmin(admin: boolean, chatroom_id: number, user_id: number): Promise<void> {
+		const result = await dbClient.query(
 			`UPDATE	chatrooms_users
 					SET admin = $1
 					WHERE chatroom_uid = $2
-					AND user_uid $3;`,
+					AND user_uid = $3;`,
 			[admin, chatroom_id, user_id]
 		)
 		.then(queryResult => { return queryResult; })
@@ -188,7 +212,7 @@ export class ChatService {
 			[chatroom_id, user_id]
 		)
 			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
-		const result = dbClient.query(
+		const result = await dbClient.query(
 			`DELETE	FROM	chatrooms_users
 							WHERE user_uid = $1
 							AND chatroom_uid = $2;`,
@@ -201,7 +225,7 @@ export class ChatService {
 	/* Punishments */
 
 	async findUserPunishments(user_id: number) {
-		const result = dbClient.query(
+		const result = await dbClient.query(
 			`SELECT *	FROM chatrooms_punishments
 						WHERE chatroom_user_target_uid IN (
 							SELECT id	FROM chatrooms_users
@@ -215,8 +239,8 @@ export class ChatService {
 		return result;
 	}
 
-	setPunishment(admin_id: number, target_id: number, chatroom_id: number, type: string, ends_at: string) {
-		const result = dbClient.query(
+	async setPunishment(admin_id: number, target_id: number, chatroom_id: number, type: string, ends_at: string) {
+		const result = await dbClient.query(
 			`INSERT INTO	chatrooms_punishments(
 								chatroom_uid,
 								chatroom_user_admin_uid,
@@ -230,30 +254,6 @@ export class ChatService {
 		.then(queryResult => { return queryResult; })
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
-
-	/* messages */
-
-/*
-	async getMessagesByChatroomId(chatroom_id: number): Promise<any[]> {
-		const result = dbClient.query(
-			`SELECT * FROM chatrooms_messages WHERE chatroom_uid = $1 ORDER BY created_at DESC;`,
-			[chatroom_id]
-		)
-		.then(queryResult => { return treatDbResult(queryResult); })
-		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
-
-		return result;
-	}
-
-	async addMessageToChatroom(chatroom_user_uid: number, content: string): Promise<void> {
-		const result = dbClient.query(
-			`INSERT INTO chatrooms_messages(chatroom_user_uid, content) VALUES($1, $2);`,
-			[chatroom_user_uid, content]
-		)
-		.then(queryResult => { return queryResult; })
-		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
-	}
-*/
 
 	/* For the guard */
 
@@ -273,7 +273,7 @@ export class ChatService {
 	}
 
 	async findChatroomsOwnedByUserId(user_id: number): Promise<number[]> {
-		const result = dbClient.query(
+		const result = await dbClient.query(
 			`SELECT id	FROM chatrooms
 						WHERE owner_uid = $1;`,
 			[user_id]
@@ -292,7 +292,7 @@ export class ChatService {
 	}
 
 	async findChatroomsWhereUserIdIsAdmin(user_id: number): Promise<number[]> {
-		const result = dbClient.query(
+		const result = await dbClient.query(
 			`SELECT chatroom_uid AS id	FROM chatrooms_users
 										WHERE user_uid = $1
 										AND admin = true;`,

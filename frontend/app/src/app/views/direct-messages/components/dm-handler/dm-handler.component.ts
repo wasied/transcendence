@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DirectMessagesService } from 'src/app/core/services/direct-messages.service';
+import { DirectMessagesWebsocketService } from 'src/app/core/services/direct-messages-websocket.service';
 import { User } from '../../../../core/models/user.model';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 
@@ -12,8 +12,10 @@ export class DmHandlerComponent implements OnInit {
 
 	newDmForm!: FormGroup;
 	
-	constructor(private fb: FormBuilder,
-				private dmService: DirectMessagesService) {}
+	constructor(
+		private fb: FormBuilder,
+		private directMessagesWebsocketService: DirectMessagesWebsocketService
+	) {}
 	
 	ngOnInit(): void {
 		this.initForm();
@@ -35,13 +37,11 @@ export class DmHandlerComponent implements OnInit {
 	}
 
 	private createNewDirectMessage() : void {
-		if (!this.newDmForm.get('userId')?.value) {
+		const otherUserId = this.newDmForm.get('userId')?.value;
+		if (!otherUserId) {
 			console.error("Invalid user id");
 			return ;
 		}
-		this.dmService.createDMsession(this.newDmForm.get('userId')?.value).subscribe(
-			data => {},
-			httpErrorHandler
-		);
+		this.directMessagesWebsocketService.createDirectMessage(otherUserId);
 	}
 }

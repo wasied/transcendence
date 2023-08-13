@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 import { Subscription } from 'rxjs';
 import { UsersService } from '../../../../core/services/users.service';
 import { httpErrorHandler } from 'src/app/http-error-handler';
@@ -19,10 +20,10 @@ export class MatchHistoryViewComponent implements OnInit, OnDestroy {
 	
 	constructor (private router: Router,
 				 private route: ActivatedRoute,
+				 private accessControlService: AccessControlService,
 				 private usersService: UsersService) {};
-
-	async ngOnInit(): Promise<void> {
-		
+	
+	ngOnInit(): void {		
 		if (this.isIdInURL() === true) {
 			const id: string | null = this.route.snapshot.paramMap.get('id');
 
@@ -53,11 +54,19 @@ export class MatchHistoryViewComponent implements OnInit, OnDestroy {
 		return true;
 	}
 
+
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+		}
+
 	goBackToProfile() : void {
 		console.log('boolean = ', this.isProfileOfUser);
 		if (this.isProfileOfUser) {
 			this.router.navigate(['main', 'profile']);
 		} else {
+			this.accessControlService.setAccess(true);
 			this.router.navigate(['main', 'profile', this.idOfUserProfile]);
 		}
 	}

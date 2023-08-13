@@ -1,0 +1,7 @@
+/* Custom tooltip theme */
+.tippy-box[data-theme~="custom-theme"] {
+  background-color: #edf2f7 !important;
+  color: #333 !important;
+  border-radius: 0.25rem !important;
+  padding: 0.5rem !important;
+}

@@ -4,9 +4,12 @@ import { ChatroomSessionComponent } from "./components/chatroom-session/chatroom
 
 import { ChatroomsViewComponent } from "./components/chatrooms-view/chatrooms-view.component";
 
+import { isAuthenticatedGuard } from "src/app/is-authenticated.guard";
+import { hasAccessGuard } from "src/app/has-access-guard.guard";
+
 const routes: Routes = [
-	{ path: ':id', component: ChatroomSessionComponent },
-	{ path: '', component: ChatroomsViewComponent }
+	{ path: ':id', component: ChatroomSessionComponent, canActivate: [isAuthenticatedGuard, hasAccessGuard] },
+	{ path: '', component: ChatroomsViewComponent, canActivate: [isAuthenticatedGuard] } // add paths for chatrooms
 ];
 
 @NgModule({

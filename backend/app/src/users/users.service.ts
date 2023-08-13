@@ -68,8 +68,8 @@ export class UsersService {
 		return result;
 	}
 
-	create(user: User): void {
-		const result = dbClient.query(
+	async create(user: User): Promise<void> {
+		const result = await dbClient.query(
 			`INSERT	INTO users(id, username, status, a2f_key, profile_picture_url)
 					VALUES($1, $2, $3, $4, $5);`,
 			[user.id, user.username, "online", user.a2f_key, user.profile_picture_url]
@@ -115,11 +115,8 @@ export class UsersService {
 			return true;
 	}
 
-	findStatus(user_id: number[]): void {
-	}
-
-	logIn(user_id: number): void {
-		const result = dbClient.query(
+	async logIn(user_id: number): Promise<void> {
+		const result = await dbClient.query(
 			`UPDATE	users
 					SET 	status=$1
 					WHERE	id=$2;`,
@@ -129,8 +126,8 @@ export class UsersService {
 		.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 	}
 
-	logOut(user_id: number): void {
-		const result = dbClient.query(
+	async logOut(user_id: number): Promise<void> {
+		const result = await dbClient.query(
 			`UPDATE	users
 					SET		status=$1
 					WHERE	id=$2;`,

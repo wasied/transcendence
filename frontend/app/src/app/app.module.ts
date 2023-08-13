@@ -16,6 +16,9 @@ import { SharedModule } from './shared/shared.module';
 import { AuthHttpClient } from './auth-http-client';
 
 import { AccessControlService } from './core/services/access-control.service';
+import { NotFoundModule } from './views/not-found/not-found.module';
+import { NotFoundComponent } from './views/not-found/not-found/not-found.component';
+import { GlobalWebsocketService } from 'src/app/core/services/global-websocket.service';
 
 @NgModule({
 	declarations: [
@@ -30,9 +33,10 @@ import { AccessControlService } from './core/services/access-control.service';
     	MatDialogModule,
     	HttpClientModule,
     	CoreModule,
-		SharedModule
+		SharedModule,
+		NotFoundModule
 	],
-	providers: [AuthHttpClient, AccessControlService],
+	providers: [AuthHttpClient, AccessControlService, GlobalWebsocketService],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

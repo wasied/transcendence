@@ -38,7 +38,7 @@ GET CHATROOMS
 			chatrooms[index].participants = participants;
 		}
 
-		client.emit('updateRooms', chatrooms);
+		this.server.emit('updateRooms', chatrooms);
 	}
 
 	private async updateMyRooms(client: SocketWithUser): Promise<void> {
@@ -57,39 +57,86 @@ GET CHATROOMS
 		client.emit('updateMyRooms', myChatrooms);
 	}
 
+	private async updateDms(client: SocketWithUser): Promise<void> {
+		var directMessages: Chat[] = await this.chatService.findUserDirectMessages(client.user.id);
+		for (const index in directMessages) {
+			const participants_id = await this.chatService.findChatroomUsersId(directMessages[index].id);
+			if (participants_id.length !== 2)
+				throw new WsException("Direct message does not have 2 members");
+			directMessages[index].participants_id = [];
+			directMessages[index].participants_id.push(client.user.id);
+			directMessages[index].participants_id.push(participants_id[0] !== client.user.id ? participants_id[0] : participants_id[1]);
+			var participants = [];
+			for (const participant_id of directMessages[index].participants_id) {
+				const participant = (await this.usersService.findOneById(participant_id))[0];
+				participants.push(participant);
+			}
+			directMessages[index].participants = participants;
+		}
+
+		client.emit('updateDms', directMessages);
+	}
+
 	private async updateAllRooms(client: SocketWithUser): Promise<void> {
 		this.updateRooms(client);
 		this.updateMyRooms(client);
 	}
 
     @SubscribeMessage('connectChatrooms')
-    async connect(
+    async connectChatrooms(
 		@ConnectedSocket() client: SocketWithUser
 	): Promise<void> {
-        client.join(String(client.user.id));
+//        client.join(String(client.user.id));
 		this.updateAllRooms(client);
     }
 
     @SubscribeMessage('disconnectChatrooms')
-    async disconnect(
+    async disconnectChatrooms(
 		@ConnectedSocket() client: SocketWithUser
 	): Promise<void> {
-        client.leave(String(client.user.id));
+//        client.leave(String(client.user.id));
 		client.disconnect();
     }
+
+    @SubscribeMessage('connectDms')
+    async connectDms(
+		@ConnectedSocket() client: SocketWithUser
+	): Promise<void> {
+		this.updateDms(client);
+    }
+
+    @SubscribeMessage('disconnectDms')
+    async disconnectDms(
+		@ConnectedSocket() client: SocketWithUser
+	): Promise<void> {
+		client.disconnect();
+    }
+
 
 	@SubscribeMessage('createRoom')
 	async create(
 		@ConnectedSocket() client: SocketWithUser,
 		@MessageBody() body: CreateDto
 	): Promise<void> {
-		const id = await this.chatService.create(client.user.id, body.name, body.password, body.direct_message)
-			.catch(err => { throw new WsException(err); });
-		await this.chatService.join(client.user.id, id);
+		var password: string | null;
 		if (body.direct_message)
-			await this.chatService.join(body.other_user_id, id);
+			password = null;
+		else
+			password = body.password;
+		const id = await this.chatService.create(client.user.id, body.name, password, body.direct_message)
+			.catch(err => { throw new WsException(err); });
+		await this.chatService.join(client.user.id, id, password)
+			.catch(err => { throw new WsException(err); });
+		await this.chatService.setAdmin(true, id, client.user.id);
+		if (body.direct_message) {
+			await this.chatService.join(body.other_user_id, id, password)
+				.catch(err => { throw new WsException(err); });
+		}
 
-		this.updateAllRooms(client);
+		if (body.direct_message)
+			this.updateDms(client);
+		else
+			this.updateAllRooms(client);
 	}
 
 	@SubscribeMessage('deleteRoom')
@@ -111,7 +158,8 @@ GET CHATROOMS
 	): Promise<void> {
 		if (client.user.chatroom_ids.indexOf(body.chatroom_id) !== -1)
 			throw new WsException("User is already a chatroom member");
-		await this.chatService.join(client.user.id, body.chatroom_id);
+		await this.chatService.join(client.user.id, body.chatroom_id, body.password)
+			.catch(err => { throw new WsException(err); });
 
 		this.updateMyRooms(client);
 	}

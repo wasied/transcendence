@@ -3,10 +3,9 @@ import { Socket, io } from 'socket.io-client';
 import { Observable, Subject } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
 import { Chatroom } from 'src/app/core/models/chatroom.model';
+import { environment } from 'src/environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ChatWebsocketService {
 	private socket: Socket;
 
@@ -23,7 +22,7 @@ export class ChatWebsocketService {
 				}
 			}
 		};
-		this.socket = io('http://localhost:8080/chat', options);
+		this.socket = io(`${environment.appUrl}:${environment.backendAPIPort}/chat`, options);
 	}
 
 	public listenToServerEvents(): void {
@@ -57,14 +56,15 @@ export class ChatWebsocketService {
 		this.socket.emit('deleteRoom', { chatroom_id: chatroomId });
 	}
 
-	joinRoom(roomId: number): void {
-		this.socket.emit('joinRoom', { chatroom_id: roomId });
+	joinRoom(roomId: number, password: string | null): void {
+		this.socket.emit('joinRoom', { chatroom_id: roomId, password: password });
 	}
 
 	leaveRoom(roomId: number): void {
 		this.socket.emit('leaveRoom', { chatroom_id: roomId });
 	}
 
+/*
 	setAdminStatus(roomId: number, userId: number, admin: boolean): void {
 		this.socket.emit('setAdmin', {
 			admin: admin,
@@ -72,6 +72,7 @@ export class ChatWebsocketService {
 			user_id: userId
 		});
 	}
+*/
 
 /*
 	// Get list of chatrooms owned by user

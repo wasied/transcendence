@@ -1,11 +1,13 @@
 import { Component, Input, Output, ViewEncapsulation, EventEmitter, 
-	AfterViewInit, ElementRef, OnInit, OnDestroy } from '@angular/core';
+	AfterViewInit, ElementRef, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Chatroom } from 'src/app/core/models/chatroom.model'; 
 import tippy from 'tippy.js';
-import { ChatroomsService } from '../../../../core/services/chatrooms.service';
+import { ChatroomsService } from 'src/app/core/services/chatrooms.service';
+import { ChatWebsocketService } from 'src/app/core/services/chat-websocket.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
 	selector: 'app-chatroom',
@@ -20,6 +22,7 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	isOwner$!: Observable<boolean>;
 	
+	private destroyed: boolean = false;
 	private subscriptions: Subscription = new Subscription();
 	
 	showParticipants: boolean = false;
@@ -27,10 +30,14 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	accessForm!: FormGroup;
 
-	constructor(private router: Router, 
-				private elementRef: ElementRef,
-				private chatroomsService: ChatroomsService,
-				private formBuilder : FormBuilder) 
+	constructor(
+		private router: Router,
+		private elementRef: ElementRef,
+		private chatroomsService: ChatroomsService,
+		private formBuilder : FormBuilder,
+		private chatWebsocketService: ChatWebsocketService,
+		private accessControlService: AccessControlService
+	)
 	{
 		this.accessForm = this.formBuilder.group({
 			accessPassword : ['']
@@ -93,11 +100,19 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.initializeTooltips();
 	}
 
+	/* GUARD */
+
+	grantAccess(): void {
+		this.accessControlService.setAccess(true);
+		}
+
 	accessChatroom(chatroomId: number) : void {
 		if (this.chatroom.password !== null) {
 			this.openModal();
 		} else {
-			this.router.navigate(['main/chatrooms', chatroomId]);
+			this.accessControlService.setAccess(true);
+			//this.router.navigate(['main/chatrooms', chatroomId]);
+			this.chatWebsocketService.joinRoom(chatroomId, null);
 		}
 	}
 
@@ -112,13 +127,8 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	onSubmitPassword(chatroomId: number, password: string) : void {
-		this.chatroomsService.requestAccessToChatroom(chatroomId, password).subscribe(
-			isValid => {
-				if (isValid === true) {
-					this.router.navigate(['main/chatrooms', chatroomId]);
-				}
-			}
-		);
+		this.accessControlService.setAccess(true);
+		this.chatWebsocketService.joinRoom(chatroomId, password);
 	}
 	
 	deleteChatroom() : void {
@@ -126,6 +136,9 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	ngOnDestroy(): void {
+		if (this.destroyed) return;
+		this.destroyed = true;
+
 		if (this.subscriptions) {
 			this.subscriptions.unsubscribe();
 		}
@@ -140,4 +153,11 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 	closeModal() : void {
 		this.isModalOpen = false;
 	}
+
+	/* CONTROLS */
+	@HostListener('window:beforeunload', ['$event'])
+	unloadHandler(event: any) {
+		this.ngOnDestroy();
+	}
+
 }
