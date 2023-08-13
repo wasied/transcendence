@@ -251,8 +251,14 @@ export class PongGameGateway {
 
             }
 
-        } else if (this.waitingPlayers.has(String(client.user.id))) {
+        }
+        
+        if (this.waitingPlayers.has(String(client.user.id))) {
             this.waitingPlayers.delete(String(client.user.id));
+        }
+
+        if (this.privateGames.has(String(client.user.id))) {
+            this.privateGames.delete(String(client.user.id));
         }
 
         client.disconnect();
