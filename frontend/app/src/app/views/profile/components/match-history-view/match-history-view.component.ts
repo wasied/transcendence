@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AccessControlService } from 'src/app/core/services/access-control.service';
 import { Subscription } from 'rxjs';
 import { UsersService } from '../../../../core/services/users.service';
+import { httpErrorHandler } from 'src/app/http-error-handler';
 
 @Component({
 	selector: 'app-match-history-view',
@@ -13,6 +14,7 @@ export class MatchHistoryViewComponent implements OnInit, OnDestroy {
 
 	idOfUserProfile!: number;
 	isProfileOfUser: boolean = false;
+	isIdSet: boolean = false;
 
 	private subscription!: Subscription;
 	
@@ -21,8 +23,7 @@ export class MatchHistoryViewComponent implements OnInit, OnDestroy {
 				 private accessControlService: AccessControlService,
 				 private usersService: UsersService) {};
 	
-	ngOnInit(): void {
-		
+	ngOnInit(): void {		
 		if (this.isIdInURL() === true) {
 			const id: string | null = this.route.snapshot.paramMap.get('id');
 
@@ -34,17 +35,16 @@ export class MatchHistoryViewComponent implements OnInit, OnDestroy {
 			}
 		} else {
 			this.isProfileOfUser = true;
-			this.getUserIdIfCurrent();
-			console.log(this.idOfUserProfile);
+			await this.getUserIdIfCurrent();
 		}
+		this.isIdSet = true;
 	}
 
-	private getUserIdIfCurrent() : void {
-		this.subscription = this.usersService.getMe().subscribe(data=> {
-			console.log('go there', data.id);
-			this.idOfUserProfile = data.id;
-			console.log(this.idOfUserProfile);
-		});
+	private async getUserIdIfCurrent() : Promise<void> {
+		const user = await this.usersService.getMe().toPromise()
+			.catch(httpErrorHandler);
+		if (user)
+			this.idOfUserProfile = user.id;
 	}
 
 	private isIdInURL() : boolean {

@@ -14,12 +14,12 @@ export class MatchHistoryComponent implements OnInit {
 	@Input() isProfileOfUser!: boolean;
 	@Input() userId!: number;
 	
-	realUserId!: number;
+//	realUserId!: number;
 	matchHistory$!: Observable<MatchHistory[]>;
 	
 	constructor (private matchHistService: MatchHistoryService) {};
 	
 	ngOnInit(): void {
-		this.matchHistory$ = this.matchHistService.getGameHistory(this.userId);
+		this.matchHistory$ = this.matchHistService.getUserHistory(this.userId);
 	}
 }

@@ -11,9 +11,12 @@
 			  >MATCH HISTORY</span
 		>
   	</div>
-	<app-match-history 
-		class="w-full flex justify-center align-items" 
-		[isProfileOfUser]="isProfileOfUser" 
-		[userId]="idOfUserProfile">
-	</app-match-history>
+
+	<div *ngIf="isIdSet">
+		<app-match-history
+			class="w-full flex justify-center align-items"
+			[isProfileOfUser]="isProfileOfUser"
+			[userId]="idOfUserProfile">
+		</app-match-history>
+	</div>
 </div>

@@ -7,60 +7,20 @@ import { User } from "../models/user.model";
 import { UsersService } from "./users.service";
 import { SessionsUsersService } from "./sessions-users.service";
 import { SessionsUser } from "../models/sessions-user.model"; 
+import { AuthHttpClient } from 'src/app/auth-http-client';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class MatchHistoryService {
 
-	constructor (private usersService: UsersService,
-				 private sessionsService: SessionsService,
-				 private sessionsUsersService: SessionsUsersService) {};
-	
-	getGameHistory(playerId: number): Observable<MatchHistory[]> {
-		
-		return forkJoin({
-			users: this.usersService.getUsersHavingPlayedWithGivenUser(playerId),
-			sessions: this.sessionsService.getSessionsHistoryByUserId(playerId),
-			sessionsUsers: this.sessionsUsersService.getSessionUsersImplyingGivenUser(playerId)
-		}).pipe(map(
-			({ users, sessionsUsers , sessions }) => 
-				sessions.map(session => this.createGameHistory(session, sessionsUsers, users))
-			),
-			catchError(error => {
-				console.error(error);
-				return of([]);
-			})
-		) as Observable<MatchHistory[]>;
-	}
+	matchHistory$!: Observable<MatchHistory[]>
 
-	private createGameHistory(session: Session, sessionsUsers: SessionsUser[] , users: User[]): MatchHistory
-	{	
-		const relevantSessionsUsers = sessionsUsers.filter(sessionUser => sessionUser.session_id === session.id);
+	constructor (private authHttp: AuthHttpClient) {}
 
-		if (!relevantSessionsUsers) {
-			throw new Error(`User with ID not found!`);
-		}
+	getUserHistory(userId: number): Observable<MatchHistory[]> {
+		const endpoint = `http://localhost:8080/sessions/history/${userId}`; // TODO: DO NOT FORGET TO USE ENVIRONMENT
 
-		const usersInSession = relevantSessionsUsers.map(sessionUser => {
-			const user = users.find(user => user.id === sessionUser.user_id);
-
-			if (!user) {
-				throw new Error(`User with ID ${sessionUser.user_id} not found!`);
-			}
-			return user;
-		});
-
-		if (!usersInSession || usersInSession.length != 2)
-			throw new Error('user not found !');
-		
-		return new MatchHistory(
-			usersInSession[0].id,
-			usersInSession[1].id,
-			usersInSession[0].username,
-			usersInSession[1].username,
-			relevantSessionsUsers[0].score,
-			relevantSessionsUsers[1].score
-		);
+		return this.authHttp.get<MatchHistory[]>(endpoint);
 	}
 }
