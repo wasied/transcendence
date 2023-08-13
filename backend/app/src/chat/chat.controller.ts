@@ -210,6 +210,7 @@ export class ChatController {
 		if (body.target_id === chatroom[0].owner_uid)
 			throw new HttpException("Chatroom owner cannot be punished", HttpStatus.FORBIDDEN);
 		await this.chatService.setPunishment(request.user.id, body.target_id, body.chatroom_id, body.type, body.ends_at);
+		await this.chatService.leave(body.target_id, +body.chatroom_id);
 	}
 
 	@Delete('kick/:id/:user_id')
