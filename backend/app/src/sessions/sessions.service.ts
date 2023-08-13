@@ -44,7 +44,7 @@ export class SessionsService {
 			.then(queryResult => { return treatDbResult(queryResult); })
 			.catch(err => { throw new HttpException(err, HttpStatus.BAD_REQUEST); });
 
-		var match_history: MatchHistory[] = [];
+		var match_history = [];
 		for (const opponent of result) {
 			var match: { [key: string]: any };
 			match.my_username = my_username;
