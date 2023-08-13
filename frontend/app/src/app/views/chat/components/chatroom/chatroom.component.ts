@@ -111,7 +111,6 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.openModal();
 		} else {
 			this.accessControlService.setAccess(true);
-			//this.router.navigate(['main/chatrooms', chatroomId]);
 			this.chatWebsocketService.joinRoom(chatroomId, null);
 		}
 	}
