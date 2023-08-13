@@ -209,8 +209,8 @@ export class ChatController {
 			throw new HttpException("Chatroom not found", HttpStatus.BAD_REQUEST);
 		if (body.target_id === chatroom[0].owner_uid)
 			throw new HttpException("Chatroom owner cannot be punished", HttpStatus.FORBIDDEN);
-		const admin_id = await this.chatService.findChatroomUserId(body.chatroom_id, request.user.id);
-		const target_id = await this.chatService.findChatroomUserId(body.chatroom_id, body.target_id);
+		const admin_id = await this.chatService.findChatroomUserId(request.user.id, body.chatroom_id);
+		const target_id = await this.chatService.findChatroomUserId(body.target_id, body.chatroom_id);
 		await this.chatService.setPunishment(admin_id, target_id, body.chatroom_id, body.type, body.ends_at);
 		if (body.type === 'ban')
 			await this.chatService.leave(target_id, +body.chatroom_id);

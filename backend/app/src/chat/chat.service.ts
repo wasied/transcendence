@@ -269,14 +269,8 @@ export class ChatService {
 
 	async setPunishment(admin_id: number, target_id: number, chatroom_id: number, type: string, ends_at: number) {
 		const result = await dbClient.query(
-			`INSERT	INTO chatrooms_punishments(
-				chatroom_uid,
-				chatroom_user_admin_uid,
-				chatroom_user_target_uid,
-				type,
-				ends_at
-			)
-					VALUES($1, $2 $3, $4, $5);`,
+			`INSERT	INTO chatrooms_punishments(chatroom_uid, chatroom_user_admin_uid, chatroom_user_target_uid, type, ends_at)
+							VALUES($1, $2, $3, $4, $5);`,
 			[chatroom_id, admin_id, target_id, type, ends_at]
 		)
 		.then(queryResult => { return queryResult; })
