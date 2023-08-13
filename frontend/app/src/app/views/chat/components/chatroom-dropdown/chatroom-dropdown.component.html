@@ -15,15 +15,11 @@
 				
 				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="seeUserProfile(participantsId[i])">See Profile</button>
 				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="invitePong(participantsId[i])">Play Pong</button>
-				<div *ngIf="isAllowedToElevateToAdmin(participantsId[i])">
-					<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="makeAdmin(participantsId[i])">Make Administrator</button>
-				</div>
+				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="makeAdmin(participantsId[i])">Make Administrator</button>
 				
-				<div *ngIf="isAllowedToCoerce(participantsId[i])">
-					<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="kickUser(participantsId[i])">Kick</button>
-					<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="banUser(participantsId[i])">Ban</button>
-					<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="muteUser(participantsId[i])">Mute</button>
-				</div>
+				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="kickUser(participantsId[i])">Kick</button>
+				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="banUser(participantsId[i])">Ban</button>
+				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="muteUser(participantsId[i])">Mute</button>
 				
 				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="blockUser(participantsId[i])">Block</button>
 			</div>
