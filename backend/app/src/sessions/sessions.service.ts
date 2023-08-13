@@ -28,19 +28,13 @@ export class SessionsService {
 	}
 
 	async findUserHistoryByUserId(userId: number, my_username: string): Promise<MatchHistory[]> {
-		console.log(userId);
 		const result = await dbClient.query(
 			`SELECT users.username, su.winner_uid
 				FROM sessions_users su
 				INNER JOIN users ON su.user_uid = users.id
 				INNER JOIN sessions ON su.session_uid = sessions.id
 				WHERE su.spectator = false
-				AND su.session_uid  = $1;`
-				/*IN (
-					SELECT session_uid	FROM sessions_users
-										WHERE user_uid = $1
-										AND spectator = false
-				);`*/
+				AND su.session_uid = $1;`,
 			[userId]
 		)
 			.then(queryResult => { return treatDbResult(queryResult); })
