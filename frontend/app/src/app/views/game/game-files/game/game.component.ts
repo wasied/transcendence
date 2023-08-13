@@ -48,6 +48,8 @@ export class GameComponent implements OnInit, OnDestroy {
 	gameData!: GameData | null;
 
 	chatroomId!: string | null;
+	spectator!: boolean | null;
+	userToSpectateId!: string | null;
 	isMatched: boolean = false;
 	loadingMessage: string = 'Please wait for an opponent';
 	dotCount: number = 0;
@@ -73,7 +75,14 @@ export class GameComponent implements OnInit, OnDestroy {
 
 	/* GAME DATA TRANSPORTATION */
 	ngOnInit(): void {
-		this.chatroomId = this.route.snapshot.paramMap.get('chatroom_id');
+		this.chatroomId = this.route.snapshot.queryParamMap.get('chatroom_id');
+		const spectator = this.route.snapshot.queryParamMap.get('spectator');
+		this.userToSpectateId = this.route.snapshot.queryParamMap.get('user_id');
+
+		if (spectator)
+			this.spectator = JSON.parse(spectator);
+		if (this.spectator && !this.userToSpectateId)
+			return ;
 
 		this.keys = new Keys();
 
