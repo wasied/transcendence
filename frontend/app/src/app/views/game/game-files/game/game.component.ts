@@ -87,15 +87,17 @@ export class GameComponent implements OnInit, OnDestroy {
 		this.keys = new Keys();
 
 		this.gameSocket.listenToServerEvents();
-		
 		this.gameDataService.getGameData().subscribe(data => {
 			this.gameData = data;
-
+			
 			if (this.gameData !== null) {
 				this.variant = this.gameData.variant;
 			}
 
-			this.gameSocket.joinMatchmaking(this.variant);
+			if (this.chatroomId !== null)
+				this.gameSocket.joinPrivateGame(String(this.chatroomId));
+			else
+				this.gameSocket.joinMatchmaking(this.variant);
 		});
 
 		this.updateLoadingMessage();
@@ -129,6 +131,13 @@ export class GameComponent implements OnInit, OnDestroy {
 
 	private onGameEndedFromSocket(data: any): void {
 		this.accessControlService.setAccess(true);
+		
+		this.gameDataService.updateGameData({
+			variant: data.variant,
+			scoreLeftPlayer: data.playerLeftScore,
+			scoreRightPlayer: data.playerRightScore
+		});
+
 		this.router.navigate(['main', 'exit_game', data.sessionId]);
 	}
 
@@ -180,7 +189,7 @@ export class GameComponent implements OnInit, OnDestroy {
 	
 	/* CONTROLS */
 	@HostListener('window:beforeunload', ['$event'])
-	unloadHandler(event: any) {
+	beforeunloadHandler(event: any) {
 		this.ngOnDestroy();
 	}
 

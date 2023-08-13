@@ -30,6 +30,7 @@ export class GlobalGateway {
 		@ConnectedSocket() client: SocketWithUser
 	): Promise<void> {
 		await this.usersService.logOut(client.user.id);
+		client.disconnect();
 		this.server.emit('updateConnections');
 	}
 
@@ -39,7 +40,7 @@ export class GlobalGateway {
 	): Promise<void> {
 		const updatedFriends: User[] = await this.friendsService.findUserFriends(client.user.id)
 			.catch(err => { throw new WsException(err); });
-
+		
 		client.emit('updateFriends', updatedFriends);
 	}
 }
