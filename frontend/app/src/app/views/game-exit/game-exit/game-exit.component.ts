@@ -27,7 +27,11 @@ export class GameExitComponent implements OnInit, OnDestroy {
 
 	private retrieveGameData() : void {
 		this.subscriptionPlayers = this.gameDataService.getGameData().subscribe(
-			data => { this.gameData = data; },
+			data => { this.gameData = data; 
+				if (!data) {
+					this.router.navigate(['main']);
+				}
+			},	
 			httpErrorHandler
 		);
 	}
