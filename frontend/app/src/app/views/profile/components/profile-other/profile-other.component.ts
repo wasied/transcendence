@@ -16,13 +16,14 @@ export class ProfileOtherComponent implements OnInit, OnDestroy {
 	userBlocked!: boolean;
 	isUserBlocked$!: Observable<boolean>;
 	private subscription!: Subscription;
+	routingError: boolean = false;
 
 	constructor(private route: ActivatedRoute,
 				private router: Router,
 				private usersService: UsersService,
 				private accessControlService: AccessControlService ) {};
 	
-	ngOnInit(): void {
+	async ngOnInit(): Promise<void> {
 		const id: string | null = this.route.snapshot.paramMap.get('id');
 
 		if (id) {
@@ -30,6 +31,12 @@ export class ProfileOtherComponent implements OnInit, OnDestroy {
 		} else {
 			console.error("Invalid user id");
 			return ;
+		}
+
+		const user = await this.usersService.getUserById(+id).toPromise() 
+		.catch(err  => {this.routingError = true});
+		if (this.routingError) {
+			this.router.navigate(['not-found']);
 		}
 	}
 
