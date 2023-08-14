@@ -73,7 +73,10 @@ export class AuthenticationService {
 		const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
 			secret: string }>(`${this.apiURL}/2fa/disable`).toPromise()
 			.catch(httpErrorHandler);
-		return (response && response.success);
+		if (response && response.success)
+			return true;
+		else
+			return false;
 	}
 
 	handle2fa(userId: number, code: string) : Observable<{ success: boolean, url: string }> {
