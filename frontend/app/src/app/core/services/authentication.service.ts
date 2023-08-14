@@ -51,7 +51,7 @@ export class AuthenticationService {
 
 	/* 2FA */
 
-	async enable2faStatus(): Promise<{ success: boolean, qrCodeUrl: string, secret: string }> {
+	async enable2faStatus(): Promise<{ success: boolean, qrCodeUrl?: string, secret?: string }> {
 		const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
 			secret: string }>(`${this.apiURL}/2fa/enable`).toPromise()
 			.catch(httpErrorHandler);
