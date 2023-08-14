@@ -27,7 +27,7 @@ export class MatchHistoryElemComponent {
 
 	grantAccess(): void {
 		this.accessControlService.setAccess(true);
-		}
+	}
 	
 	goToOpponentProfile(opponentId: number) : void {
 		this.accessControlService.setAccess(true);

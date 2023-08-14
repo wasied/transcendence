@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { MatchHistoryService } from 'src/app/core/services/match-history.service';
 import { MatchHistory } from 'src/app/core/models/match-history.model';
 import { UsersService } from 'src/app/core/services/users.service';
+import { of } from 'rxjs';
 
 @Component({
 	selector: 'app-match-history',
@@ -20,6 +21,8 @@ export class MatchHistoryComponent implements OnInit {
 	
 	ngOnInit(): void {
 		this.matchHistory$ = this.matchHistService.getUserHistory(this.userId);
-		console.log(this.matchHistory$);
+		this.matchHistory$.pipe(
+			tap(value => console.log("Obs value:", value))
+		).subscribe();
 	}
 }
