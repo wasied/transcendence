@@ -8,7 +8,9 @@
 		[buttonText]="'Match History'" 
 		(buttonAction)="goToGameHistory()">
 	</app-profile-badge>
-	<app-info-security></app-info-security>
+	<app-info-security
+		[A2FKey]="userProfile.a2f_key"
+	></app-info-security>
 	<div class="max-w-3xl inline-flex items-center w-full">
     	<hr class="w-screen m-8" />
     	<span class="absolute px-3 font-medium bg-black -translate-x-1/2 left-1/2"
