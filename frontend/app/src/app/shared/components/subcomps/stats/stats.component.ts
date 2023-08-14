@@ -16,10 +16,6 @@ export class StatsComponent implements OnInit {
   	constructor (private statsService: StatsService) {}
   
   	ngOnInit(): void {
-		this.stats = this.statsService.getStats();
+		this.stats = this.statsService.getStatsFromUserById(this.userId);
   	}
-
-	loadStatofCurrentUser() : void { // use that instead
-		this.stats = this.statsService.getStats();
-	}
 }
