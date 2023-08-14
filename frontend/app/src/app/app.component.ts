@@ -14,7 +14,7 @@ export class AppComponent {
 	@HostListener('window:beforeunload', ['$event'])
 	beforeunloadHandler(event: any) {
 		try {
-			this.globalWebsocketService.updateFriends$.unsubscribe();
+			//this.globalWebsocketService.updateFriends$.unsubscribe();
 			this.globalWebsocketService.disconnect();
 		}
 		catch {}
