@@ -5,6 +5,7 @@ import { UsersService } from 'src/app/core/services/users.service';
 import { Observable, Subscription } from 'rxjs';
 import { httpErrorHandler } from 'src/app/http-error-handler';
 import { User } from 'src/app/core/models/user.model';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { AccessControlService } from 'src/app/core/services/access-control.service';
 
 @Component({
@@ -25,10 +26,27 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 
 	private subscription!: Subscription;
 
-	constructor (private usersService: UsersService,
-				 private chatroomsService: ChatroomsService,
-				 private router: Router,
-				 private accessControlService: AccessControlService) {}
+	participantMuteId!: number;
+	participantBanId!: number;
+	isModalMuteOpen: boolean = false;
+	isModalBanOpen: boolean = false;
+	durationMuteForm!: FormGroup;
+	durationBanForm!: FormGroup;
+
+	constructor (
+		private usersService: UsersService,
+		private chatroomsService: ChatroomsService,
+		private router: Router,
+		private accessControlService: AccessControlService,
+		private formBuilder: FormBuilder
+	) {
+		this.durationMuteForm = this.formBuilder.group({
+			durationMute: ['']
+		});
+		this.durationBanForm = this.formBuilder.group({
+			durationBan: ['']
+		});
+	}
 
 	async ngOnInit(): Promise<void> {
 		const me = await this.usersService.getMe().toPromise()
@@ -40,6 +58,30 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 				delete this.participants[index];
 		}
 		this.participants = this.participants.filter(participant => participant !== null && participant !== undefined);
+	}
+
+	async handleMute(): Promise<void> {
+		var duration: number | string | null = this.durationMuteForm.get('durationMute')?.value;
+		if (!duration || (typeof duration === 'string' && (duration === '' || !(+duration))))
+			return ;
+		if (typeof duration === 'string')
+			duration = +duration;
+
+		this.closeModalMute();
+		await this.chatroomsService.muteUserFromChatroom(this.chatroomId, this.participantMuteId, duration).toPromise()
+			.catch(err => { httpErrorHandler(err); });
+	}
+
+	async handleBan(): Promise<void> {
+		var duration: number | string | null = this.durationBanForm.get('durationBan')?.value;
+		if (!duration || (typeof duration === 'string' && (duration === '' || !(+duration))))
+			return ;
+		if (typeof duration === 'string')
+			duration = +duration;
+
+		this.closeModalBan();
+		await this.chatroomsService.banUserFromChatroom(this.chatroomId, this.participantBanId, duration).toPromise()
+			.catch(err => { httpErrorHandler(err); });
 	}
 	
 	toggleDropdown(): void {
@@ -102,5 +144,25 @@ export class ChatroomDropdownComponent implements OnInit, OnDestroy {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
 		}
+	}
+
+	/* MODAL HANDLING */
+
+	openModalMute(participantId: number): void {
+		this.participantMuteId = participantId;
+		this.isModalMuteOpen = true;
+	}
+
+	openModalBan(participantId: number): void {
+		this.participantBanId = participantId;
+		this.isModalBanOpen = true;
+	}
+
+	closeModalMute(): void {
+		this.isModalMuteOpen = false;
+	}
+
+	closeModalBan(): void {
+		this.isModalBanOpen = false;
 	}
 }

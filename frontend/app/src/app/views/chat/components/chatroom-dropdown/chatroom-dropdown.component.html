@@ -18,11 +18,35 @@
 				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="makeAdmin(participant.id)">Make Administrator</button>
 				
 				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="kickUser(participant.id)">Kick</button>
-				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="banUser(participant.id)">Ban</button>
-				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="muteUser(participant.id)">Mute</button>
+				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="openModalBan(participant.id)">Ban</button>
+				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="openModalMute(participant.id)">Mute</button>
 				
 				<button class="w-full bg-gray-200 hover:bg-gray-300 rounded my-1 py-1" (click)="blockUser(participant.id)">Block</button>
 			</div>
 		</div>
 	</div>				
 </div>
+
+<app-modal [showModal]="isModalMuteOpen" (onClose)="closeModalMute()">
+	<div class="flex flex-col justify-center items-center bg-white text-black">
+		<form [formGroup]="durationMuteForm" (ngSubmit)="handleMute()">
+			<div class="mb-4">
+				<label class="block">Duration in seconds</label>
+				<input type="number" formControlName="durationMute" class="w-full px-3 py-2 border rounded">
+			</div>
+			<button type="submit" class="w-full py-2 bg-blue-500 text-white rounded">Submit</button>
+		</form>
+	</div>
+</app-modal>
+
+<app-modal [showModal]="isModalBanOpen" (onClose)="closeModalBan()">
+	<div class="flex flex-col justify-center items-center bg-white text-black">
+		<form [formGroup]="durationBanForm" (ngSubmit)="handleBan()">
+			<div class="mb-4">
+				<label class="block">Duration in seconds</label>
+				<input type="number" formControlName="durationBan" class="w-full px-3 py-2 border rounded">
+			</div>
+			<button type="submit" class="w-full py-2 bg-blue-500 text-white rounded">Submit</button>
+		</form>
+	</div>
+</app-modal>
