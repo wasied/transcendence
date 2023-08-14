@@ -20,10 +20,6 @@ export class MatchHistoryComponent implements OnInit {
 	constructor (private matchHistService: MatchHistoryService) {};
 	
 	ngOnInit(): void {
-		console.log(this.userId);
 		this.matchHistory$ = this.matchHistService.getUserHistory(this.userId);
-		this.matchHistory$.pipe(
-			tap(value => console.log("Obs value:", value))
-		).subscribe();
 	}
 }

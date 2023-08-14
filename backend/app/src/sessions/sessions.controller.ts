@@ -5,11 +5,12 @@ import { MatchHistory } from './match-history';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateDto } from './dto';
 import { RequestWithUser } from '../utils/RequestWithUser';
+import { UsersService } from '../users/users.service';
 
 @Controller('sessions')
 @UseGuards(AuthGuard('jwt'))
 export class SessionsController {
-	constructor(private readonly sessionsService: SessionsService) {}
+	constructor(private readonly sessionsService: SessionsService, private usersService: UsersService) {}
 
 	@Get()
 	async findAll(): Promise<Session[]> {
@@ -26,7 +27,8 @@ export class SessionsController {
 		@Request() request: RequestWithUser,
 		@Param('userId') userId: string
 	): Promise<MatchHistory[]> {
-		return this.sessionsService.findUserHistoryByUserId(+userId, request.user.username);
+		const user = await this.usersService.findOneById(+userId);
+		return this.sessionsService.findUserHistoryByUserId(+userId, user.username);
 	}
 
 	@Get(':sessionId')
