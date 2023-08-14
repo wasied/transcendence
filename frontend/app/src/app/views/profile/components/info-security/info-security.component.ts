@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { UsersService } from '../../../../core/services/users.service';
@@ -8,7 +8,9 @@ import { httpErrorHandler } from 'src/app/http-error-handler';
 	selector: 'app-info-security',
 	templateUrl: './info-security.component.html'
 })
-export class InfoSecurityComponent {
+export class InfoSecurityComponent implements OnInit {
+
+	@Input() A2FKey!: string;
 
 	picForm!: FormGroup;
 	usernameForm!: FormGroup;
@@ -16,6 +18,7 @@ export class InfoSecurityComponent {
 	showModalUsername: boolean = false;
 	showModalPic: boolean = false;
 	showModal2FA: boolean = false;
+	A2FEnabled!: boolean;
 
 	twoFactorAuthQR!: string;
 
@@ -33,6 +36,10 @@ export class InfoSecurityComponent {
 		});
 	};
 	
+	ngOnInit(): void {
+		this.A2FEnabled = this.A2FKey !== null;
+	}
+
 	async onToggleTwoFactorAuth(event: Event): Promise<void> {
 		const target = event.target as HTMLInputElement;
   		const isChecked = target.checked;
