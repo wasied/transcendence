@@ -15,6 +15,7 @@ export class MatchHistoryService {
 
 	getUserHistory(userId: number): Observable<MatchHistory[]> {
 		const endpoint = `${environment.appUrl}:${environment.backendAPIPort}/sessions/history/${userId}`;
+		console.log(userId);
 
 		return this.authHttp.get<MatchHistory[]>(endpoint);
 	}
