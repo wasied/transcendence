@@ -20,5 +20,6 @@ export class MatchHistoryComponent implements OnInit {
 	
 	ngOnInit(): void {
 		this.matchHistory$ = this.matchHistService.getUserHistory(this.userId);
+		console.log(this.matchHistory$);
 	}
 }
