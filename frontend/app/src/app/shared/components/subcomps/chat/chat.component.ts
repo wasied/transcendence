@@ -68,7 +68,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   	}
 
 	ngOnDestroy() {
-		this.messagesWebsocketService.updateMessages$.unsubscribe();
+		//this.messagesWebsocketService.updateMessages$.unsubscribe();
 		this.messagesWebsocketService.disconnect(this.chatroomId);
 	}
 }
