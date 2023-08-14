@@ -53,9 +53,9 @@ export class DirectMessagesViewComponent implements OnInit, OnDestroy {
 		this.isModalOpen = false;
 	}
 
-	// ngOnDestroy(): void {
+	ngOnDestroy(): void {
 	// 	if (this.subscription) {
 	// 		this.subscription.unsubscribe();
 	// 	}
-	// }
+	}
 }
