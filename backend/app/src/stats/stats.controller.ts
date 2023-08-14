@@ -21,8 +21,8 @@ export class StatsController {
 	}
 
 	@Get(':user_id')
-	async findOneByUserId(@Param('user_id') user_id: number): Promise<Stats> {
-		return this.statsService.findOneByUserId(user_id);
+	async findOneByUserId(@Param('user_id') user_id: string): Promise<Stats> {
+		return this.statsService.findOneByUserId(+user_id);
 	}
 
 }
