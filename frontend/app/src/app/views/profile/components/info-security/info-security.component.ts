@@ -45,7 +45,7 @@ export class InfoSecurityComponent implements OnInit {
   		const isChecked = target.checked;
 
 		if (isChecked) {
-			await this.auth.change2faStatus()
+			await this.auth.enable2faStatus()
 				.then(value => {
 					if (!value.success)
 						return ;
@@ -56,7 +56,7 @@ export class InfoSecurityComponent implements OnInit {
 				});
 			this.showModal2FA = true;
   		} else {
-			await this.auth.change2faStatus();
+			await this.auth.disable2faStatus();
 			this.showModal2FA = false;
   		}
 	}

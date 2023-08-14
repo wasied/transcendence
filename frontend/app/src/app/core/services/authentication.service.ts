@@ -51,35 +51,29 @@ export class AuthenticationService {
 
 	/* 2FA */
 
-	async change2faStatus() : Promise<{ success: boolean, qrCodeUrl?: string, secret?: string }> {
-		this.doubleAuthActivated = !this.doubleAuthActivated;
-
-		if (this.doubleAuthActivated) {
-			const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
-				secret: string }>(`${this.apiURL}/2fa/enable`).toPromise()
-				.catch(httpErrorHandler);
-			if (!response) {
-				httpErrorHandler();
-				return { success: false };
-			}
-			const qrCodeUrl = await QRCode.toDataURL(response.otpAuthUrl)
-				.catch((err: any) => { return undefined; });
-
-			return {
-				success: response.success,
-				qrCodeUrl: qrCodeUrl,
-				secret: response.secret
-			};
+	async enable2faStatus(): Promise<{ success: boolean, qrCodeUrl: string, secret: string }> {
+		const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
+			secret: string }>(`${this.apiURL}/2fa/enable`).toPromise()
+			.catch(httpErrorHandler);
+		if (!response) {
+			httpErrorHandler();
+			return { success: false };
 		}
-		else {
-			const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
-				secret: string }>(`${this.apiURL}/2fa/disable`).toPromise()
-				.catch(httpErrorHandler);
-			if (response && response.success)
-				return { success: true };
-			else
-				return { success: false };
-		}
+		const qrCodeUrl = await QRCode.toDataURL(response.otpAuthUrl)
+			.catch((err: any) => { return undefined; });
+
+		return {
+			success: response.success,
+			qrCodeUrl: qrCodeUrl,
+			secret: response.secret
+		};
+	}
+
+	async disable2faStatus(): Promise<boolean> {
+		const response = await this.authHttp.get<{ success: boolean, otpAuthUrl: string,
+			secret: string }>(`${this.apiURL}/2fa/disable`).toPromise()
+			.catch(httpErrorHandler);
+		return (response && response.success);
 	}
 
 	handle2fa(userId: number, code: string) : Observable<{ success: boolean, url: string }> {
