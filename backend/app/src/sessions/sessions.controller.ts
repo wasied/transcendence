@@ -28,7 +28,9 @@ export class SessionsController {
 		@Param('userId') userId: string
 	): Promise<MatchHistory[]> {
 		const user = await this.usersService.findOneById(+userId);
-		return this.sessionsService.findUserHistoryByUserId(+userId, user.username);
+		if (!user || !user.length)
+			throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+		return this.sessionsService.findUserHistoryByUserId(+userId, user[0].username);
 	}
 
 	@Get(':sessionId')
