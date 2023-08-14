@@ -140,7 +140,7 @@ export class GameComponent implements OnInit, OnDestroy {
 			scoreRightPlayer: data.playerRightScore
 		});
 		this.accessControlService.setAccess(true);
-		this.router.navigate(['main', 'exit_game', data.sessionId]);
+		this.router.navigate(['main', 'exit_game']);
 	}
 
 	private sendPaddleState(): void {
