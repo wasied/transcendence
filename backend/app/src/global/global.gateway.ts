@@ -17,12 +17,16 @@ export class GlobalGateway {
 		private readonly friendsService: FriendsService
 	) {}
 
+	public updateStatus() {
+		this.server.emit('updateConnections');
+	}
+
 	@SubscribeMessage('connectGlobal')
 	async connect(
 		@ConnectedSocket() client: SocketWithUser
 	): Promise<void> {
 		await this.usersService.logIn(client.user.id);
-		this.server.emit('updateConnections');
+		this.updateStatus();
 	}
 
 	@SubscribeMessage('disconnectGlobal')
@@ -31,7 +35,7 @@ export class GlobalGateway {
 	): Promise<void> {
 		await this.usersService.logOut(client.user.id);
 		client.disconnect();
-		this.server.emit('updateConnections');
+		this.updateStatus();
 	}
 
 	@SubscribeMessage('getUpdateFriends')

@@ -5,13 +5,14 @@ import { GameWebsocketGuard } from './game-websocket.guard';
 import { SocketWithUser } from '../utils/SocketWithUser';
 import { PongGameService, GameData } from './game.service';
 import { SessionsService } from '../sessions/sessions.service';
+import { GlobalGateway } from '../global/global.gateway';
 
 @WebSocketGateway({ cors: true, namespace: 'game' })
 @UseGuards(GameWebsocketGuard)
 export class PongGameGateway {
     @WebSocketServer() server: Server;
 
-    constructor(private sessionsService: SessionsService) {}
+    constructor(private sessionsService: SessionsService, private globalGateway: GlobalGateway) {}
 
     // Map<playerId, [socket, matchType]>
     private waitingPlayers: Map<string, [Socket, string]> = new Map();
@@ -103,6 +104,8 @@ export class PongGameGateway {
 
         this.sessionsService.join(sessionId, parseInt(playerOneId), false);
         this.sessionsService.join(sessionId, parseInt(playerTwoId), false);
+
+        this.globalGateway.updateStatus();
 
         playerOneSocket.join(gameSessionId);
         playerTwoSocket.join(gameSessionId);
